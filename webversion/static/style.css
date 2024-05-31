@@ -1,0 +1,96 @@
+*{
+    box-sizing: border-box;
+    font-family: sans-serif;
+    max-width: 100%;
+    text-decoration: none;
+    list-style: none;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    background: linear-gradient(#fff,#e3f2fd);
+}
+header{
+    margin: 0;
+    max-width: 100%;
+    /* background-color:#e3f2fd; */
+    background: linear-gradient(#ffebee,#e3f2fd);
+    border-bottom: #fff solid 5px;
+    position: relative;
+    width: 100%;
+}
+header .subHead{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+header .subHead .logo{
+    width: 60%;
+    display: inline-flex;
+    align-items: center;
+    padding-left: 10px;
+}
+header .subHead .logo img{
+    margin: 5px;
+    padding-right: 0;
+}
+header .subHead .logo h1{
+    margin-left: 0;
+    float: left;
+}
+header .subHead .TopNavBar ul{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+}
+header .subHead .TopNavBar ul li{
+    padding: 5px;
+}
+.body{
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    min-height: 80vh;
+}
+.body .welcome{
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+    text-align: center;
+}
+.body .selectcourse ul{
+    display: inline-flex;
+    justify-content: space-between;
+}
+.body .deptsection{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.body .deptsection .nav ul{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 10px;
+    text-align: center;
+    padding: 10px;
+}
+footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(#e3f2fd, #ffebee);
+}
+footer .BottomNavBar ul{
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+footer .BottomNavBar ul li{
+    padding: 5px;
+}

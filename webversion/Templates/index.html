@@ -1,0 +1,19 @@
+{% extends "main.html" %}
+{% load static %}
+<!DOCTYPE html>
+{% block title %}
+home
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+    <h1>Timetabling Made Easy!</h1>
+    <p>Create a timetable for your college with ease. Click on the button to begin</p>
+    <form method="post">
+        {% csrf_token %}
+      <button type="submit" onclick="" value="post"><a href="/select/engineering/1"> Create Timetable</a></button>  
+    </form>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+{% block title %}
+Select
+{% endblock %}
+
+
+{% block content %}
+
+<div class="deptsection">
+    <div class="nav">
+        <ul>
+            {% for dept in departments %}
+            <li><a href=""">{{ dept.name }}</a></li>
+            {% endfor %}
+    </div>
+    <div class="main">
+        <p>Select courses for this Department</p>
+        <div class="firstyear">
+            <form method="post" action="/select/{{college}}/{{dname}}/{{page}}">
+                {% csrf_token %}
+                {% for course in course %}
+                <input type="checkbox" value="{{ course.id }}" name="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" %}">
+                <label for="{{ course.code }}">{{course.code}}</label>
+                {% endfor %}
+                <button type="submit" value="post">Next</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>
+
+{% endblock %}
