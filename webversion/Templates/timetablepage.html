@@ -9,7 +9,29 @@ Timetable
 <div class="timetable_body">
     <div class="leftsection">
         <div class="card" width="300px" height="300px">
-           
+            <h1> First year</h1>
+           {% for x in year1 %}
+           <p>{{x.course_code}}</p>
+           {% endfor %}
+        </div>
+        <div class="card" width="300px" height="300px">
+            <h1> Second year</h1>
+           {% for x in year2 %}
+           <p>{{x.course_code}}</p>
+           <p>{{x.L}}</p>
+           {% endfor %}
+        </div>
+        <div class="card" width="300px" height="300px">
+            <h1> Third year</h1>
+           {% for x in year3 %}
+           <p>{{x.course_code}}</p>
+           {% endfor %}
+        </div>
+        <div class="card" width="300px" height="300px">
+            <h1> Fourth year</h1>
+           {% for x in year4 %}
+           <p>{{x.course_code}}</p>
+           {% endfor %}
         </div>
     </div>
     <div class="rightsection">

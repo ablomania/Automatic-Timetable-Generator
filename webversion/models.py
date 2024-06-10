@@ -31,10 +31,13 @@ class Course(models.Model):
     department = models.ForeignKey("Department", on_delete=models.CASCADE, related_name="adepartment", null=True)
     hours = models.PositiveSmallIntegerField(default=2, null=True)
     has_labs = models.BooleanField(default=False, null=True)
+    is_lab_only = models.BooleanField(default=False, null=True)
+    is_elective = models.BooleanField(default=False, null=True)
     lab_hours = models.PositiveSmallIntegerField(default=0, null=True)
     has_practicals = models.BooleanField(default=0, null=True)
     practical_hours = models.PositiveSmallIntegerField(default=0, null=True)
     year_group = models.PositiveSmallIntegerField(null=True)
+    estimated_class_size = models.PositiveIntegerField(default=200, null=True)
     def __str__(self):
         return f"{self.code} - {self.name}"
 
@@ -42,9 +45,11 @@ class Course(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=255, unique=True)
     capacity = models.IntegerField(default=0)
+    is_Lab = models.BooleanField(default=False, null=True)
     about = models.CharField(max_length=255, null=True)
-    def __str__(self):
-        return f"{self.name}"
+    is_in_same_college = models.BooleanField(default=True, null=True)
+    # def __str__(self):
+    #     return f"{self.name}"
     
 
 class Lecturer(models.Model):
@@ -56,10 +61,16 @@ class Lecturer(models.Model):
     
 
 class Schedule(models.Model):
-    course_name = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="acourse", null=True)
+    course= models.ForeignKey("Course", on_delete=models.CASCADE, related_name="acourse", null=True)
+    course_code = models.CharField(max_length=50, null=True)
+    year_group = models.PositiveSmallIntegerField(null = True)
     Location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="alocation", null=True)
-    duration = models.PositiveSmallIntegerField(null=True)
-
+    location_name = models.CharField(max_length=255, null = True)
+    height = models.PositiveSmallIntegerField(null=True)
+    column = models.PositiveSmallIntegerField(null=True)
+    row = models.PositiveSmallIntegerField(null=True)
+    department =models.ForeignKey("Department", on_delete=models.CASCADE, related_name="somedepartment", null=True)
+    lecturer_name = models.CharField(max_length=255, null=True)
 
 class Department(models.Model):
     name = models.CharField(max_length=255, unique=True, null=True)
