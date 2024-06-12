@@ -5,5 +5,32 @@ Create Course
 {% endblock %}
 
 {% block content %}
-
+<form method="post">
+    <h3>Create a course</h3>
+    <label>
+        code: <input type="text" name="code">
+    </label><br>
+    <label>
+        name: <input type="text" name="name">
+    </label><br>
+    <label>
+        lecturer: <select name="lecturer" id="">
+            {% for x in lecturer %}
+            <option value="{{ x.id }}">{{ x.other_names }} {{ x.surname }}</option>
+            {% endfor %}
+        </select>
+        <input type="button" value="create lecturer">
+    </label><br>
+    <label>
+        department: <select name="department">
+            {% for x in departments %}
+            <option value="{{ x.id }}">{{ x.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="button" value="create department">
+    </label>
+    <label for="">
+        credit hours: <input type="number" name="hours" min="1" max="10">
+    </label>
+</form>
 {% endblock %}

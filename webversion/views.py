@@ -27,7 +27,6 @@ def secondPage(request, college, dname,id):
     if request.method == 'POST':
         b = dict(request.POST)
         b.pop("csrfmiddlewaretoken")
-        print(b)
         createSchedule(dictionary=b, department=department, courses_per_day=average_Courses_Per_Day)
         
 
@@ -52,19 +51,16 @@ def secondPage(request, college, dname,id):
 
 
 #Timetable page loader
-def timetable(request):
+def timetable(request, college):
     template = loader.get_template("timetablepage.html")
     schedule = Schedule.objects.all().values()
     course = Course.objects.all().values()
-    year1 = schedule.filter(year_group = 1)
-    year2 = schedule.filter(year_group = 2)
-    year3 = schedule.filter(year_group = 3)
-    year4 = schedule.filter(year_group = 4)
-    
-    print(year2)
+    department = Department.objects.filter(college=college)
+    arranged = schedule.order_by("row").values()
+
     context = {
-        "schedule": schedule, "year1": year1, "year2": year2,
-        "year3": year3, "year4": year4
+        "schedule": schedule, "department": department,
+        "arranged":arranged
     }
     return HttpResponse(template.render(context, request))
 
@@ -97,12 +93,14 @@ def createHours(hours):
     return height
 
 def createClass(course, department, hours, courses_per_day):
+    department = (Course.objects.get(id = course[0])).department_id
     for y in range(hours):
         height =createHours(hours)
         if(hours == 0): break 
         hours = hours - 2     
         if(height > 0): 
             used_Locations = dict(Schedule.objects.values_list("row", "Location_id")) 
+            used_Lecturers = dict(Schedule.objects.values_list("row", "lecturer_id"))
             current_course = Course.objects.get(id = course[0])
             max_row = 50
             
@@ -110,29 +108,30 @@ def createClass(course, department, hours, courses_per_day):
             while is_Done <= 0:
                 current_row = chooseRow(course = course, height = height, courses_per_day = courses_per_day)
                 temp_data = dict()
+                currrent_Lecturer = (Course.objects.get(id =course[0])).lecturer_id
                 temp_location = createClassLocation(course = current_course.id, department = department)
                 temp_data[current_row] = temp_location
+                temp_data["lecturer"] = currrent_Lecturer
                 
-                if(len(used_Locations) == 0):
+                if(len(used_Locations) == 0 and len(used_Lecturers) == 0):
                     class_location = temp_location
                     used_Locations[current_row] = class_location
                     is_Done = 1
                     break
                 for x, y in list(used_Locations.items()):
                     if((x not in temp_data.keys()) and (y not in temp_data.values())):
-                        is_Done = 1
-                        class_location =temp_location
-                        used_Locations[current_row] = class_location
-                        break
+                        for w, z in list(used_Lecturers.items()):
+                            is_Done = 1
+                            class_location =temp_location
+                            used_Locations[current_row] = class_location
+                            break
 
             course_code = (Course.objects.get(id = course[0])).code
             lecturer = Lecturer.objects.get(id=((Course.objects.get(id = course[0])).lecturer_id))
             lecturer_name = lecturer.other_names + " " + lecturer.surname
             location_name = (Location.objects.get(id = class_location)).name
-            print(lecturer_name)
-            print(location_name)
             course_year_group = (Course.objects.get(id = course[0])).year_group        
-            new_schedule = Schedule(lecturer_name = lecturer_name, location_name = location_name, course_code = course_code, year_group = course_year_group,course_id = course[0], department_id = department.id, height = height, column = department.id, Location_id = class_location, row = current_row)
+            new_schedule = Schedule(lecturer=lecturer,lecturer_name = lecturer_name, location_name = location_name, course_code = course_code, year_group = course_year_group,course_id = course[0], department_id = department, height = height, column = department, Location_id = class_location, row = current_row)
             new_schedule.save()
 
 
@@ -154,12 +153,17 @@ def createClassLocation(course, department):
 def chooseRow(course, height, courses_per_day):
     is_done = 0
     current_course = Course.objects.get(id = course[0])
+    current_department = current_course.department_id
     current_course_yg = current_course.year_group
     max_yg_row = 50 * current_course_yg
     min_yg_row = max_yg_row + 1 - 50
     # max_row = 2 * 5 * courses_per_day
     while is_done == 0:
-        rand_row = random.randrange(min_yg_row, max_yg_row+1)
+        aa = 5
+        while aa == 5:
+            rand_row = random.randrange(min_yg_row, max_yg_row+1)
+            if not Schedule.objects.filter(row = rand_row, department_id = current_department):
+                aa = 9
         if((rand_row==(courses_per_day*2)) or (rand_row==(courses_per_day*4)) or (rand_row==(courses_per_day*6)) or (rand_row==(courses_per_day*8)) or (rand_row==(courses_per_day*10))):
             if (height < 2):
                 is_done = 1
@@ -173,15 +177,19 @@ def chooseRow(course, height, courses_per_day):
             break
         
     print("choose row ends")
-    print(rand_row)
     return rand_row
 
 
 def createLab(course, department, height):
+        department = (Course.objects.get(id = course[0])).department_id
         course_code = (Course.objects.get(id = course[0])).code
         course_year_group = (Course.objects.get(id = course[0])).year_group
         location = Location.objects.get(name = "LAB")
-        new_schedule = Schedule(course_id = course[0], department_id = department.id, height = height, Location_id = location.id, column = department.id, course_code = course_code, year_group = course_year_group)
+        current_row = chooseRow(course = course, height = height, courses_per_day = 5)
+        location_name = (Location.objects.get(id = location.id)).name
+        lecturer = Lecturer.objects.get(id=((Course.objects.get(id = course[0])).lecturer_id))
+        lecturer_name = lecturer.other_names + " " + lecturer.surname
+        new_schedule = Schedule(lecturer=lecturer,lecturer_name = lecturer_name, location_name = location_name, course_code = course_code, year_group = course_year_group,course_id = course[0], department_id = department, height = height, column = department, Location_id = location.id, row = current_row)
         new_schedule.save()
 
 
@@ -189,8 +197,12 @@ def createLab(course, department, height):
 def createCourse(request):
     course = Course.objects.all().values()
     template = loader.get_template("createcourse.html")
+    lecturer = Lecturer.objects.all().values()
+    departments = Department.objects.all().values()
 
-    context = {}
+    context = {
+        "lecturer": lecturer, "departments": departments
+    }
     return HttpResponse(template.render(context, request))
 
 

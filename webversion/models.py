@@ -48,8 +48,6 @@ class Location(models.Model):
     is_Lab = models.BooleanField(default=False, null=True)
     about = models.CharField(max_length=255, null=True)
     is_in_same_college = models.BooleanField(default=True, null=True)
-    # def __str__(self):
-    #     return f"{self.name}"
     
 
 class Lecturer(models.Model):
@@ -71,6 +69,7 @@ class Schedule(models.Model):
     row = models.PositiveSmallIntegerField(null=True)
     department =models.ForeignKey("Department", on_delete=models.CASCADE, related_name="somedepartment", null=True)
     lecturer_name = models.CharField(max_length=255, null=True)
+    lecturer = models.ForeignKey("Lecturer", on_delete=models.CASCADE, related_name="the_lecturer", null=True)
 
 class Department(models.Model):
     name = models.CharField(max_length=255, unique=True, null=True)
