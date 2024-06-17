@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+{% block title %}
+View selected courses
+{% endblock %}
+
+
+{% block content %}
+<div class="viewselected">
+    <div class="top">
+       {% for department in departments %}
+            <h3>{{ department.name }}</h3>
+            {% for x in list %}
+                {% if x.department_id is department.id %}
+                    <p>{{ x.code }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %} 
+    </div>
+    
+    <div class="bottom">
+        <a href="/{{college}}/timetable">
+        <button type="button">Create Timetable</button>
+        </a>
+    </div>
+</div>
+{% endblock %}

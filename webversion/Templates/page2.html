@@ -1,4 +1,6 @@
 {% extends 'main.html' %}
+{% load static %}
+
 {% block title %}
 Select
 {% endblock %}
@@ -7,22 +9,23 @@ Select
 {% block content %}
 
 <div class="deptsection">
-    <div class="nav">
-        <ul>
-            {% for dept in departments %}
-            <li><a href=""">{{ dept.name }}</a></li>
-            {% endfor %}
-    </div>
     <div class="main">
+        <h2>{{ department.name }} {{ tp }}</h2>
         <p>Select courses for this Department</p>
         <div class="firstyear">
             <form method="post" action="/select/{{college}}/{{dname}}/{{page}}">
                 {% csrf_token %}
                 {% for course in course %}
-                <input type="checkbox" value="{{ course.id }}" name="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" %}">
+                <input type="checkbox" id="{{ course.code }}" value="{{ course.id }}" name="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" %}">
                 <label for="{{ course.code }}">{{course.code}}</label>
+                <a href="/editcourse/{{course.code}}" target="_parent"">
+                    <button id="editCourse" type="button" value="{{ course.id }}"><img src="{% static 'pencil.png' %}" alt="EditCourse" width="10px" height="10px"></button>
+                </a>
+                
                 {% endfor %}
-                <button type="submit" value="post">Next</button>
+                <br>
+                <a href="/addaCoursePage" target="_blank"><button type="button" id="addCourse" de value="Add A Course">&plus;</button></a>
+                <button type="submit" value="post">Next &raquo;</button>
             </form>
             
         </div>

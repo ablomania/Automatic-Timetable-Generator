@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Departments
+{% endblock %}
+
+{% block content %}
+<div class="viewDepartments">
+    <h3>Departments in {{collegename}}</h3>
+    {% for x in departments %}
+    <a href="/select/{{x.college}}/{{x.name}}/{{x.max_yg}}"><button type="button">{{ x.name }}</button></a>
+    {% endfor %}
+    <a href="/select/{{collegename}}/{{first}}/{{max_yg}}"><input type="button" value="Next"></a>
+</div>
+
+
+{% endblock %}

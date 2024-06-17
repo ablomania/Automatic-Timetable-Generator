@@ -94,3 +94,70 @@ footer .BottomNavBar ul{
 footer .BottomNavBar ul li{
     padding: 5px;
 }
+
+
+/*For createcourse template*/
+.createcourse{
+    width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+.createcourse table td{
+    padding: 10px;
+}
+
+.optionsPage .hidden{
+    display: none;
+}
+
+/*for timetables page*/
+.timetable_body{
+    display: flex;
+    flex-direction: row;
+}
+.timetable_body .rightsection{
+    width: 85%;
+}
+.rightsection p{
+    text-align: center;
+}
+.ann{
+    display: grid;
+    grid-template-columns: auto;
+}
+.gridtime:first-of-type{
+    height: 52px;
+}
+#item1{
+    background-color: lightgray;
+}
+.gridtime{
+    border: 1px solid;
+    height: 100px;
+}
+.gridcontainer1{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+}
+.gridcontainer2{
+    float: right;
+    display: grid;
+    grid-template-columns: repeat(15, auto);
+    grid-template-rows: repeat(10, auto);
+    grid-auto-columns: 50px;
+    justify-content: center;
+    border-collapse: collapse;
+}
+.gridcontainer2 .griddept{
+    border: solid 1px;
+}
+.griditem{
+    border: 1px solid;
+    display: inline-grid;
+    height: 100px;
+    width: 100%; 
+    /* width: -moz-fit-content;
+    width: fit-content; */
+}

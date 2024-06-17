@@ -5,32 +5,77 @@ Create Course
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    <h3>Create a course</h3>
-    <label>
-        code: <input type="text" name="code">
-    </label><br>
-    <label>
-        name: <input type="text" name="name">
-    </label><br>
-    <label>
-        lecturer: <select name="lecturer" id="">
-            {% for x in lecturer %}
-            <option value="{{ x.id }}">{{ x.other_names }} {{ x.surname }}</option>
-            {% endfor %}
-        </select>
-        <input type="button" value="create lecturer">
-    </label><br>
-    <label>
-        department: <select name="department">
-            {% for x in departments %}
-            <option value="{{ x.id }}">{{ x.name }}</option>
-            {% endfor %}
-        </select>
-        <input type="button" value="create department">
-    </label>
-    <label for="">
-        credit hours: <input type="number" name="hours" min="1" max="10">
-    </label>
-</form>
+<div class="createcourse">
+    <form method="post">
+        {% csrf_token %}
+        <h3>Create a course</h3>
+        <table>
+            <tr>
+                <td><label for="code">code:</label></td>
+                <td><input type="text" name="code" id="code"></td>
+            </tr>
+            <tr>
+                <td><label for="name">name:</label></td>
+                <td><input type="text" name="name" id="name"></td>
+            </tr>
+            <tr>
+                <td><label for="lecturer">lecturer:</label></td>
+                <td> 
+                    <select name="lecturer" id="lecturer">
+                        {% for x in lecturer %}
+                        <option value="{{ x.id }}">{{ x.other_names }} {{ x.surname }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <a href="/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlecturebtn"></a>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="department">department:</label></td>
+                <td>
+                    <select name="department" id="department">
+                        {% for x in departments %}
+                        <option value="{{ x.id }}">{{ x.name }}</option>
+                        {% endfor %}
+                    </select>        
+                </td>
+                <td>
+                    <a href="/createDepartment" target="#"><input type="button" value="Add a Department" id="createdptbtn"></a>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="hours">credit hours:</label></td>
+                <td><input type="number" name="hours" min="1" max="10" id="hours"></td>
+            </tr>
+            <tr>
+                <td><label for="is_combined">Combined class:</label></td>
+                <td><input type="checkbox" name="is_combined" id="is_combined"></td>
+            </tr>
+            <tr>
+                <td><label for="has_labs">has lab sessions:</label></td>
+                <td><input type="checkbox" name="has_labs" id="has_labs"></td>
+            </tr>
+            <tr>
+                <td><label for="is_lab_only">course is lab only:</label></td>
+                <td><input type="checkbox" name="is_lab_only" id="is_lab_only"></td>
+            </tr>
+            <tr>
+                <td><label for="lab_hours">laboratory hours:</label></td>
+                <td><input id="lab_hours" type="number" min="0" max="10" name="lab_hours"></td>
+            </tr>
+            <tr>
+                <td><label for="year_group">year group:</label></td>
+                <td><input id="year_group" type="number" min="1" max="10" name="year_group"></td>
+            </tr>
+            <tr>
+                <td><label for="estimated_class_size">Estimated class size:</label></td>
+                <td><input id="estimated_class_size" type="number" min="1" max="1000" name="estimated_class_size"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="submit"></td>
+            </tr>
+        </table>  
+    </form>
+</div>
 {% endblock %}
