@@ -8,22 +8,19 @@ home
 {% block content %}
 
 <div class="welcome">
+  <div id="indextop">
     <h1>Timetabling Made Easy!</h1>
     <p>Create a timetable for your college with ease. Click on the button to begin</p>
-    <form method="post" action = "/optionsPage">
+    <button type="button" onclick="loadForm()" id="formLoader">get started</button>
+  </div>
+    
+    
+    <form method="post" action = "/optionsPage" id="formindex" style="display: none;">
       {% csrf_token %}
       <h3>To Begin, please fill the forms below</h3>
-      <table>
-        <tr>
-          <td><label for="college">name of college</label</td>
-          <td><input type="text" name="college" id="college" required><br></td>
-        </tr>
-        <tr>
-          <td><label for="depmntCount">number of departments for this college</label></td>
-          <td><input type="number" name="depmntCount" id="depmntCount" max="20"><br></td>
-        </tr>
-      </table>
-      <input type="submit" onclick="" value="Get started">      
+      <input type="text" name="college" placeholder="name of college" id="college" required><br>
+      <input type="number" name="depmntCount" placeholder="number of departments for this college" id="depmntCount" max="20"><br>
+      <button type="submit" id="getstartedbtn" onclick="">Continue</button>     
   </form>
     
 </div>

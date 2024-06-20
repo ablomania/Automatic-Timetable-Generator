@@ -1,5 +1,7 @@
 {% extends 'main.html' %}
 
+{% load static %}
+
 {% block title %}
 Edit Course
 {% endblock %}
@@ -10,6 +12,7 @@ Edit Course
     <form method="post">
         {% csrf_token %}
         <h3>Create a course</h3>
+        <img src="{% static 'stack-of-books.svg' %}" width="150px" height="150px" alt="img">
         <table>
             <tr>
                 <td><label for="code">code:</label></td>
@@ -30,7 +33,7 @@ Edit Course
                     </select>
                 </td>
                 <td>
-                    <a href="/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlecturebtn"></a>
+                    <a href="/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlectbtn"></a>
                 </td>
             </tr>
             <tr>
@@ -44,7 +47,7 @@ Edit Course
                     </select>        
                 </td>
                 <td>
-                    <a href="/createDepartment" target="#"><input type="button" value="Add a Department" id="createdptbtn"></a>
+                    <a href="/createDepartment" target="#"><input type="button" value="Add a Department" id="createdeptbtn"></a>
                 </td>
             </tr>
             <tr>
@@ -54,7 +57,7 @@ Edit Course
             <tr>
                 <td><label for="is_combined">Combined class:</label></td>
                 <td>
-                    <select name="is_combined" id="department">
+                    <select name="is_combined" id="is_combined">
                         <option value="{{course.is_combined}}">{{course.is_combined}}</option>
                         {% for x in bool_List %}
                         <option value="{{ x }}">{{ x }}</option>
@@ -65,7 +68,7 @@ Edit Course
             <tr>
                 <td><label for="has_labs">has lab sessions:</label></td>
                 <td>
-                    <select name="has_labs" id="department">
+                    <select name="has_labs" id="has_labs">
                         <option value="{{course.has_labs}}">{{course.has_labs}}</option>
                         {% for x in bool_List %}
                         <option value="{{ x }}">{{ x }}</option>
@@ -88,6 +91,15 @@ Edit Course
                 <td><label for="lab_hours">laboratory hours:</label></td>
                 <td><input id="lab_hours" value="{{course.lab_hours}}" type="number" min="0" max="10" name="lab_hours"></td>
             </tr>
+            <td><label for="is_contiguous_lab_time">lab hours need to be contiguous:</label></td>
+            <td>
+                <select name="is_contiguous_lab_time" id="is_contiguous_lab_time">
+                    <option value="{{course.is_contiguous_lab_time}}">{{course.is_lab_only}}</option>
+                    {% for x in bool_List %}
+                    <option value="{{ x }}">{{ x }}</option>
+                    {% endfor %}
+                </select>
+            </td>
             <tr>
                 <td><label for="year_group">year group:</label></td>
                 <td><input id="year_group" value="{{course.year_group}}" type="number" min="1" max="10" name="year_group"></td>
@@ -97,7 +109,7 @@ Edit Course
                 <td><input id="estimated_class_size" value="{{course.estimated_class_size}}" type="number" min="1" max="1000" name="estimated_class_size"></td>
             </tr>
             <tr>
-                <td><input type="submit" value="submit" formtarget="_parent"></td>
+                <td colspan="2"><input type="submit" id="editcoursebtn" value="submit" formtarget="_parent"></td>
             </tr>
         </table>  
     </form>

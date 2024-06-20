@@ -6,15 +6,32 @@ View selected courses
 
 {% block content %}
 <div class="viewselected">
+    <h2>review</h2>
+    <hr width="10%">
     <div class="top">
        {% for department in departments %}
-            <h3>{{ department.name }}</h3>
-            {% for x in list %}
-                {% if x.department_id is department.id %}
-                    <p>{{ x.code }}</p>
-                {% endif %}
+       <div class="big">
+        <h3>{{ department.name }}</h3>
+        <hr width="95%">
+            {% for year_group in y_gs %}
+            {% if department.max_yg >= year_group %}
+            <a href="/select/{{department.college}}/{{department.name}}/{{year_group}}">
+                <p id="smallertext">Year {{year_group}}</p>
+            </a>
+            <div class="groups">
+               {% for x in list %}
+                    {% if x.department_id is department.id and x.year_group is year_group %}
+                        <a href="/editcourse/{{x.code}}">{{ x.code }}</a>
+                    {% endif %}
+                {% endfor %} 
+            </div>
+            <hr width="90%">
+            {% endif %}
             {% endfor %}
-        {% endfor %} 
+            <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}"><button type="button" id="editselected">edit</button></a>
+       </div>
+       {% endfor %} 
+            
     </div>
     
     <div class="bottom">

@@ -10,13 +10,15 @@ Info
         {% csrf_token %}
         <h3>College of {{ collegename }}</h3>
         {% for x in count %}
-        <label for="department">Department Name</label>
-        <input type="text" name="department{{x}}" id="department" required padding = "20px">
-        <label for="max_yg">Max. Year Group</label>
-        <input type="number" name="max_yg{{x}}" id="max_yg{{x}}" min="1" max="20">
-        <br />
+        <div class="options">
+            <label for="department">Department Name</label>
+            <input type="text" name="department{{x}}" id="department" required padding = "20px">
+            <label for="max_yg">Max. Year Group</label>
+            <input type="number" name="max_yg{{x}}" id="max_yg{{x}}" min="1" max="20">
+            <br />
+        </div>
         {% endfor %}
-        <input type="submit" value="Next" formaction="departments/{{collegename}}"/>
+        <input type="submit" value="Next" id="optionsbtn" formaction="departments/{{collegename}}"/>
     </form>
 </div>
 

@@ -1,6 +1,6 @@
 *{
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: Arial;
     max-width: 100%;
     text-decoration: none;
     list-style: none;
@@ -9,16 +9,15 @@ body{
     display: flex;
     flex-direction: column;
     margin: 0;
-    background: linear-gradient(#fff,#e3f2fd);
+    /* background: linear-gradient(#fff,#e3f2fd); */
 }
 header{
     margin: 0;
     max-width: 100%;
-    /* background-color:#e3f2fd; */
-    background: linear-gradient(#ffebee,#e3f2fd);
-    border-bottom: #fff solid 5px;
-    position: relative;
+    background-color: #e57373;
+    /* background: linear-gradient(#ffebee,#e3f2fd); */
     width: 100%;
+    color: #fff;
 }
 header .subHead{
     display: flex;
@@ -49,36 +48,9 @@ header .subHead .TopNavBar ul li{
     padding: 5px;
 }
 .body{
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
-    min-height: 80vh;
-}
-.body .welcome{
-    width: 60%;
-    margin-left: 20%;
-    margin-right: 20%;
-    text-align: center;
-}
-.body .selectcourse ul{
-    display: inline-flex;
-    justify-content: space-between;
-}
-.body .deptsection{
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    margin: auto;
-    background-color: #fff;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-.body .deptsection .nav ul{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    row-gap: 10px;
-    text-align: center;
-    padding: 10px;
+    margin-top: 0;
+    min-height: 90vh;
+    text-transform: capitalize;
 }
 footer{
     display: flex;
@@ -94,8 +66,194 @@ footer .BottomNavBar ul{
 footer .BottomNavBar ul li{
     padding: 5px;
 }
+/*For Index.html */
+.welcome{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width: 60%;
+    margin: auto; */
+}
 
-
+#formindex input{
+    border: #eceff1 solid 1px;
+    border-radius: 5px;
+    width: 300px;
+    margin: 10px;
+    height: 30px;
+}
+#form input:focus{
+    border: #ef5350;
+}
+#formindex #getstartedbtn{
+    margin-left: 240px;
+}
+#formindex{
+    width: 50%;
+    margin: auto;
+    display: flex;
+    background-color: #eceff1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 10px;
+    margin-top: 10px;
+    height: 500px;
+    color: #ff5252;
+}
+/*for select courses page*/
+.deptsection{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.deptsection .sidenav{
+    width: 15%;
+    position: fixed;
+    background-color: #eceff1;
+    min-height: 90vh;
+    margin: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.sidenav .subnav{
+    padding-top: 10px;
+    
+}
+.sidenav .subnav a{
+    color: #424242;
+}
+.sidenav .subnav ul{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    background-color: #fafafa;
+    width: 100%;
+}
+.subnav ul li{
+    padding: 5px;
+    font-size: 9pt;
+}
+.subnav ul li button{
+    display: inline-flex;
+    width: fit-content;
+    font-size: 8pt;
+}
+.deptsection .main{
+    padding-left: 5px;
+    width: 75%;
+    margin-left: 15%;
+}
+.firstyear form{
+    width: 80%;
+}
+.firstyear form .scourses{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    column-gap: 5px;
+    /* width: 60%; */
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    min-height: 300px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+@keyframes animeCourse {
+    0% {background-color: #ef9a9a;}
+    25% {background-color: #e57373;}
+    50% {background-color: #ef5350;}
+    75% {background-color: #e57373;}
+    100% {background-color: #ef9a9a;}
+}
+.firstyear form .selectcourses:hover{
+    animation-name: animeCourse;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    background-color: #e57373;
+    color: #fafafa;
+    
+}
+.firstyear form .scourses .inner{
+    display: inline-flex;
+}
+.firstyear form .btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin: auto;
+    width: 60%;
+}
+.firstyear form .btns #nextbtn{
+    width: 100px;
+    height: 30px;
+    align-self: center;
+    color: #ff5252;
+    background-color: inherit;
+    border-radius: 5px;
+    border: #ff5252 solid 1px;
+    margin-left: 20px;
+}
+.span{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+#done{
+    width: 100px;
+    height: 30px;
+    align-self: center;
+    color: #fafafa;
+    background-color: #ff5252;
+    border-radius: 5px;
+    border: none;
+    margin-left: 20px;
+}
+.firstyear form .btns #save{
+    width: 100px;
+    height: 30px;
+    align-self: center;
+    color: #ff5252;
+    background-color: #ffff;
+    border-radius: 5px;
+    border: dashed #ff5252 1px;
+    margin-left: 20px;
+}
+.scourses{
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   margin: 10% 5% 10% 5%;
+}
+.scourses a{
+    border-radius: 10px;
+    margin: 10px;
+}
+.deptsection .main .firstyear .scourses .selectcourses{
+    padding: 5px;
+    border: solid 1px #ff5252;
+    width: max-content;
+    height: min-content;
+}
+.deptsection .rightnav{
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    background-color: #eceff1;
+    min-height: 80vh;
+}
+.rightnav .rightsubnav{
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.deptsection .rightnav .departments{
+    padding: 10px;
+}
+.rightnav .departments a{
+    color: #424242;
+}
 /*For createcourse template*/
 .createcourse{
     width: 600px;
@@ -106,9 +264,7 @@ footer .BottomNavBar ul li{
     padding: 10px;
 }
 
-.optionsPage .hidden{
-    display: none;
-}
+
 
 /*for timetables page*/
 .timetable_body{
@@ -117,6 +273,7 @@ footer .BottomNavBar ul li{
 }
 .timetable_body .rightsection{
     width: 85%;
+    margin: auto;
 }
 .rightsection p{
     text-align: center;
@@ -146,7 +303,8 @@ footer .BottomNavBar ul li{
     display: grid;
     grid-template-columns: repeat(15, auto);
     grid-template-rows: repeat(10, auto);
-    grid-auto-columns: 50px;
+    grid-auto-columns: 1fr;
+    column-gap: 0px;
     justify-content: center;
     border-collapse: collapse;
 }
@@ -160,4 +318,148 @@ footer .BottomNavBar ul li{
     width: 100%; 
     /* width: -moz-fit-content;
     width: fit-content; */
+}
+
+/* fpr viewselected courses */
+.viewselected h2{
+    text-align: center;
+}
+.viewselected .top{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 80%;
+    margin: auto;
+    gap: 10px;
+    margin-top: 10px;
+}
+.viewselected .top .big{
+    width: 1fr;
+    min-height: 300px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    padding: 5px;
+}
+.viewselected #smallertext{
+    font-size: 10pt;
+    color: #ff5252;
+    font-weight: bold;
+}
+.viewselected .groups{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-evenly;
+}
+
+.viewselected .groups a{
+    color: #424242;
+    padding: 5px;
+    margin: 5px;
+}
+.viewselected .groups a:hover{
+    color: #ff5252;
+    border: dashed 1px #e57373;
+}
+.viewselected #editselected{
+    background-color: #ff5252;
+    color: #fafafa;
+    border: none;
+    justify-self: end;
+}
+.viewselected .bottom{
+    position: sticky;
+    bottom: 170px;
+    right: 15px;
+    float: right;
+}
+.viewselected .bottom button{
+    width: 130px;
+    height: 30px;
+    align-self: center;
+    color: #fafafa;
+    background-color: #ff5252;
+    border-radius: 5px;
+    border: none;
+    margin-left: 20px;
+}
+
+/*for editcourse page */
+.editCourse, .createlecturer, .createDepartment{
+    width: 80%;
+    margin: auto;
+}
+
+.editCourse table, .createlecturer table, .createDepartment table{
+    background-color: #eceff1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    margin-top: 20px;
+}
+.editCourse table td, .createlecturer table td, .createDepartment table td{
+    padding: 10px;
+}
+#editcoursebtn, #deptsbtn, #optionsbtn, #createlectbtn, #createdeptbtn, #getstartedbtn{
+    background-color: #ff5252;
+    border: none;
+    width: fit-content;
+    height: 30px;
+    border-radius: 10px;
+    color: #fafafa;
+}
+
+/*for options page */
+.optionsPage{
+    width: 70%;
+    margin: auto;
+    background-color: #eceff1;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    align-items: center;
+}
+.optionsPage .options{
+    margin: 10px;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.options label{
+    padding-top: 10px;
+}
+.options input{
+    max-width: 40%;
+    height: 30px;
+}
+#optionsbtn{
+    margin-left: 370px;
+}
+
+/* for departments page */
+.viewDepartments{
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background-color: #eceff1;
+    margin-top: 30px;
+    border-radius: 10px;
+}
+.departments{
+    margin: 20px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 10px;
+}
+.departments a:hover{
+    color: #ef5350;
+}
+.departments a{
+    color: #424242;
 }

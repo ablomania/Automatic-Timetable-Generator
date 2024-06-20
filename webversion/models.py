@@ -35,8 +35,7 @@ class Course(models.Model):
     is_lab_only = models.BooleanField(default=False, null=True)
     is_elective = models.BooleanField(default=False, null=True)
     lab_hours = models.PositiveSmallIntegerField(default=0, null=True)
-    has_practicals = models.BooleanField(default=0, null=True)
-    practical_hours = models.PositiveSmallIntegerField(default=0, null=True)
+    is_contiguous_lab_time = models.BooleanField(default=0, null=True)
     year_group = models.PositiveSmallIntegerField(null=True)
     estimated_class_size = models.PositiveIntegerField(default=200, null=True)
     def __str__(self):
@@ -74,12 +73,12 @@ class Schedule(models.Model):
     lecturer_name = models.CharField(max_length=255, null=True)
     lecturer = models.ForeignKey("Lecturer", on_delete=models.CASCADE, related_name="the_lecturer", null=True)
     def __str__(self):
-        return f"{self.course_code}  {self.location_name} {self.lecturer_name}"
+        return f"{self.course_code} {self.location_name} {self.lecturer_name}"
 
 class Department(models.Model):
     name = models.CharField(max_length=255, null=True)
     college = models.CharField(max_length=255, null=True)
-    max_yg = models.PositiveSmallIntegerField(null=True)
+    max_yg = models.PositiveSmallIntegerField(default=4, null=True)
     def __str__(self):
         return f"{self.name}"
 
