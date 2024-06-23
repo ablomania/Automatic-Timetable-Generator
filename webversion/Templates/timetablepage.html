@@ -23,8 +23,21 @@ Timetable
     </div>
     
     <div class="rightsection">
+        <div class="timetablebtns">
+            <form>
+                {% csrf_token %}
+                <button id="savetimetable" type="submit">
+                    Save
+                </button>
+                <button type="submit" id="regenerate" formaction="/{{college}}/timetable">
+                    Regenerate
+                </button>
+            </form>
+            
+        </div>
         {% for group, schedules in scarr.items %}  
-        <p><strong></st>COLLEGE OF ENGINEERING</strong></p> 
+        <p><strong style="text-transform: uppercase;">COLLEGE OF {{college}}</strong></p> 
+        <p><strong>{% cycle "First Year" "First Year" "First Year" "First Year" "First Year" "Second Year" "Second Year" "Second Year" "Second Year" "Second Year" "Third Year" "Third Year" "Third Year" "Third Year" "Third Year" "Fourth Year" "Fourth Year" "Fourth Year" "Fourth Year" "Fourth Year" %}</strong></p> 
         <p><strong>
             {% cycle "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" %}</p>
         </strong>
@@ -45,7 +58,11 @@ Timetable
                 {% endfor %}  
                 {% for schedule in schedules %}
                 <div class="griditem">
-                    <p>{{schedule}}</p>
+                    <p>
+                        {{schedule.course_code}}<br>
+                        {{schedule.location_name}}<br>
+                        {{schedule.lecturer_name}}
+                    </p>
                 </div>
                 {% endfor %}
             </div>
@@ -53,8 +70,6 @@ Timetable
         <br><br><hr>
         <br><hr>
         {% endfor %}
-        </div>
-        
     </div>
 </div>
 

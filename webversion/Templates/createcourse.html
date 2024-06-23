@@ -12,11 +12,11 @@ Create Course
         <table>
             <tr>
                 <td><label for="code">code:</label></td>
-                <td><input type="text" name="code" id="code"></td>
+                <td><input type="text" name="code" id="code" required autofocus></td>
             </tr>
             <tr>
                 <td><label for="name">name:</label></td>
-                <td><input type="text" name="name" id="name"></td>
+                <td><input type="text" name="name" id="name" required></td>
             </tr>
             <tr>
                 <td><label for="lecturer">lecturer:</label></td>
@@ -28,20 +28,21 @@ Create Course
                     </select>
                 </td>
                 <td>
-                    <a href="/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlecturebtn"></a>
+                    <a href="/createLecturer" target="#"><button type="button" id="createlectbtn">Add a Lecturer</button></a>
                 </td>
             </tr>
             <tr>
                 <td><label for="department">department:</label></td>
                 <td>
                     <select name="department" id="department">
+                        <option value="{{department.id}}">{{department.name}}</option>
                         {% for x in departments %}
                         <option value="{{ x.id }}">{{ x.name }}</option>
                         {% endfor %}
                     </select>        
                 </td>
                 <td>
-                    <a href="/createDepartment" target="#"><input type="button" value="Add a Department" id="createdptbtn"></a>
+                    <a href="/createDepartment" target="#"><button type="button" id="createdeptbtn">Add a Department</button></a>
                 </td>
             </tr>
             <tr>
@@ -50,34 +51,34 @@ Create Course
             </tr>
             <tr>
                 <td><label for="is_combined">Combined class:</label></td>
-                <td><input type="checkbox" name="is_combined" id="is_combined"></td>
+                <td><input type="checkbox" value="True" name="is_combined" id="is_combined"></td>
             </tr>
             <tr>
                 <td><label for="has_labs">has lab sessions:</label></td>
-                <td><input type="checkbox" name="has_labs" id="has_labs"></td>
+                <td><input type="checkbox" value="True" name="has_labs" id="has_labs"></td>
             </tr>
             <tr>
                 <td><label for="is_lab_only">course is lab only:</label></td>
-                <td><input type="checkbox" name="is_lab_only" id="is_lab_only"></td>
+                <td><input type="checkbox" value="True" name="is_lab_only" id="is_lab_only"></td>
             </tr>
             <tr>
                 <td><label for="lab_hours">laboratory hours:</label></td>
-                <td><input id="lab_hours" type="number" min="0" max="10" name="lab_hours"></td>
+                <td><input id="lab_hours" type="number" value="0" min="0" max="10" name="lab_hours" required></td>
             </tr>
             <tr>
                 <td><label for="is_contiguous_lab_time">labs need to be contiguous:</label></td>
-                <td><input type="checkbox" name="is_contiguous_lab_time" id="is_contiguous_lab_time"></td>
+                <td><input type="checkbox" name="is_contiguous_lab_time" id="is_contiguous_lab_time" value="True"></td>
             </tr>
             <tr>
                 <td><label for="year_group">year group:</label></td>
-                <td><input id="year_group" type="number" min="1" max="10" name="year_group"></td>
+                <td><input id="year_group" type="number" value="{{year_group}}" min="1" max="10" name="year_group" required></td>
             </tr>
             <tr>
                 <td><label for="estimated_class_size">Estimated class size:</label></td>
-                <td><input id="estimated_class_size" type="number" min="1" max="1000" name="estimated_class_size"></td>
+                <td><input id="estimated_class_size" type="number" min="1" max="1000" required name="estimated_class_size"></td>
             </tr>
             <tr>
-                <td><input type="submit" value="submit"></td>
+                <td><button type="submit" id="createcoursebtn">Submit</button></td>
             </tr>
         </table>  
     </form>

@@ -1,0 +1,89 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+Lecturers
+{% endblock %}
+
+{% block content %}
+    <div class="all-locations">
+        <div class="some">
+            <h2>Manage Class Locations / LABS</h2>
+            <hr width="40%">
+            <div class="left">
+                {% for location in locations %}
+                <div class="location-grid">
+                    <div class="forms">
+                        <form>
+                            {% csrf_token %}
+                            <button title="Delete Location" type="submit" id="deletelocation" formmethod="post" formaction="/deletelocation/{{location.id}}">
+                                <img src="{% static 'trash-can.png' %}" width="20px" height="20px" />
+                            </button>
+                        </form> 
+                        <form method="post" action="/editlocation/{{location.id}}">
+                            {% csrf_token %}
+                            <button title="Edit Location Details" type="submit" id="editlocation">
+                                <img src="{% static 'pencil.png' %}" width="20px" height="20px" />
+                            </button>    
+                        </form>
+                        
+                    </div>
+                    <ul>
+                        <li>Name: {{location.name}}</li>
+                        <li>Capacity: {{location.capacity}}</li>
+                        <li>College: {{location.college}}</li>
+                    </ul>
+                </div>
+                {% endfor %}
+                <div class="addbtn">
+                    <button type="button" onclick="alllocforms()" id="add-location" title="Add a new Department">
+                        &plus;
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="rightnav">
+            <div class="rightsubnav">
+                {% for department in departments %}
+                <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
+                    <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
+                        {{department.name}}
+                    </a>
+                </div>
+            {% endfor %}
+            </div>          
+        </div>        
+    </div>
+    <div id="invisible">
+        <h2>Create a location</h2>
+        <form>
+            {% csrf_token %}
+            <div>
+                <label for="location_name">Location name</label>
+                <input type="text" id="location_name" name="name">  
+            </div>
+            <div>
+                <label for="capacity">capacity</label>
+                <input type="number" min="0" id="capacity" name="capacity">  
+            </div>
+            <div>
+                <label for="about">about</label>
+                <input type="text" id="about" name="about">  
+            </div>
+            <div>
+                <label for="is_in_same_college">Location is in same college</label>
+                <input type="checkbox" value="True" id="is_in_same_college" name="is_in_same_college">  
+            </div>
+            <div>
+                <label for="college">college name</label>
+                <input type="text" id="college" name="college">  
+            </div>
+            <div class="btns">
+                <button type="submit" formmethod="post" id="add-locationbtn" formaction="/addlocation">
+                    Submit
+                </button>
+                <button type="button" onclick="undofunc()" id="cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

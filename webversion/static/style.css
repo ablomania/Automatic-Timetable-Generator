@@ -5,6 +5,9 @@
     text-decoration: none;
     list-style: none;
 }
+input:focus{
+    border: #e57373;
+}
 body{
     display: flex;
     flex-direction: column;
@@ -18,6 +21,10 @@ header{
     /* background: linear-gradient(#ffebee,#e3f2fd); */
     width: 100%;
     color: #fff;
+    position: sticky;
+    top: 0px;
+    right: 0px;
+    left: 0px;
 }
 header .subHead{
     display: flex;
@@ -66,14 +73,26 @@ footer .BottomNavBar ul{
 footer .BottomNavBar ul li{
     padding: 5px;
 }
+header ul a, footer ul a{
+    text-transform: capitalize;
+    color: #fafafa;
+}
 /*For Index.html */
 .welcome{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #fafafa;
+    min-height: 90vh;
     /* width: 60%;
     margin: auto; */
+}
+#indextop{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }
 
 #formindex input{
@@ -92,7 +111,7 @@ footer .BottomNavBar ul li{
 #formindex{
     width: 50%;
     margin: auto;
-    display: flex;
+    display: none;
     background-color: #eceff1;
     flex-direction: column;
     justify-content: center;
@@ -237,16 +256,34 @@ footer .BottomNavBar ul li{
     width: max-content;
     height: min-content;
 }
+.deptsection #book1{
+    width: 200px;
+    height: 200px;
+}
 .deptsection .rightnav{
     width: 10%;
     display: flex;
     flex-direction: column;
     background-color: #eceff1;
-    min-height: 80vh;
+    height: 80vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.main .mainhead{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
 }
 .rightnav .rightsubnav{
     overflow-y: scroll;
     scrollbar-width: none;
+}
+.deptsection .rightnav {
+    position: fixed;
+    right: 0px;
+    left: 90%;
 }
 .deptsection .rightnav .departments{
     padding: 10px;
@@ -255,14 +292,6 @@ footer .BottomNavBar ul li{
     color: #424242;
 }
 /*For createcourse template*/
-.createcourse{
-    width: 600px;
-    margin: auto;
-    padding: 20px;
-}
-.createcourse table td{
-    padding: 10px;
-}
 
 
 
@@ -270,10 +299,13 @@ footer .BottomNavBar ul li{
 .timetable_body{
     display: flex;
     flex-direction: row;
+    padding-top: 50px;
 }
 .timetable_body .rightsection{
     width: 85%;
     margin: auto;
+    background-color: #eceff1;
+    border-radius: 10px;
 }
 .rightsection p{
     text-align: center;
@@ -291,12 +323,14 @@ footer .BottomNavBar ul li{
 .gridtime{
     border: 1px solid;
     height: 100px;
+    background-color: #fafafa;
 }
 .gridcontainer1{
     width: 100%;
     display: grid;
     grid-template-columns: auto auto;
     justify-content: center;
+    border-collapse: collapse;
 }
 .gridcontainer2{
     float: right;
@@ -310,14 +344,35 @@ footer .BottomNavBar ul li{
 }
 .gridcontainer2 .griddept{
     border: solid 1px;
+    background-color: #fafafa;
 }
 .griditem{
     border: 1px solid;
     display: inline-grid;
     height: 100px;
     width: 100%; 
+    background-color: #fafafa;
     /* width: -moz-fit-content;
     width: fit-content; */
+}
+.timetablebtns{
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    justify-content: flex-end; 
+    position: sticky;
+    top: 50px;
+    right: 70px;  
+}
+.timetablebtns #savetimetable{
+    width: -moz-fit-content;
+    width: fit-content;
+    background-color: #fff;
+    color: #ff5252;
+    border: #ef5350 1px dashed;
+    height: -moz-fit-content;
+    height: fit-content;
+    margin-right: 20px;
 }
 
 /* fpr viewselected courses */
@@ -383,28 +438,34 @@ footer .BottomNavBar ul li{
 }
 
 /*for editcourse page */
-.editCourse, .createlecturer, .createDepartment{
+.editCourse, .createlecturer, .createDepartment, .createcourse{
     width: 80%;
     margin: auto;
 }
 
-.editCourse table, .createlecturer table, .createDepartment table{
+.editCourse table, .createlecturer table, .createDepartment table,.createcourse table{
     background-color: #eceff1;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 50px;
     margin-top: 20px;
 }
-.editCourse table td, .createlecturer table td, .createDepartment table td{
+.editCourse table td, .createcourse table td, .createlecturer table td, .createDepartment table td{
     padding: 10px;
 }
-#editcoursebtn, #deptsbtn, #optionsbtn, #createlectbtn, #createdeptbtn, #getstartedbtn{
+ #createcoursebtn, #generate, #editcoursebtn, #regenerate, #formLoader, #deptsbtn, #optionsbtn, #createlectbtn, #createdeptbtn, #getstartedbtn{
     background-color: #ff5252;
     border: none;
+    width: -moz-fit-content;
     width: fit-content;
     height: 30px;
     border-radius: 10px;
     color: #fafafa;
+}
+#generate:hover, #editcoursebtn:hover, #regenerate:hover, #formLoader:hover, #deptsbtn:hover, #optionsbtn:hover, #createlectbtn:hover, #createdeptbtn:hover, #getstartedbtn:hover{
+    background-color: #fff;
+    color: #ff5252;
+    border: solid 1px #ff5252;
 }
 
 /*for options page */
@@ -462,4 +523,158 @@ footer .BottomNavBar ul li{
 }
 .departments a{
     color: #424242;
+}
+img:hover{
+    opacity: 80%;
+}
+
+/* for all lecturers page */
+.alllecturers{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.alllecturersgrid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-evenly;
+    width: 80%;
+    margin: auto;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.alllecturersgrid .lectdept{
+    background-color: #eceff1;
+    border-radius: 10px;
+    height: 380px;
+    padding: 10px;
+}
+.lectdept .deptdeep{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 2px;
+    padding-right: 5px;
+}
+.alllecturersgrid .lectdept ul{
+    overflow-y: auto;
+    scrollbar-width: thin;
+    height: 250px;
+}
+.lectdept ul li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 2px;
+    padding-right: 10px;
+}
+.alllecturersgrid a{
+    color: #424242;
+}
+.alllecturersgrid a:hover{
+    color: #ff5252;
+    font-size: 13pt;
+}
+.addbtn{
+    padding: 50px;
+}
+.addbtn #adddept{
+    width: 50%;
+    height: 50%;
+    font-size: 30pt;
+}
+.all{
+    display: flex;
+    flex-direction: column;
+}
+.all h2{
+    text-align: center;
+}
+#deletelect:hover, #deletedepartment:hover{
+    background-color: #ef5350;
+    color: #fafafa;
+    border: #e57373;
+}
+
+/* for all-locations page */
+.all-locations{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.all-locations .some{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.some h2{
+    align-self: center;
+}
+.all-locations .left{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.all-locations .location-grid{
+    background-color: #eceff1;
+    border-radius: 10px;
+    padding: 10px;
+}
+.all-locations ul li{
+    margin: 5px;
+    color: #424242;
+}
+.all-locations .addbtn #add-location{
+    width: 50%;
+    height: 100%;
+    font-size: 30pt;
+}
+.all-locations .forms{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#invisible{
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    left: 25%;
+    top: 12%;
+    z-index: 1;
+    width: 50%;
+    margin: auto;
+    border-radius: 10px;
+    background-color: #eceff1;
+    color: #424242;
+    padding: 20px;
+}
+#invisible form div{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    padding: 20px;
+    margin: auto;
+}
+#invisible .btns{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+}
+#invisible #add-locationbtn{
+    width: -moz-fit-content;
+    width: fit-content;
+    background-color: #ff5252;
+    color: #fafafa;
+    border: #ff5252 solid 1px;
+}
+#invisible #cancel{
+    width: -moz-fit-content;
+    width: fit-content;
+    background-color: #fafafa;
+    color: #ef5350;
+    border: #ff5252 dashed 1px;
 }

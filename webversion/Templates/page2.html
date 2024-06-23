@@ -4,11 +4,11 @@
 {% block title %}
 Select
 {% endblock %}
-<body>
     {% block content %}
 
-    <div class="deptsection">
-        <div class="sidenav">
+<div class="deptsection">
+    <div class="sidenav">
+        <div class="leftsubnav">
             <p>current department</p>
             <hr width="95%">
             <hr width="95%">
@@ -35,61 +35,77 @@ Select
             <hr width="80%">
             {% endfor %}
         </div>
-        <div class="main">
-            <h2>{{ department.name }} {{ tp }}</h2>
-            <p>Select courses for this Department</p>
-            <div class="firstyear">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="scourses">
-                        {% for course in courses %}
-                        <div class="inner">
-                            <div class="selectcourses" onclick="checkbox(id)" id="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.id }}" name="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                                <label for="{{ course.code }}">
-                                    {{course.code}}
-                                </label>
-                            </div>                            
-                            <a href="/editcourse/{{course.code}}" target="_parent"">
-                                <button id="editCourse" type="button" value="{{ course.id }}"><img src="{% static 'pencil.png' %}" alt="EditCourse" width="10px" height="10px"></button>
-                            </a>
-                        </div>
-                        {% empty %}
-                        <p>empty &#8594;</p><br>
-                        <p>please select the <strong>plus &plus;</strong> button</button></p>
-                        {% endfor %}
-                    </div>
-                    <div class="btns">
-                        <a href="/addaCoursePage" target="_blank"><button type="button" id="addCourse" value="Add A Course">&plus;</button></a>                        
-                        <a href=""><button id="save" type="submit" value="post">&#9918; Save</button></a>
-                        <button id="nextbtn" type="submit" value="post" formaction="/select/{{college}}/{{dname}}/{{page}}">Next &raquo;</button>
-                    </div>
-                    <div class="span">
-                        <p>Please save before clicking done</p>
-                    <button id="done" type="submit" value="post" formaction="/select/{{college}}/{{department.name}}/viewselected">&#10003; Done</button>
-                    </div>
-                </form>  
+    </div>
+    <div class="main">
+        <div class="mainhead">
+            <div class="left">
+                <h2>{{ department.name }} {{ tp }}</h2>
+                <p>Select courses for this Department</p>
             </div>
+            <img id="book1" src="{% static 'book1.gif' %}" alt="img">
         </div>
-    
-        <div class="rightnav">
-            <div class="subrightnav">
-                {% for department in departments %}
-                <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                    <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
-                        {{department.name}}
-                    </a>
+        
+        
+        <div class="firstyear">
+            <form method="post">
+                {% csrf_token %}
+                <div class="scourses">
+                    {% for course in courses %}
+                    <div class="inner">
+                        <div class="selectcourses" onclick="checkbox(id)" id="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
+                            <input type="checkbox" id="{{ course.code }}" value="{{ course.id }}" name="course{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
+                            <label for="{{ course.code }}">
+                                {{course.code}}
+                            </label>
+                        </div>                            
+                        <a href="/editcourse/{{course.code}}" target="_parent"">
+                            <button id="editCourse" type="button" value="{{ course.id }}">
+                                <img src="{% static 'pencil.png' %}" alt="EditCourse" width="10px" height="10px">
+                            </button>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>empty &#8594;</p><br>
+                    <p>please select the <strong>plus &plus;</strong> button</button></p>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-            </div>          
+                <div class="btns">
+                    <button type="submit" id="deletecourse" formmethod="post" formaction="/deletecourse/{{college}}/{{department.name}}/{{tp}}">
+                        <img src="{% static 'trash-can.png' %}" width="20px" height="20px">
+                    </button>
+                    <a href="/addaCoursePage/{{department.id}}/{{tp}}" target="_blank">
+                        <button type="button" id="addCourse" value="Add A Course" style="width: 29px; height: 29px; margin-left: 10px;">
+                            &plus;
+                        </button>
+                    </a>                        
+                    <a href=""><button id="save" type="submit" value="post">&#9918; Save</button></a>
+                    <button id="nextbtn" type="submit" value="post" formaction="/select/{{college}}/{{dname}}/{{page}}">Next &raquo;</button>
+                </div>
+                <div class="span">
+                    <p>Please save before clicking done</p>
+                <button id="done" type="submit" value="post" formaction="/select/{{college}}/viewselected">&#10003; Done</button>
+                </div>
+            </form>  
         </div>
     </div>
-    
-    
-    <script>
-    
-    </script>
-    
-    {% endblock %}
-</body>
+
+    <div class="rightnav">
+        <div class="rightsubnav">
+            {% for department in departments %}
+            <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
+                <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
+                    {{department.name}}
+                </a>
+            </div>
+        {% endfor %}
+        </div>          
+    </div>
+</div>
+
+
+<script>
+
+</script>
+
+{% endblock %}
 

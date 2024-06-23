@@ -35,9 +35,12 @@ View selected courses
     </div>
     
     <div class="bottom">
-        <a href="/{{college}}/timetable">
-        <button type="button">Create Timetable</button>
-        </a>
+        <form>
+            {% csrf_token %}
+            <button type="submit" id="generate" formaction="/{{college}}/timetable">
+                Generate
+            </button>
+        </form>
     </div>
 </div>
 {% endblock %}

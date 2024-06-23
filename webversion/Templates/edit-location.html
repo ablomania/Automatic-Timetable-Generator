@@ -1,0 +1,46 @@
+{% extends "main.html" %}
+{% load static %}
+<!DOCTYPE html>
+{% block title %}
+Edit Location
+{% endblock %}
+
+{% block content %}
+<div id="edit-location">
+    <h2>Create a location</h2>
+    <form>
+        {% csrf_token %}
+        <div>
+            <label for="name">{{Location.name}}</label>
+            <input type="text" id="location_name" name="name" value="{{location.name}}">  
+        </div>
+        <div>
+            <label for="capacity">capacity</label>
+            <input type="number" min="0" value="{{location.capacity}}" id="capacity" name="capacity">  
+        </div>
+        <div>
+            <label for="about">about</label>
+            <input type="text" id="about" value="{{location.about}}" name="about">  
+        </div>
+        <div>
+            <label for="is_in_same_college">Location is in same college</label>
+            <select name="department" id="department">
+                <option value="{{ location.is_in_same_college }}">{{ location.is_in_same_college }}</option>
+                {% for x in boolist %}
+                <option value="{{ x }}">{{ x }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="college">college name</label>
+            <input type="text" id="college" value="{{location.college}}" name="college">  
+        </div>
+        <div class="btns">
+            <button type="submit" formmethod="post" id="add-locationbtn" formaction="/addlocation">
+                Submit
+            </button>
+            <button type="button" onclick="undofunc()" id="cancel">Cancel</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

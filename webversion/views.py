@@ -77,9 +77,8 @@ def secondPage(request, college, dname,id):
     return HttpResponse(template.render(context, request))
 
 
-def viewSelected(request, college, dname):
+def viewSelected(request, college):
     template = loader.get_template("vscourses.html")
-    department = Department.objects.get(name=dname)
     courses = Course.objects.all()
     departments = Department.objects.filter(college=college)
     year_groups = [i for i in range(1,20+1)]
@@ -100,9 +99,16 @@ def timetable(request, college):
     schedule = Schedule.objects.order_by("row")
     course = Course.objects.all().values()
     departments = Department.objects.filter(college=college)
+    # For the buttons
+    if request.method == "POST":
+        if 'regenerate' in request.POST or 'generate' in request.POST:
+            Schedule.objects.all().delete()
+            for course_id in selected_courses:
+                createSchedule(course_id=course_id)
+            return HttpResponseRedirect(reverse("timetablePage", args=(college)))
+        if 'save' in request.POST:
+            pass
     ss =[]
-    for course_id in selected_courses:
-        createSchedule(course_id=course_id)
     some_list = list(range(1,1000))
     for sch in schedule:
         if sch.department in departments:
@@ -131,28 +137,39 @@ def timetable(request, college):
     year_groups = [1, 2, 3, 4]
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
-        "year_groups":year_groups, "times":times
+        "year_groups":year_groups, "times":times, "college":college
     }
     return HttpResponse(template.render(context, request))
 
 
-def createCoursePage(request):
+def createCoursePage(request, department_id, year_group):
     course = Course.objects.all().values()
     template = loader.get_template("createcourse.html")
-    slecturer = Lecturer.objects.all().values()
-    departments = Department.objects.all().values()
+    department = Department.objects.get(id=department_id)
+    college = Department.objects.get(id=department_id).college
+    slecturer = Lecturer.objects.all().order_by("surname")
+    departments = Department.objects.all().filter(college=college).order_by("name")
 
     if request.method == "POST":
         createCourse(request.POST)
-
     context = {
-        "lecturer": slecturer, "departments": departments
+        "lecturer": slecturer, "departments": departments, "department":department,
+        "year_group": year_group
     }
     return HttpResponse(template.render(context, request))
 
+def deleteCourse(request, college, dname, year_group):
+    if request.method =='POST':
+        dictionary = dict(request.POST)
+        dictionary.pop("csrfmiddlewaretoken")
+        for x in dictionary.values():
+            course_id = int(x[0])
+            Course.objects.all().get(id=course_id).delete()
+        return HttpResponseRedirect(reverse("pagetwo", args=(college,dname,year_group)))
+
 
 def optionsPage(request):
-    template = loader.get_template("optionsPage")
+    template = loader.get_template("optionsPage.html")
     if request.method == "POST":
         dictionary = request.POST
         collegename = dictionary['college'].upper()
@@ -232,18 +249,101 @@ def createDepartment(request):
     return HttpResponse(template.render(context, request))
 
 
+def allLecturers(request):
+    template = loader.get_template("alllecturers.html")
+    departments = Department.objects.all()
+    lecturers = Lecturer.objects.all().order_by("other_names")
+    context = {
+        "lecturers":lecturers, "departments":departments,
+    }
+    return HttpResponse(template.render(context, request))
+
+def deleteLecturer(request, id):
+    if request.method == "POST":
+        current_lecturer = Lecturer.objects.get(id=id)
+        current_lecturer.delete()
+        return HttpResponseRedirect(reverse("alllecturers"))
+
 def createLecturer(request):
     template = loader.get_template("createlecturer.html")
     departments = Department.objects.all().values()
     if request.method == "POST":
         dictionary = request.POST
         surname = dictionary['surname'].capitalize()
-        other_names = dictionary['other_names'].capitalize()
+        other_names = dictionary['other_names'].upper()
         department = dictionary['department']
         new_Lecturer = Lecturer(surname=surname, other_names=other_names, department_id=department)
         new_Lecturer.save()
-
     context = {
         "departments": departments,
     }
     return HttpResponse(template.render(context, request))
+
+def modifyLecturerPage(request, lecturer_id):
+    currentlect = Lecturer.objects.get(id=lecturer_id)
+    department = Department.objects.get(id=currentlect.department_id)
+    departments = Department.objects.all()
+    template = loader.get_template("modifylect.html")
+    if request.method == "POST":
+        dictionary = request.POST
+        modifylecturer(lecturer_id=lecturer_id, dictionary=dictionary)
+        return HttpResponseRedirect(reverse('alllecturers'))
+    context = {
+        "currentlect":currentlect, "departments":departments, "department":department
+    }
+    return HttpResponse(template.render(context, request))
+
+def locations(request):
+    template = loader.get_template("all-locations.html")
+    locations = Location.objects.all().order_by("name")
+    departments = Department.objects.all().order_by("name")
+    context = {
+        "locations":locations, "departments":departments
+    }
+    return HttpResponse(template.render(context, request))
+
+def deleteLocation(request, id):
+    if request.method == "POST":
+        current_location = Location.objects.get(id=id)
+        current_location.delete()
+        return HttpResponseRedirect(reverse("locations"))
+
+
+def addalocation(request):
+    if request.method == "POST":
+        dictionary = request.POST
+        name = dictionary['name'].upper()
+        capacity = int(dictionary['capacity'])
+        about = dictionary['about'].capitalize()
+        is_in_same_college = dictionary.get('is_in_same_college', False)
+        college = dictionary['college'].upper()
+        new_location = Location(
+            college=college, name=name, capacity=capacity, about=about, is_in_same_college=is_in_same_college
+        )
+        new_location.save()
+    return HttpResponseRedirect(reverse('locations'))
+
+def modifylocation(request, id):
+    template = loader.get_template("edit-location.html")
+    location = Location.objects.get(id=id)
+    boolist = [True, False]
+    if request.method == "POST":
+        dictionary = request.POST
+        currentlocation = Location.objects.get(id=id)
+        currentlocation.name = dictionary['name'].upper()
+        currentlocation.capacity = int(dictionary['capacity'])
+        currentlocation.about = dictionary['about']
+        currentlocation.is_in_same_college = dictionary.get('is_in_same_college', False)
+        currentlocation.save()
+        return HttpResponseRedirect(reverse("locations"))
+    context = {
+        'location':location, "boolist":boolist
+    }
+    return HttpResponse(template.render(context, request))
+
+
+def deleteDepartment(request, id):
+    if request.method == "POST":
+        current_department = Department.objects.get(id=id)
+        current_department.delete()
+        return HttpResponseRedirect(reverse("alllecturers"))

@@ -48,6 +48,7 @@ class Location(models.Model):
     is_Lab = models.BooleanField(default=False, null=True)
     about = models.CharField(max_length=255, null=True)
     is_in_same_college = models.BooleanField(default=True, null=True)
+    college = models.CharField(max_length=255, null=True)
     def __str__(self):
         return f"{self.name}"
     

@@ -1,5 +1,7 @@
 from .models import Course, Lecturer, Schedule, Location, Department
 import random, math
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
 def createSchedule(course_id):
     current_course = Course.objects.get(id=course_id)
@@ -150,11 +152,11 @@ def chooseLocation(course, rows):
 
 def createCourse(dictionary):
     code = dictionary['code'].upper()
-    name = dictionary['name'].capitalize()
+    name = dictionary['name'].upper()
     lecturer = dictionary['lecturer']
     department = dictionary['department']
     hours = dictionary['hours']
-    has_labs = dictionary['has_labs']
+    has_labs = dictionary.get('has_labs', False)
     is_combined = dictionary.get('is_combined', False)
     is_lab_only = dictionary.get('is_lab_only', False)
     is_contiguous_lab_time = dictionary.get('is_contiguous_lab_time', False)
@@ -164,16 +166,26 @@ def createCourse(dictionary):
     new_Course = Course(is_contiguous_lab_time=is_contiguous_lab_time, is_combined=is_combined, code=code, name=name, lecturer_id=lecturer, department_id=department, hours=hours, is_lab_only=is_lab_only, has_labs=has_labs, lab_hours=lab_hours, year_group=year_group, estimated_class_size=estimated_class_size)
     new_Course.save()
 
+
 def modifyCourse(course, dictionary):
     currentCourse = course
-    currentCourse.code = dictionary['code']
-    currentCourse.name = dictionary['name']
+    currentCourse.code = dictionary['code'].upper()
+    currentCourse.name = dictionary['name'].upper()
     currentCourse.lecturer_id = dictionary['lecturer']
     currentCourse.department_id = dictionary['department']
     currentCourse.hours = dictionary['hours']
     currentCourse.has_labs = dictionary['has_labs']
     currentCourse.is_lab_only = dictionary['is_lab_only']
+    currentCourse.is_contiguous_lab_time = dictionary.get('is_contiguous_lab_time', False)
     currentCourse.lab_hours = dictionary['lab_hours']
     currentCourse.year_group = dictionary['year_group']
     currentCourse.estimated_class_size = dictionary['estimated_class_size']
     currentCourse.save()
+
+
+def modifylecturer(lecturer_id, dictionary):
+    currentlect = Lecturer.objects.get(id=lecturer_id)
+    currentlect.surname = dictionary['surname']
+    currentlect.other_names = dictionary['other_names']
+    currentlect.department_id = dictionary['department']
+    currentlect.save()

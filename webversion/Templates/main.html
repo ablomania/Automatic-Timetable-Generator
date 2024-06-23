@@ -11,24 +11,33 @@
 </head>
 <script src="{% static 'functions.js' %}"></script>
 <body>
-    <header>
+    <header id="header">
         <div class="subHead">
             <div class="logo">
                     <img src="{% static 'logo.png' %}" alt="logo" width="50px" height="50px"/>
                 <h1>Automatic Timetable Generator</h1>
             </div>
             <nav class="TopNavBar">
+                {% if college %}
                 <ul>
                     <li>
-                        <a href="">home</a>
+                        <a href="/">home</a>
                     </li>
                     <li>
-                        <a href="">team</a>
+                        <a href="/select/{{college}}/viewselected">courses</a>
                     </li>
                     <li>
-                        <a href="">about</a>
+                        <a href="/alllecturers">lecturers</a>
+                    </li>
+                    <li>
+                        <a href="">locations</a>
+                    </li>
+                    <li>
+                        <a href="/{{college}}/timetable">timetable</a>
                     </li>
                 </ul>
+                {% endif %}
+                
             </nav>
         </div>
     </header>
@@ -44,7 +53,7 @@
         <div class="BottomNavBar">
             <ul>
                 <li>
-                    <a href="">home</a>
+                    <a href="/">home</a>
                 </li>
                 <li>
                     <a href="">team</a>
