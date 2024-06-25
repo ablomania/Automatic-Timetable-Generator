@@ -88,26 +88,25 @@ def viewSelected(request, college):
             temp_list.append(x)
     print(temp_list)
     context = {
-        "y_gs": year_groups, "departments": departments, "list":temp_list, "college":college
+        "y_gs": year_groups, "college":college, "departments": departments, "list":temp_list, "college":college
     }
     return HttpResponse(template.render(context, request))
 
 
 #Timetable page loader
+def generateTimetable(request, college):
+    if request.method == "POST":
+        print("generating")
+        Schedule.objects.all().delete()
+        for course_id in selected_courses:
+            createSchedule(course_id=course_id)
+    return HttpResponseRedirect(reverse("timetablePage", args=(college,)))
+
 def timetable(request, college):
     template = loader.get_template("timetablepage.html")
     schedule = Schedule.objects.order_by("row")
     course = Course.objects.all().values()
     departments = Department.objects.filter(college=college)
-    # For the buttons
-    if request.method == "POST":
-        if 'regenerate' in request.POST or 'generate' in request.POST:
-            Schedule.objects.all().delete()
-            for course_id in selected_courses:
-                createSchedule(course_id=course_id)
-            return HttpResponseRedirect(reverse("timetablePage", args=(college)))
-        if 'save' in request.POST:
-            pass
     ss =[]
     some_list = list(range(1,1000))
     for sch in schedule:
@@ -242,7 +241,11 @@ def createDepartment(request):
         dictionary = request.POST
         name = dictionary['name'].upper()
         college = dictionary['college'].upper()
-        new_Department = Department(name=name, college=college)
+        code = dictionary['code'].upper()
+        max_yg = int(dictionary['max_yg'])
+        new_Department = Department(
+            name=name, college=college, code=code, max_yg=max_yg
+            )
         new_Department.save()
 
     context = {}

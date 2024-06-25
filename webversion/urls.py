@@ -20,5 +20,6 @@ urlpatterns = [
     path("deletedepartment/<int:id>", views.deleteDepartment, name="deletedepartment"),
     path("addlocation", views.addalocation, name="createlocation"),
     path("deletelocation/<int:id>", views.deleteLocation, name="deletelocation"),
-    path("editlocation/<int:id>", views.modifylocation, name="modifylocation")
+    path("editlocation/<int:id>", views.modifylocation, name="modifylocation"),
+    path("generate-timetable/<str:college>", views.generateTimetable, name="generate")
 ]

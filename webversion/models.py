@@ -78,6 +78,7 @@ class Schedule(models.Model):
 
 class Department(models.Model):
     name = models.CharField(max_length=255, null=True)
+    code = models.CharField(max_length=50, null=True)
     college = models.CharField(max_length=255, null=True)
     max_yg = models.PositiveSmallIntegerField(default=4, null=True)
     def __str__(self):

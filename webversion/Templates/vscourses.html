@@ -37,7 +37,7 @@ View selected courses
     <div class="bottom">
         <form>
             {% csrf_token %}
-            <button type="submit" id="generate" formaction="/{{college}}/timetable">
+            <button type="submit" id="generate" formmethod="post" formaction="/generate-timetable/{{college}}">
                 Generate
             </button>
         </form>
