@@ -73,13 +73,15 @@ Select
                     <button type="submit" id="deletecourse" formmethod="post" formaction="/deletecourse/{{college}}/{{department.name}}/{{tp}}">
                         <img src="{% static 'trash-can.png' %}" width="20px" height="20px">
                     </button>
-                    <a href="/addaCoursePage/{{department.id}}/{{tp}}" target="_blank">
+                    <a href="/addaCoursePage/{{department.id}}/{{tp}}">
                         <button type="button" id="addCourse" value="Add A Course" style="width: 29px; height: 29px; margin-left: 10px;">
                             &plus;
                         </button>
                     </a>                        
                     <a href=""><button id="save" type="submit" value="post">&#9918; Save</button></a>
+                    {% if page >= 1 %}
                     <button id="nextbtn" type="submit" value="post" formaction="/select/{{college}}/{{dname}}/{{page}}">Next &raquo;</button>
+                    {% endif %}
                 </div>
                 <div class="span">
                     <p>Please save before clicking done</p>
@@ -101,11 +103,6 @@ Select
         </div>          
     </div>
 </div>
-
-
-<script>
-
-</script>
 
 {% endblock %}
 

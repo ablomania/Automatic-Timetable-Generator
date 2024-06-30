@@ -36,8 +36,22 @@ Timetable
             
         </div>
         {% for group, schedules in scarr.items %}  
-        <p><strong style="text-transform: uppercase;">COLLEGE OF {{college}}</strong></p> 
-        <p><strong>{% cycle "First Year" "First Year" "First Year" "First Year" "First Year" "Second Year" "Second Year" "Second Year" "Second Year" "Second Year" "Third Year" "Third Year" "Third Year" "Third Year" "Third Year" "Fourth Year" "Fourth Year" "Fourth Year" "Fourth Year" "Fourth Year" %}</strong></p> 
+            <p><strong style="text-transform: uppercase;">COLLEGE OF {{college}}</strong></p> 
+        {% if group <= 5 %}
+            <p><strong>FIRST YEAR</strong></p>
+        {% elif group > 5 and group <= 10 %}
+            <p><strong>SECOND YEAR</strong></p>
+        {% elif group > 10 and group <= 15 %}
+            <p><strong>THIRD YEAR</strong></p>
+        {% elif group > 15 and group <= 20 %}
+            <p><strong>FOURTH YEAR</strong></p>
+        {% elif group > 20 and group <= 25 %}
+            <p><strong>FIFTH YEAR</strong></p>
+        {% elif group > 25 and group <= 30 %}
+            <p><strong>SIXTH YEAR</strong></p>
+        {% elif group > 30 and group <= 35 %}
+            <p><strong>SEVENTH YEAR</strong></p>
+        {% endif %} 
         <p><strong>
             {% cycle "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" %}</p>
         </strong>
@@ -50,7 +64,7 @@ Timetable
                 {% endfor %}  
             </div>
             
-            <div class="gridcontainer2">
+            <div class="gridcontainer2" style="display: grid; grid-template-columns: repeat({{nofdepts}}, auto); grid-template-rows: repeat(10, auto);">
                 {% for department in departments %}
                 <div class="griddept">
                     <p>{{department}}</p>

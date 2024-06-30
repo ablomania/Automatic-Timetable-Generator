@@ -107,8 +107,11 @@ def timetable(request, college):
     schedule = Schedule.objects.order_by("row")
     course = Course.objects.all().values()
     departments = Department.objects.filter(college=college)
+    max_yg = (departments.order_by("-max_yg").first()).max_yg
+    nofdepts = len(departments)
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    year_groups = []
     ss =[]
-    some_list = list(range(1,1000))
     for sch in schedule:
         if sch.department in departments:
             ss.append(sch)
@@ -116,14 +119,14 @@ def timetable(request, college):
     nfds = len(departments) * 10
     row = list(" " * nfds)
     l1 = len(ss)
-    for x in range(1, 21):
+    for x in range(1, max_yg*5+1):
         scarr[x] = row
     temp = []
     tt =0
     for x in ss:
         group =(x.row // 10) + 1
         rem = x.row % 10
-        position = round(((rem-1)*15) + (x.column-1))
+        position = round(((rem-1)*len(departments)) + (x.column-1))
         if x.row % 10 == 0:
             group = (x.row //10)
         temp = []
@@ -132,11 +135,12 @@ def timetable(request, college):
         scarr[group] = temp
     times = ["PERIOD","8:00 - 8:55", "9:00 - 9:55", "10:30 - 11:25", "11:30 - 12:25", "1:00 - 1:55", "2:00 - 2:55", "3:00 - 3:55", "4:00 - 4:55", "5:00 - 5:55", "6:00 - 6:55"]
     
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    year_groups = [1, 2, 3, 4]
+    
+    
+    print(year_groups)
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
-        "year_groups":year_groups, "times":times, "college":college
+        "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts
     }
     return HttpResponse(template.render(context, request))
 
@@ -151,6 +155,7 @@ def createCoursePage(request, department_id, year_group):
 
     if request.method == "POST":
         createCourse(request.POST)
+        return HttpResponseRedirect(reverse("pagetwo", args=(college,department.name,year_group)))
     context = {
         "lecturer": slecturer, "departments": departments, "department":department,
         "year_group": year_group
@@ -186,22 +191,29 @@ def viewDepartments(request, collegename):
         bb.pop('csrfmiddlewaretoken')
         d = "department"
         d1 = 0
+        c = "code"
         nums = 1
         m = "max_yg"
         m1 =0
+        c1 = 0
         for x, y in list(bb.items()):
             dd = d + str(nums)
+            cc = c + str(nums)
             mm = m + str(nums)
             if(x == dd):
                 department = y[0].upper()
                 d1 = d1 + 1
+                continue
+            if(x == cc):
+                code = y[0].upper()
+                c1 = c1 + 1
                 continue
             if(x == mm):
                 max_yg = y[0]
                 m1 = m1 + 1
             if(d1==m1):
                 if not Department.objects.filter(name=department,college=collegename):
-                    new_Department = Department(name=department, college=collegename, max_yg=max_yg)
+                    new_Department = Department(name=department, code=code, college=collegename, max_yg=max_yg)
                     new_Department.save()
             nums = nums + 1
     
@@ -300,8 +312,9 @@ def locations(request):
     template = loader.get_template("all-locations.html")
     locations = Location.objects.all().order_by("name")
     departments = Department.objects.all().order_by("name")
+    number = len(locations)
     context = {
-        "locations":locations, "departments":departments
+        "locations":locations, "departments":departments, "number": number
     }
     return HttpResponse(template.render(context, request))
 
@@ -337,6 +350,7 @@ def modifylocation(request, id):
         currentlocation.capacity = int(dictionary['capacity'])
         currentlocation.about = dictionary['about']
         currentlocation.is_in_same_college = dictionary.get('is_in_same_college', False)
+        currentlocation.college = dictionary['college'].upper()
         currentlocation.save()
         return HttpResponseRedirect(reverse("locations"))
     context = {

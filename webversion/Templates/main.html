@@ -18,19 +18,19 @@
                 <h1>Automatic Timetable Generator</h1>
             </div>
             <nav class="TopNavBar">
-                {% if college %}
                 <ul>
                     <li>
                         <a href="/">home</a>
                     </li>
                     <li>
-                        <a href="/select/{{college}}/viewselected">courses</a>
-                    </li>
-                    <li>
                         <a href="/alllecturers">lecturers</a>
                     </li>
                     <li>
-                        <a href="">locations</a>
+                        <a href="{% url 'locations' %}">locations</a>
+                    </li>
+                    {% if college %}
+                    <li>
+                        <a href="/select/{{college}}/viewselected">courses</a>
                     </li>
                     <li>
                         <a href="/{{college}}/timetable">timetable</a>

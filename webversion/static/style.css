@@ -335,8 +335,8 @@ header ul a, footer ul a{
 .gridcontainer2{
     float: right;
     display: grid;
-    grid-template-columns: repeat(15, auto);
-    grid-template-rows: repeat(10, auto);
+    /* grid-template-columns: repeat(15, auto);
+    grid-template-rows: repeat(10, auto); */
     grid-auto-columns: 1fr;
     column-gap: 0px;
     justify-content: center;
@@ -348,7 +348,6 @@ header ul a, footer ul a{
 }
 .griditem{
     border: 1px solid;
-    display: inline-grid;
     height: 100px;
     width: 100%; 
     background-color: #fafafa;
@@ -438,12 +437,12 @@ header ul a, footer ul a{
 }
 
 /*for editcourse page */
-.editCourse, .createlecturer, .createDepartment, .createcourse{
+.editCourse, .createlecturer, .createDepartment, .createcourse, #edit-location{
     width: 80%;
     margin: auto;
 }
 
-.editCourse table, .createlecturer table, .createDepartment table,.createcourse table{
+.editCourse table, #edit-location, .createlecturer table, .createDepartment table,.createcourse table{
     background-color: #eceff1;
     padding: 20px;
     border-radius: 10px;
@@ -664,7 +663,7 @@ img:hover{
     flex-direction: row-reverse;
     justify-content: space-evenly;
 }
-#invisible #add-locationbtn{
+#invisible #add-locationbtn, #add-locationbtn{
     width: -moz-fit-content;
     width: fit-content;
     background-color: #ff5252;
@@ -677,4 +676,15 @@ img:hover{
     background-color: #fafafa;
     color: #ef5350;
     border: #ff5252 dashed 1px;
+}
+#edit-location{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#edit-location div{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }

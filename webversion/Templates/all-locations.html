@@ -8,7 +8,8 @@ Lecturers
 {% block content %}
     <div class="all-locations">
         <div class="some">
-            <h2>Manage Class Locations / LABS</h2>
+            <h2>Manage Class Locations / LABS <br>{{number}} locations</h2>
+            
             <hr width="40%">
             <div class="left">
                 {% for location in locations %}
@@ -20,7 +21,7 @@ Lecturers
                                 <img src="{% static 'trash-can.png' %}" width="20px" height="20px" />
                             </button>
                         </form> 
-                        <form method="post" action="/editlocation/{{location.id}}">
+                        <form method="get" action="/editlocation/{{location.id}}">
                             {% csrf_token %}
                             <button title="Edit Location Details" type="submit" id="editlocation">
                                 <img src="{% static 'pencil.png' %}" width="20px" height="20px" />
@@ -28,12 +29,14 @@ Lecturers
                         </form>
                         
                     </div>
-                    <ul>
+                    <ul title="{{location.about}}. College of: {{location.college}}">
                         <li>Name: {{location.name}}</li>
                         <li>Capacity: {{location.capacity}}</li>
                         <li>College: {{location.college}}</li>
                     </ul>
                 </div>
+                {% empty %}
+                <p>Any locations you add will be shown here</p>
                 {% endfor %}
                 <div class="addbtn">
                     <button type="button" onclick="alllocforms()" id="add-location" title="Add a new Department">

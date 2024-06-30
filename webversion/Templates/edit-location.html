@@ -7,11 +7,11 @@ Edit Location
 
 {% block content %}
 <div id="edit-location">
-    <h2>Create a location</h2>
+    <h2>edit location</h2>
     <form>
         {% csrf_token %}
         <div>
-            <label for="name">{{Location.name}}</label>
+            <label for="name">location name</label>
             <input type="text" id="location_name" name="name" value="{{location.name}}">  
         </div>
         <div>
@@ -36,10 +36,9 @@ Edit Location
             <input type="text" id="college" value="{{location.college}}" name="college">  
         </div>
         <div class="btns">
-            <button type="submit" formmethod="post" id="add-locationbtn" formaction="/addlocation">
+            <button type="submit" formmethod="post" id="add-locationbtn" formaction="/editlocation/{{location.id}}">
                 Submit
             </button>
-            <button type="button" onclick="undofunc()" id="cancel">Cancel</button>
         </div>
     </form>
 </div>
