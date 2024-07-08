@@ -15,3 +15,48 @@ function undofunc() {
     document.getElementById("header").style.zIndex = "4";
     form.style.display = 'none';
 }
+function allo() {
+    const form = document.querySelector(".create-college");
+    document.querySelector(".colleges").style.filter = "opacity(0%)"
+    form.style.display = 'flex';
+}
+function unallo() {
+    const form = document.querySelector(".create-college");
+    const z = document.querySelector(".colleges");
+    z.style.filter = "opacity(100%)";
+    document.getElementById("header").style.zIndex = "4";
+    form.style.display = 'none';
+}
+function dropDown() {
+    parent = event.currentTarget.parentElement;
+    const pp = parent.childNodes;
+    drpSymbol = document.querySelectorAll(".drpsymbol");
+    const drop = document.querySelectorAll(".dropdown");
+    drop.forEach(function(drp) {
+        for(let i=0; i<pp.length; i++){
+            if(drp == pp[i]){
+                if(drp.style.display != "flex") {
+                    drp.style.display = "flex";
+                    parent.style.height = "auto";
+                    if(document.get)
+                    drpSymbol.forEach((v)=> {
+                        if((v.parentElement == parent) || (v.parentElement.parentElement == parent)){
+                            v.innerHTML = "&#x25b2;";
+                        }
+                        
+                    })
+                }else{
+                    drp.style.display ="none";
+                    parent.style.height = "50px";
+                    drpSymbol.innerHTML = ";"
+                    drpSymbol.forEach((v)=> {
+                        if((v.parentElement == parent) || v.parentElement.parentElement == parent){
+                            v.innerHTML = "&#x25bc;";
+                        }
+                    })
+                }
+            }
+        }
+    })
+}
+

@@ -33,7 +33,7 @@ Edit Course
                     </select>
                 </td>
                 <td>
-                    <a href="/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlectbtn"></a>
+                    <a href="/{{email}}/createLecturer" target="#"><input type="button" value="Add a Lecturer" id="createlectbtn"></a>
                 </td>
             </tr>
             <tr>
@@ -47,7 +47,7 @@ Edit Course
                     </select>        
                 </td>
                 <td>
-                    <a href="/createDepartment" target="#"><input type="button" value="Add a Department" id="createdeptbtn"></a>
+                    <a href="/{{email}}/createDepartment/{{college_id}}" target="#"><input type="button" value="Add a Department" id="createdeptbtn"></a>
                 </td>
             </tr>
             <tr>
@@ -107,6 +107,19 @@ Edit Course
             <tr>
                 <td><label for="estimated_class_size">Estimated class size:</label></td>
                 <td><input id="estimated_class_size" value="{{course.estimated_class_size}}" type="number" min="1" max="1000" name="estimated_class_size"></td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="locations">Usable Classes</label>
+                </td>
+                <td>
+                    <select name="locations" id="locations">
+                        <option value="{{course.pref_loc}}">{{pref_loc.name}}</option>
+                        {% for location in available_locations %}
+                        <option value="{{location.id}}">{{location.name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td colspan="2"><input type="submit" id="editcoursebtn" value="submit" formtarget="_parent"></td>

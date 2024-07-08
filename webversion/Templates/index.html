@@ -12,17 +12,17 @@ home
     <img src="{% static 'calendar.png' %}" width="300px" height="300px">
     <h1>Timetabling Made Easy!</h1>
     <p>Create a timetable for your college with ease. Click on the button to begin</p>
-    <button type="button" onclick="loadForm()" id="formLoader">get started</button>
+    <button type="button" onclick="loadForm()" id="formLoader"><strong>Get Started</strong></button>
   </div>
     
     
-    <form method="post" action = "/optionsPage" id="formindex">
+    <form method="post" id="formindex">
       {% csrf_token %}
-      <h3>To Begin, please fill the forms below</h3>
-      <input type="text" name="college" placeholder="name of college" id="college" required><br>
-      <input type="number" name="depmntCount" placeholder="number of departments for this college" id="depmntCount" max="20"><br>
-      <button type="submit" id="getstartedbtn" onclick="">Continue</button>     
-  </form>
+      <h3>Sign In</h3>
+      <input type="email" name="email" placeholder="email" id="college" required><br>
+      <button type="submit" id="getstartedbtn" onclick="">Continue</button> 
+      <a href="{% url 'create-account' %}">Create Account</a>    
+    </form>
     
 </div>
 {% endblock %}

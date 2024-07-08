@@ -29,7 +29,7 @@ Timetable
                 <button id="savetimetable" type="submit">
                     Save
                 </button>
-                <button type="submit" id="regenerate" formmethod="post" formaction="/generate-timetable/{{college}}">
+                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college %}">
                     Regenerate
                 </button>
             </form>
@@ -57,10 +57,12 @@ Timetable
         </strong>
         <div class="gridcontainer1">
             <div class="ann">
-                {% for time in times %}
+                {% for index, time in times.items %}
+                {% if index <= rows_per_day %}
                 <div class="gridtime">
                     <p>{{time}}</p>
                 </div>
+                {% endif %}
                 {% endfor %}  
             </div>
             

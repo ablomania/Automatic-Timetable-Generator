@@ -1,14 +1,15 @@
-from .models import Course, Lecturer, Schedule, Location, Department
+from .models import Course, College, UserAccount, Lecturer, Schedule, Location, Department
 import random, math
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-def createSchedule(course_id):
+def createSchedule(course_id, user_id):
     current_course = Course.objects.get(id=course_id)
     current_department = Department.objects.get(id=current_course.department_id)
+    college_id = current_department.college_main_id
     #create lab sessions for courses with labs
     if current_course.has_labs or current_course.is_lab_only:
-        createLab(course=current_course)
+        createLab(course=current_course, user_id=user_id, college_id=college_id)
         if current_course.is_lab_only:
             return
     column = chooseColumn(department=current_department)
@@ -19,10 +20,11 @@ def createSchedule(course_id):
         lecturer_name = Lecturer.objects.get(id=current_course.lecturer_id)
         new_schedule = Schedule(course_id=current_course.id, course_code=current_course.code, year_group=current_course.year_group,
                                 location_id=location, location_name=location_name, height=2, column=column, row=row, department=current_department,
-                                lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id)
+                                lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id, creator_id=user_id,
+                                college_id=college_id)
         new_schedule.save()
 
-def createLab(course):
+def createLab(course, user_id, college_id):
     column = chooseColumn(department=course.department)
     lab = Location.objects.get(name="LAB").id
     rows = chooseRow(course=course, locations=lab, is_lab=True)
@@ -32,7 +34,8 @@ def createLab(course):
         new_lab = Schedule(
             course_id=course.id, course_code=course.code, year_group=course.year_group,
             location_id=lab, location_name="LAB", height=0, column=column,row=row,
-            department_id=course.department_id, lecturer_name=lecturer_name, lecturer_id=course.lecturer_id
+            department_id=course.department_id, lecturer_name=lecturer_name, lecturer_id=course.lecturer_id,
+            creator_id=user_id, college_id=college_id
         )
         new_lab.save()
 
@@ -42,12 +45,14 @@ def chooseRow(course, is_lab, locations, height = 2):
     lect_id = course.lecturer_id
     credit_hours = int(course.hours)
     if is_lab: credit_hours = int(course.lab_hours)
-    courses_per_day = 10
+    college = College.objects.get(id=Department.objects.get(id=course.department_id).college_main_id)
+    rows_per_day = college.rows_per_day
+    days_per_week = college.days_per_week
     number_of_schedules = credit_hours//2
     remainder = credit_hours % 2
     year_group = course.year_group
-    max_yg_row = year_group * 50
-    min_yg_row = (max_yg_row + 1) - 50
+    max_yg_row = year_group * (rows_per_day * days_per_week)
+    min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
     rows = []
     result = {}
     odd_rows = []
@@ -192,21 +197,23 @@ def chooseLocation(course):
     use_pref = False
     for dept in list(departments):
         if dept.code in course.code:
-            locations = list(dict(Location.objects.filter(college=college, capacity__gte=class_size, is_Lab=False).values_list("id", "name")))
+            locations = list(dict(Location.objects.filter(college__icontains=college, capacity__gte=class_size, is_Lab=False).values_list("id", "name")))
             break
     locations_list = {}
     height_list = []
     hours = course.hours
     for number in range(number_of_schedules):
-        rand_location = random.choice(locations)
         hours = hours -2
         if hours >= 0: height = 2
         else: height = 1
-        locations_list[rand_location]=height
+        if not course.preferred_location_id:
+            rand_location = random.choice(locations)
+            locations_list[rand_location]=height
+        else: locations_list[course.preferred_location_id] = height
     print("location list is : ",locations_list)
     return locations_list
 
-def createCourse(dictionary):
+def createCourse(dictionary, user_id):
     code = dictionary['code'].upper()
     name = dictionary['name'].upper()
     lecturer = dictionary['lecturer']
@@ -219,8 +226,11 @@ def createCourse(dictionary):
     lab_hours = dictionary.get('lab_hours', False)
     year_group = dictionary['year_group']
     estimated_class_size = dictionary['estimated_class_size']
-    new_Course = Course(is_contiguous_lab_time=is_contiguous_lab_time, is_combined=is_combined, code=code, name=name, lecturer_id=lecturer, department_id=department, hours=hours, is_lab_only=is_lab_only, has_labs=has_labs, lab_hours=lab_hours, year_group=year_group, estimated_class_size=estimated_class_size)
+    # preferred_location = dictionary[]
+    new_Course = Course(creator_id=user_id, is_contiguous_lab_time=is_contiguous_lab_time, is_combined=is_combined, code=code, name=name, lecturer_id=lecturer, department_id=department, hours=hours, is_lab_only=is_lab_only, has_labs=has_labs, lab_hours=lab_hours, year_group=year_group, estimated_class_size=estimated_class_size)
     new_Course.save()
+    return new_Course
+
 
 
 def modifyCourse(course, dictionary):
@@ -236,7 +246,9 @@ def modifyCourse(course, dictionary):
     currentCourse.lab_hours = dictionary['lab_hours']
     currentCourse.year_group = dictionary['year_group']
     currentCourse.estimated_class_size = dictionary['estimated_class_size']
+    currentCourse.preferred_location_id = dictionary['locations']
     currentCourse.save()
+    return currentCourse
 
 
 def modifylecturer(lecturer_id, dictionary):

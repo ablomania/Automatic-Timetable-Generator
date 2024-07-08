@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+Colleges
+{% endblock %}
+
+{% block content %}
+<div class="colleges">
+    <h1>colleges created</h1>
+    {% for college in colleges %}
+    <div class="collegeItem">
+        <div class="drop_parent">
+            <p class="dropdownbtn" onclick="dropDown()">
+                <span class="drpsymbol">
+                    &#x25bc;
+                </span>
+                  <strong>{{college.name}}</strong>
+            </p>
+            <div class="dropdown">
+                <a href="/{{email}}/collegeviewGenerator/{{college.id}}">Go to</a>
+                <a href="/{{email}}/createDepartment/{{college.id}}">new department</a>
+                <a href="/{{email}}/editcollege/{{college.id}}">Settings</a>
+            </div>    
+        </div>
+        
+        <div class="btns">
+            <form method="post" action="{% url 'deletecollege' email college.id %}">
+                {% csrf_token %}
+                <button type="submit" name="delete-college" id="delete-college">
+                    &times;
+                </button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <p>Please click on the <strong>&plus;</strong> button to add a college</p>
+    {% endfor %}
+    <button type="button" name="new-college" onclick="allo()" id="new-collegebtn">
+        &plus;
+    </button>
+</div>
+<div class="create-college">
+    <form method="post" action="{% url 'create-college' email %}">
+        {% csrf_token %}
+        <h3>New college</h3>
+        <div>
+            <input type="text" name="name" placeholder="name of college" id="college" required><br>
+        </div>
+        <div>
+            <input type="number" min="1" name="count" placeholder="number of departments for this college" id="depmntCount" max="20" required><br>
+        </div>
+        <div>
+            <input type="number" min="1" max="15" placeholder="Number of timetable rows per day" name="rows" required>
+        </div>
+        <div>
+            <input type="number" min="1" max="7" placeholder="Days per week" name="days" required>
+        </div>
+        <div id="create-college-btns">
+            <button type="button" name="cancel-college" onclick="unallo()" id="cancel-college">
+                cancel
+            </button>
+            <button type="submit" id="createcollegebtn" onclick="">Continue</button>     
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

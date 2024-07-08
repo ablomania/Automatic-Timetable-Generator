@@ -12,29 +12,37 @@ Lecturers
             <h2>all lecturers</h2>
             <hr width="10%">
             <div class="alllecturersgrid">
+                <div class="addbtn">
+                    <a href="/{{email}}/createDepartment/1" target="_blank">
+                        <button type="button" id="adddept" title="Add a new Department">
+                            &plus;
+                        </button>
+                    </a>
+                </div>
                 {% for dept in departments %}
                     <div class="lectdept">
                         <div class="deptdeep">
-                            <a href="/select/{{dept.college}}/{{dept.name}}/{{dept.max_yg}}">
+                            <span class="drpsymbol" onclick="dropDown()">&#x25bc;</span>
+                            <a href="/{{email}}/select/{{dept.college_main_id}}/{{dept.name}}/{{dept.max_yg}}">
                                 <p>{{dept.name}} {{dept.college}}</p>
                             </a>
                             <form>
                                 {% csrf_token %}
-                                <button title="Delete Department" type="submit" id="deletedepartment" formmethod="post" formaction="/deletedepartment/{{dept.id}}">
+                                <button title="Delete Department" type="submit" id="deletedepartment" formmethod="post" formaction="{% url 'deletedepartment' email dept.id %}">
                                     <img src="{% static 'trash-can.png' %}" width="20px" height="20px" />
                                 </button>
                             </form>
                         </div>
-                        <ul>
+                        <ul class="dropdown">
                             {% for lecturer in lecturers %}
                                 {% if lecturer.department_id == dept.id %}
                                     <li>
-                                        <a href="/modifylecturer/{{lecturer.id}}" title="Edit Lecturer Details">
+                                        <a href="{% url 'modifylecturer' email lecturer.id %}" title="Edit Lecturer Details">
                                             {{lecturer.other_names}} {{lecturer.surname}}
                                         </a>
                                         <form>
                                             {% csrf_token %}
-                                            <button title="Delete This Lecturer" type="submit" id="deletelect" formmethod="post" formaction="/deletelecturer/{{lecturer.id}}">
+                                            <button title="Delete This Lecturer" type="submit" id="deletelect" formmethod="post" formaction="{% url 'deletelecturer' email lecturer.id %}">
                                                 &times;
                                             </button>
                                         </form>
@@ -43,18 +51,11 @@ Lecturers
                                 {% endif %}
                             {% endfor %} 
                         </ul>
-                        <a href="/createLecturer" target="_blank">
+                        <a href="{% url 'createLecturer' email %}" target="_blank">
                             <button type="button" title="Add a new Lecturer for this department">Add</button>
                         </a>
                     </div>
                 {% endfor %}
-                <div class="addbtn">
-                    <a href="/createDepartment" target="_blank">
-                        <button type="button" id="adddept" title="Add a new Department">
-                            &plus;
-                        </button>
-                    </a>
-                </div>
             </div>            
         </div>
         
@@ -62,7 +63,7 @@ Lecturers
             <div class="rightsubnav">
                 {% for department in departments %}
                 <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                    <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
+                    <a href="/{{email}}/select/{{department.college_main_id}}/{{department.name}}/{{department.max_yg}}">
                         {{department.name}}
                     </a>
                 </div>

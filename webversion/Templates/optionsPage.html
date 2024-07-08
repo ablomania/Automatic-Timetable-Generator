@@ -6,7 +6,7 @@ Info
 
 {% block content %}
 <div class="optionsPage">
-    <form method="post" action="departments/{{collegename}}">
+    <form method="post" action="{% url 'departments' email college_id %}">
         {% csrf_token %}
         <h3>College of {{ collegename }}</h3>
         {% for x in count %}
@@ -20,7 +20,7 @@ Info
             <br />
         </div>
         {% endfor %}
-        <input type="submit" value="Next" id="optionsbtn" formaction="departments/{{collegename}}"/>
+        <input type="submit" value="Next" id="optionsbtn"/>
     </form>
 </div>
 

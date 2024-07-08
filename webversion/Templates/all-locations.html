@@ -17,11 +17,11 @@ Lecturers
                     <div class="forms">
                         <form>
                             {% csrf_token %}
-                            <button title="Delete Location" type="submit" id="deletelocation" formmethod="post" formaction="/deletelocation/{{location.id}}">
+                            <button title="Delete Location" type="submit" id="deletelocation" formmethod="post" formaction="{% url 'deletelocation' email location.id %}">
                                 <img src="{% static 'trash-can.png' %}" width="20px" height="20px" />
                             </button>
                         </form> 
-                        <form method="get" action="/editlocation/{{location.id}}">
+                        <form method="get" action="{% url 'modifylocation' email location.id %}">
                             {% csrf_token %}
                             <button title="Edit Location Details" type="submit" id="editlocation">
                                 <img src="{% static 'pencil.png' %}" width="20px" height="20px" />
@@ -49,7 +49,7 @@ Lecturers
             <div class="rightsubnav">
                 {% for department in departments %}
                 <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                    <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
+                    <a href="/{{email}}/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
                         {{department.name}}
                     </a>
                 </div>
@@ -81,8 +81,21 @@ Lecturers
                 <label for="college">college name</label>
                 <input type="text" id="college" name="college">  
             </div>
+            <div>
+                <label for="floor">floor</label>
+                <select name="floor">
+                    <option value="0">Ground floor</option>
+                    <option value="1">first floor</option>
+                    <option value="2">second floor</option>
+                    <option value="3">third floor</option>
+                    <option value="4">fourth floor</option>
+                    <option value="5">fifth floor</option>
+                    <option value="6">sixth floor</option>
+                    <option value="7">seventh floor</option>
+                </select>
+            </div>
             <div class="btns">
-                <button type="submit" formmethod="post" id="add-locationbtn" formaction="/addlocation">
+                <button type="submit" formmethod="post" id="add-locationbtn" formaction="{% url 'createlocation' email %}">
                     Submit
                 </button>
                 <button type="button" onclick="undofunc()" id="cancel">Cancel</button>

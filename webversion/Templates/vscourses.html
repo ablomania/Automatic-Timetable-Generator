@@ -11,24 +11,30 @@ View selected courses
     <div class="top">
        {% for department in departments %}
        <div class="big">
-        <h3>{{ department.name }}</h3>
+        <h3 onclick="dropDown()"><span class="drpsymbol">&#x25bc;</span>{{ department.name }}</h3>
         <hr width="95%">
+        <div class="dropdown">
             {% for year_group in y_gs %}
             {% if department.max_yg >= year_group %}
-            <a href="/select/{{department.college}}/{{department.name}}/{{year_group}}">
+            
+            <a href="{% url 'pagetwo' email department.college_main_id department.name year_group %}">
                 <p id="smallertext">Year {{year_group}}</p>
             </a>
             <div class="groups">
                {% for x in list %}
                     {% if x.department_id is department.id and x.year_group is year_group %}
-                        <a href="/editcourse/{{x.code}}">{{ x.code }}</a>
+                        <a href="{% url 'editCourse' email x.code x.id %}">{{ x.code }}</a>
                     {% endif %}
+                    {% empty %}
+                    <p>No courses chosen for this group</p>
                 {% endfor %} 
             </div>
             <hr width="90%">
             {% endif %}
             {% endfor %}
-            <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}"><button type="button" id="editselected">edit</button></a>
+            <a href="{% url 'pagetwo' email department.college_main_id department.name department.max_yg %}"><button type="button" id="editselected">edit</button></a>
+        </div>
+            
        </div>
        {% endfor %} 
             
@@ -37,7 +43,7 @@ View selected courses
     <div class="bottom">
         <form>
             {% csrf_token %}
-            <button type="submit" id="generate" formmethod="post" formaction="/generate-timetable/{{college}}">
+            <button type="submit" id="generate" formmethod="post" formaction="{% url 'generate' email college %}">
                 Generate
             </button>
         </form>

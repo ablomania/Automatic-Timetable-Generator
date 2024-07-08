@@ -9,10 +9,10 @@ Departments
     <h3>Departments in {{collegename}}</h3>
     {% for x in departments %}
     <div class="departments">
-        <a href="/select/{{x.college}}/{{x.name}}/{{x.max_yg}}">{{ x.name }}</a>
+        <a href="{% url 'pagetwo' email x.college_main_id x.name x.max_yg %}">{{ x.name }}</a>
     </div>
     {% endfor %}
-    <a href="/select/{{collegename}}/{{first}}/{{max_yg}}"><input type="button" id="deptsbtn" value="Next"></a>
+    <a href="{% url 'pagetwo' email college_id first max_yg %}"><input type="button" id="deptsbtn" value="Next"></a>
 </div>
 
 

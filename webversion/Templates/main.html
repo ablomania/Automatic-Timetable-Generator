@@ -19,27 +19,43 @@
             </div>
             <nav class="TopNavBar">
                 <ul>
+                    {% if email %}
+                    <li>
+                        <a href="/" style="text-transform: lowercase; padding-right: 100px;">{{email}}</a>
+                    </li>
+                    {% endif %}
                     <li>
                         <a href="/">home</a>
                     </li>
+                    {% if email %}
                     <li>
-                        <a href="/alllecturers">lecturers</a>
+                        <a href="{% url 'alllecturers' email %}">lecturers</a>
                     </li>
                     <li>
-                        <a href="{% url 'locations' %}">locations</a>
+                        <a href="{% url 'locations' email %}">locations</a>
                     </li>
-                    {% if college %}
+                    {% if college < 100 %}
                     <li>
-                        <a href="/select/{{college}}/viewselected">courses</a>
+                        <a href="{% url 'viewSelected' email college %}">courses</a>
                     </li>
                     <li>
-                        <a href="/{{college}}/timetable">timetable</a>
+                        <a href="{% url 'colleges' email %}">colleges</a>
+                    </li>
+                    {% if college.id %}
+                    <li>
+                        <a href="{% url 'viewSelected' email college.id %}">courses</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'timetablePage' email college %}">timetable</a>
                     </li>
                 </ul>
+                {% endif %}
+                {% endif %}
                 {% endif %}
                 
             </nav>
         </div>
+        <hr>
     </header>
 
     <div class="body">
@@ -49,6 +65,7 @@
     </div>
 
     <footer>
+        <hr style="float: right; background-color: #0d47a1; height: 10px;">
         <p>copyright &copy; 2024</p>
         <div class="BottomNavBar">
             <ul>

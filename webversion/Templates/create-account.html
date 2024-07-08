@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+Create Account
+{% endblock %}
+
+{% block content %}
+<div class="create-account">
+    <div>
+        <h2>Create Account</h2>
+    </div>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <label for="email">Email</label>
+            <input type="email" name="email" autofocus required>
+            <button type="submit">Submit</button>
+        </form>
+        
+    </div>
+</div>
+{% endblock %}

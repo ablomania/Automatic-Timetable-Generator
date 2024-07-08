@@ -14,15 +14,16 @@ Select
             <hr width="95%">
             {% for year_group in year_groups %}
             <div class="subnav">
-                <a href="/select/{{department.college}}/{{department.name}}/{{year_group}}">{{department.name}} {{year_group}}</a>
-                <ul>
+                <a href="{% url 'pagetwo' email department.college_main_id department.name year_group %}">{{department.name}} {{year_group}}</a>
+                <button type="button" class="drpsymbol" onclick="dropDown()" style="border: none;">&#x25bc;</button>
+                <ul class="dropdown">
                     {% for selected in result.values %}
                     {% if selected.year_group is year_group and department.id is selected.department_id %}
                     <form>
                         {% csrf_token %}
                         <li>
+                            <a href="{% url 'editCourse' email selected.code selected.id %}">{{selected.code}} </a>
                             <button type="submit" value="{{selected.id}}" name="btnsidebar_remove">
-                            <a href="/editcourse/{{selected.code}}">{{selected.code}} </a>
                                 &times
                             </button>
                         </li>
@@ -58,7 +59,7 @@ Select
                                 {{course.code}}
                             </label>
                         </div>                            
-                        <a href="/editcourse/{{course.code}}" target="_parent"">
+                        <a href="{% url 'editCourse' email course.code course.id %}" target="_parent"">
                             <button id="editCourse" type="button" value="{{ course.id }}">
                                 <img src="{% static 'pencil.png' %}" alt="EditCourse" width="10px" height="10px">
                             </button>
@@ -70,32 +71,33 @@ Select
                     {% endfor %}
                 </div>
                 <div class="btns">
-                    <button type="submit" id="deletecourse" formmethod="post" formaction="/deletecourse/{{college}}/{{department.name}}/{{tp}}">
+                    <button type="submit" id="deletecourse" formmethod="post" formaction="{% url 'deletecourse' email college department.name tp %}">
                         <img src="{% static 'trash-can.png' %}" width="20px" height="20px">
                     </button>
-                    <a href="/addaCoursePage/{{department.id}}/{{tp}}">
+                    <a href="{% url 'createCourse' email department.id tp %}">
                         <button type="button" id="addCourse" value="Add A Course" style="width: 29px; height: 29px; margin-left: 10px;">
                             &plus;
                         </button>
                     </a>                        
                     <a href=""><button id="save" type="submit" value="post">&#9918; Save</button></a>
                     {% if page >= 1 %}
-                    <button id="nextbtn" type="submit" value="post" formaction="/select/{{college}}/{{dname}}/{{page}}">Next &raquo;</button>
+                    <button id="nextbtn" type="submit" value="post" formaction="{% url 'pagetwo' email college dname page %}">Next &raquo;</button>
                     {% endif %}
                 </div>
                 <div class="span">
                     <p>Please save before clicking done</p>
-                <button id="done" type="submit" value="post" formaction="/select/{{college}}/viewselected">&#10003; Done</button>
+                <button id="done" type="submit" value="post" formaction="{% url 'viewSelected' email college %}">&#10003; Done</button>
                 </div>
             </form>  
         </div>
+        <hr width="20%" style="height: 5px; background-color: #0d47a1; float: right;">
     </div>
 
     <div class="rightnav">
         <div class="rightsubnav">
             {% for department in departments %}
             <div class="departments" id="dept{% cycle "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" %}">
-                <a href="/select/{{department.college}}/{{department.name}}/{{department.max_yg}}">
+                <a href="{% url 'pagetwo' email department.college_main_id department.name department.max_yg %}">
                     {{department.name}}
                 </a>
             </div>

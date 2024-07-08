@@ -1,0 +1,70 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Course Review
+{% endblock %}
+
+{% block content %}
+<div class="createCourse">
+    <div>
+        <p>Course name</p>
+        <p>{{course.name}}</p>
+    </div>
+    <div>
+        <p>course code</p>
+        <p>{{course.code}}</p>
+    </div>
+    <div>
+        <p>lecturer</p>
+        <p>{{course.lecturer}}</p>
+    </div>
+    <div>
+        <p>department</p>
+        <p>{{course.department}}</p>
+    </div>
+    <div>
+        <p>credit hours</p>
+        <p>{{course.hours}}</p>
+    </div>
+    <div>
+        <p>Combined Class</p>
+        <p>{{course.is_combined}}</p>
+    </div>
+    <div>
+        <p>Has Lab Sessions</p>
+        <p>{{course.has_labs}}</p>
+    </div>
+    {% if course.has_labs %}
+    <div>
+        <p>Course Is Lab Only</p>
+        <p>{{course.is_lab_only}}</p>
+    </div>
+    <div>
+        <p>Laboratory Hours</p>
+        <p>{{course.lab_hours}}</p>
+    </div>
+    <div>
+        <p>Labs Need To Be Contiguous</p>
+        <p>{{course.is_contiguous_lab_time}}</p>
+    </div>
+    {% endif %}
+    <div>
+        <p>Year Group</p>
+        <p>{{course.year_group}}</p>
+    </div>
+    <div>
+        <p>Estimated Class Size</p>
+        <p>{{course.estimated_class_size}}</p>
+    </div>
+    <div>
+        <form method="post">
+        {% csrf_token %}
+        {% for location in locations %}
+            <label for="{{location.id}}">{{location.name}}</label>
+            <input type="radio" name="location" value="{{location.id}}" id="{{location.id}}">
+        {% endfor %}
+        <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
