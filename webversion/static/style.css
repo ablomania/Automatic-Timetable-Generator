@@ -6,7 +6,7 @@
     list-style: none;
 }
 input:focus{
-    border: #e57373;
+    border: #0d47a1;
 }
 h1, h2, h3,h4{
     color: #0d47a1;
@@ -15,6 +15,7 @@ body{
     display: flex;
     flex-direction: column;
     margin: 0;
+    background-image: url('circles.png');
     /* background: linear-gradient(#fff,#e3f2fd); */
 }
 header{
@@ -71,6 +72,19 @@ header .subHead .TopNavBar ul{
 header .subHead .TopNavBar ul li{
     padding: 5px;
 }
+#email1{
+    text-transform: lowercase;
+    border: none;
+    color: #0d47a1;
+}
+#email1:hover{
+    color: purple;
+}
+.user-link{
+    display: none;
+    animation-name: growdown;
+    animation-duration: 1s;
+}
 .body{
     margin-top: 0px;
     min-height: 90vh;
@@ -101,7 +115,6 @@ header ul a, footer ul a{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
     min-height: 90vh;
     /* width: 60%;
     margin: auto; */
@@ -194,7 +207,7 @@ header ul a, footer ul a{
     align-items: center;
     padding: 5px;
     font-size: 9pt;
-    background: rgba(0, 12, 255, 0);
+    background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(11.6px);
@@ -219,6 +232,7 @@ header ul a, footer ul a{
     justify-self: center;
     align-self: center;
     margin: 30px;
+    margin-top: 5px;
     margin-left: 60px;
     background: rgba(0, 12, 255, 0);
     border-radius: 16px;
@@ -242,9 +256,8 @@ header ul a, footer ul a{
     align-items: center;
     height: 300px;
     min-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-width: 1px;
-    scrollbar-gutter: auto;
 }
 @keyframes animeCourse {
     0% {background-color: #ef9a9a;}
@@ -348,10 +361,22 @@ header ul a, footer ul a{
     overflow-y: scroll;
     scrollbar-width: none;
 }
-.deptsection .rightnav {
+.deptsection .rightnav{
     position: fixed;
     right: 0px;
     left: 90%;
+    display: flex;
+    flex-direction: column;
+}
+.deptsection .rightnav .rightsubnav-link{
+    padding: 5px;
+    margin: 10px;
+}
+.deptsection .rightnav .rightsubnav-link button{
+    color: #fff;
+    background-color: #0d47a1;
+    border:#0d47a1 solid 1px;
+    border-radius: 5px;
 }
 .deptsection .rightnav .departments{
     padding: 10px;
@@ -435,8 +460,8 @@ header ul a, footer ul a{
     width: -moz-fit-content;
     width: fit-content;
     background-color: #fff;
-    color: #ff5252;
-    border: #ef5350 1px dashed;
+    color: #0d47a1;
+    border: #0d47a1 1px dashed;
     height: -moz-fit-content;
     height: fit-content;
     margin-right: 20px;
@@ -508,8 +533,8 @@ header ul a, footer ul a{
     width: 130px;
     height: 30px;
     align-self: center;
-    color: #fafafa;
-    background-color: #ff5252;
+    color: #0d47a1;
+    background-color: #0d47a1;
     border-radius: 5px;
     border: none;
     margin-left: 20px;
@@ -601,7 +626,7 @@ header ul a, footer ul a{
     border-radius: 10px;
 }
 .departments a:hover{
-    color: #ef5350;
+    color: #0d47a1;
 }
 .departments a{
     color: #424242;
@@ -644,7 +669,9 @@ img:hover{
 }
 .alllecturersgrid .lectdept .dropdown{
     display: none;
+    flex-direction: column;
     overflow-y: auto;
+    width: 100%;
     scrollbar-width: thin;
 }
 .lectdept ul li{
@@ -658,7 +685,7 @@ img:hover{
     color: #424242;
 }
 .alllecturersgrid a:hover{
-    color: #ff5252;
+    color: #0d47a1;
     font-size: 13pt;
 }
 .addbtn{
@@ -680,9 +707,9 @@ img:hover{
     text-align: center;
 }
 #deletelect:hover, #deletedepartment:hover{
-    background-color: #ef5350;
-    color: #fafafa;
-    border: #e57373;
+    background-color: #0d47a1;
+    color: #FFF;
+    border: #FFF;
 }
 
 /* for all-locations page */
@@ -700,26 +727,44 @@ img:hover{
     align-self: center;
 }
 .all-locations .left{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 .all-locations .location-grid{
-    background-color: #eceff1;
+    background: rgba(0, 12, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
     border-radius: 10px;
     padding: 10px;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
 }
 .all-locations ul li{
     margin: 5px;
     color: #424242;
 }
-.all-locations .addbtn #add-location{
-    width: 50%;
-    height: 100%;
+#add-location{
+    width: 50px;
+    height: 50px;
     font-size: 30pt;
+    float: right;
+    border-radius: 50%;
+}
+.all-locations .addbtn{
+    position: sticky;
+    bottom: 20px;
+    right: 30px;
+}
+.all-locations .addbtn #add-location:hover{
+    background-color: #0d47a1;
+    color: #fff;
+    border-radius: 50%;
+    border: 1px solid #0d47a1;
 }
 .all-locations .forms{
     display: flex;
@@ -763,16 +808,16 @@ img:hover{
 #invisible #add-locationbtn, #add-locationbtn{
     width: -moz-fit-content;
     width: fit-content;
-    background-color: #ff5252;
-    color: #fafafa;
-    border: #ff5252 solid 1px;
+    background-color: #0d47a1;
+    color: #fff;
+    border: #fff solid 1px;
 }
 #invisible #cancel{
     width: -moz-fit-content;
     width: fit-content;
-    background-color: #fafafa;
-    color: #ef5350;
-    border: #ff5252 dashed 1px;
+    background-color: #fff;
+    color: #0d47a1;
+    border: #0d47a1 solid 1px;
 }
 #edit-location{
     display: flex;

@@ -155,8 +155,8 @@ def secondPage(request, email, college_id, dname,id):
         "courses" : course, "departments" : departments,"college": college_id
         ,"ldept":lastdepartment, "result":result, "year_groups": year_groups,
           "dname": dname, "page" : page, "tp":tp, "department": department,
-          "email":email,
-    }
+          "email":email, "college_name":college.name,
+          }
     return HttpResponse(template.render(context, request))
 
 
@@ -367,7 +367,7 @@ def editCourse(request, email, code, id):
                }
     return HttpResponse(template.render(context, request))
 
-def createDepartment(request, email, college_id=1):
+def createDepartment(request, email, college_id, callingpage):
     creator_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("createdept.html")
     college_name = College.objects.get(id=college_id)
@@ -381,7 +381,15 @@ def createDepartment(request, email, college_id=1):
             creator_id=creator_id
             )
         new_Department.save()
-
+        if callingpage == "pagetwo":
+            arg1 = email
+            arg2 = college_id
+            arg3 = new_Department.name
+            arg4 = max_yg
+            return HttpResponseRedirect(reverse(callingpage, args=(arg1, arg2, arg3, arg4)))
+        elif callingpage == "colleges":
+            arg1 = email
+            return HttpResponseRedirect(reverse(callingpage, args=(arg1,)))
     context = {"college_name":college_name}
     return HttpResponse(template.render(context, request))
 

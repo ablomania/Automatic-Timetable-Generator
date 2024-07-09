@@ -10,7 +10,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <script src="{% static 'functions.js' %}"></script>
-<body>
+<body id="main-body">
     <header id="header">
         <div class="subHead">
             <div class="logo">
@@ -21,7 +21,10 @@
                 <ul>
                     {% if email %}
                     <li>
-                        <a href="/" style="text-transform: lowercase; padding-right: 100px;">{{email}}</a>
+                        <button id="email1" type="button" onclick="uPanel()">
+                            {{email}}
+                        </button>
+                        <a  class="user-link" href="/">logout</a>
                     </li>
                     {% endif %}
                     <li>

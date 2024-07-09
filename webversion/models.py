@@ -1,26 +1,6 @@
 from django.db import models
 
-# Create your models here.
-
-# class Semester(models.Model):
-#     first_sem = models.BooleanField()
-#     second_sem = models.BooleanField()
-#     year = models.IntegerField()
-#     programme = models.ForeignKey("Programme", on_delete=models.CASCADE, related_name='programme', null=True)
-#     def __str__(self):
-#         if(self.first_sem):
-#             return f"First semester - year {self.year} - {self.programme}"
-#         if(self.second_sem):
-#             return f"Second semester - year {self.year} - {self.programme}"
-
-# class Programme(models.Model):
-#     name = models.CharField(max_length=255)
-#     code = models.CharField(max_length=10)
-#     year_group = models.PositiveSmallIntegerField(default=1)
-#     dept = models.ForeignKey("Department", on_delete=models.CASCADE, related_name="dept", null=True)
-#     def __str__(self):
-#         return f"{self.code} - {self.year_group}"
-    
+# Create your models here. 
 class UserAccount(models.Model):
     email = models.EmailField(null=True, max_length=255)
     password = models.CharField(max_length=255, null=True)
