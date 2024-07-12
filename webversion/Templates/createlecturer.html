@@ -9,39 +9,33 @@ Add a Lecturer
     <h2>Add a lecturer</h2>
     <form method="post">
         {% csrf_token %}
-        <table>
-            <tr>
-                <td><label for="surname">surname</label></td>
-                <td><input type="text" name="surname" id="surname" autocomplete="additional-name" required></td>
-            </tr>
-            <tr>
-                <td><label for="other_names">other names</label></td>
-                <td><input type="text" name="other_names" id="other_names" required autocomplete="additional-name"></td>
-            </tr>
-            <tr>
-                <td><label for="department">department</label></td>
-                <td>
-                    <select name="department" id="department">
-                        {% for x in departments %}
-                        <option value="{{ x.id }}">{{ x.name }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="telephone">Phone Number</label></td>
-                <td><input type="text" name="telephone" id="telephone"></td>
-            </tr>
-            <tr>
-                <td><label for="email">email</label></td>
-                <td><input type="email" name="email" id="email"></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" id="createlectbtn" value="submit">
-                </td>
-            </tr>
-        </table>
+        <div>
+            <label for="surname">surname</label>
+            <input type="text" name="surname" id="surname" autocomplete="additional-name" required>
+        </div>
+        <div>
+            <label for="other_names">other names</label>
+            <input type="text" name="other_names" id="other_names" required autocomplete="additional-name">
+        </div>
+        <div>
+            <label for="department">department</label>
+            <select name="department" id="department">
+                {% for x in departments %}
+                <option value="{{ x.id }}">{{ x.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="telephone">Phone Number</label>
+            <input type="text" name="telephone" id="telephone">
+        </div>
+        <div>
+            <label for="email">email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <input type="submit" id="createlectbtn" value="submit">
+        </div>
     </form>
 </div>
 {% endblock %}

@@ -1,14 +1,14 @@
 {% extends 'main.html' %}
 
 {% block title %}
-Create Course
+College Settings
 {% endblock %}
 
 {% block content %}
 <div class="edit-college">
     <form method="post" action="{% url 'editcollege' email college.id %}">
         {% csrf_token %}
-        <h3>New college</h3>
+        <h3>{{college.name}} settings</h3>
         <div>
             <label for="name">name of college</label>
             <input type="text" name="name" value="{{college.name}}" id="college" required><br>
@@ -25,9 +25,9 @@ Create Course
             <input type="number" value="{{college.days_per_week}}" min="1" max="7" name="days" required>
         </div>
         <div id="edit-college-btns">
-            <button type="button" name="cancel-college" onclick="unallo()" id="new-college">
+            <!-- <button type="button" name="cancel-college" onclick="unallo()" id="new-college">
                 cancel
-            </button>
+            </button> -->
             <button type="submit" id="createcollegebtn" onclick="">Continue</button>     
         </div>
         

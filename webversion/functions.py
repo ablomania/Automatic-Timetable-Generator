@@ -308,4 +308,6 @@ def modifylecturer(lecturer_id, dictionary):
     currentlect.surname = dictionary['surname']
     currentlect.other_names = dictionary['other_names']
     currentlect.department_id = dictionary['department']
+    currentlect.telephone = dictionary['telephone']
+    currentlect.email = dictionary['email']
     currentlect.save()

@@ -9,34 +9,32 @@ Create Department
     <form method="post">
         {% csrf_token %}
         <h3>Create a department</h3>
-        <table>
-            <tr>
-                <td><label for="name">name</label></td>
-                <td><input type="text" id="name" name="name" required></td>
-            </tr>
-            <tr>
-                <td><label for="code">code</label></td>
-                <td><input type="text" id="code" name="code"></td>
-            </tr>
-            <tr>
-                <td><label for="max_yg">Highest year group</label></td>
-                <td><input type="number" min="1" max="20" id="name" name="max_yg" required></td>
-            </tr>
-            <tr>
-                <td><label for="college">College</label></td>
-                <td><select name="college" id="college">
-                    <option value="{{college.id}}">{{college.name}}</option>
-                    {% for cc in colleges %}
-                    <option value="{{cc.id}}">{{cc.name}}</option>
-                    {% endfor %}
-                </select></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" id="createdeptbtn" value="submit">
-                </td>
-            </tr>
-        </table>
+        <div>
+            <label for="name">name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="code">code</label>
+            <input type="text" id="code" name="code" required>
+        </div>
+        <div>
+            <label for="max_yg">Highest year group</label>
+            <input type="number" min="1" max="20" id="name" name="max_yg" required>
+        </div>
+        <div>
+            <label for="college">College</label>
+            <select name="college" id="college">
+                <option value="{{college.id}}">{{college.name}}</option>
+                {% for cc in colleges %}
+                <option value="{{cc.id}}">{{cc.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            
+                <input type="submit" id="createdeptbtn" value="submit">
+            
+        </div>
     </form>
 </div>
 {% endblock %}

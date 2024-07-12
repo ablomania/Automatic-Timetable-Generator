@@ -277,14 +277,11 @@ def createCoursePage2(request, email, course_id):
             return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
         for time in list(preferred_time):
             for day in (preferred_day):
-                day_time_checker = Pref_Stuff.objects.filter(time=time, day=day)
-                if day_time_checker: error = {days[int(day)]:times[int(time)]}
-                print("ts ", day_time_checker)
-            for location in list(pref_location_id):
-                time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location)
-                print("tl ", time_location_checker)
-                if time_location_checker: 
-                    error = {(Location.objects.get(id=location).name):times[int(time)]}
+                for location in list(pref_location_id):
+                    time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location, day=day)
+                    print("tl ", time_location_checker)
+                    if time_location_checker: 
+                        error = {(Location.objects.get(id=location).name):times[int(time)]}
         if not error:
             if "" in preferred_time or "" in preferred_location_id or "" in preferred_day:
                 return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
@@ -369,7 +366,7 @@ def viewDepartments(request, email, college_id):
     
     context = {
         "departments": departments, "college_id" : college_id, "first": first_department_name,
-        "max_yg" : first_department.max_yg, "email":email
+        "max_yg" : first_department.max_yg, "email":email, "college":college.name
     }
     return HttpResponse(template.render(context, request))
 
@@ -429,15 +426,11 @@ def editCourse2(request, email, id):
             return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
         for time in list(preferred_time):
             for day in (preferred_day):
-                day_time_checker = Pref_Stuff.objects.filter(time=time, day=day)
-                for chk in day_time_checker:
-                    if course.id == chk.course_id: ignoreError = 1
-                if ignoreError < 1: error = {days[int(day)]:times[int(time)]}
-            for location in list(preferred_location_id):
-                time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location)
-                for chk2 in time_location_checker:
-                    if course.id == chk2.course_id: ignoreError = 1
-                if ignoreError < 1: error = {(Location.objects.get(id=location).name):times[int(time)]}
+                for location in list(preferred_location_id):
+                    time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location, day=day)
+                    for chk2 in time_location_checker:
+                        if course.id == chk2.course_id: ignoreError = 1
+                    if ignoreError < 1: error = {(Location.objects.get(id=location).name):times[int(time)]}
         if error is False and ignoreError > 0:
             return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
         else:
@@ -519,7 +512,7 @@ def deleteLecturer(request, email, id):
 def createLecturer(request, email):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("createlecturer.html")
-    departments = Department.objects.filter(creator_id=user_id).values()
+    departments = Department.objects.filter(creator_id=user_id).order_by("college_main_id")
     if request.method == "POST":
         dictionary = request.POST
         surname = dictionary['surname'].capitalize()
