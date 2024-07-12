@@ -11,11 +11,21 @@ input:focus{
 h1, h2, h3,h4{
     color: #0d47a1;
 }
+.errorPage{
+    width: 60%;
+    margin: auto;
+    color: #ef5350;
+    position: sticky;
+    top: 120px;
+    z-index: 99999999999999999999;
+}
 body{
     display: flex;
     flex-direction: column;
     margin: 0;
     background-image: url('circles.png');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     /* background: linear-gradient(#fff,#e3f2fd); */
 }
 header{
@@ -82,8 +92,10 @@ header .subHead .TopNavBar ul li{
 }
 .user-link{
     display: none;
-    animation-name: growdown;
+    flex-direction: column;
+    animation-name: rotateX;
     animation-duration: 1s;
+    animation-iteration-count: 1;
 }
 .body{
     margin-top: 0px;
@@ -151,6 +163,9 @@ header ul a, footer ul a{
     width: 50%;
     margin: auto;
     display: none;
+    animation-name: rotateMenu;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
     flex-direction: column;
     justify-content: space-evenly;
     background: rgba(0, 12, 255, 0);
@@ -195,6 +210,9 @@ header ul a, footer ul a{
 }
 .sidenav .subnav ul{
     display: none;
+    animation-name: growOut;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
     flex-direction: column;
     background-color: #fafafa;
     width: 100%;
@@ -397,7 +415,13 @@ header ul a, footer ul a{
 .timetable_body .rightsection{
     width: 85%;
     margin: auto;
-    background-color: #eceff1;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    margin-top: 20px;
     border-radius: 10px;
 }
 .rightsection p{
@@ -411,7 +435,13 @@ header ul a, footer ul a{
     height: 52px;
 }
 #item1{
-    background-color: lightgray;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    margin-top: 20px;
 }
 .gridtime{
     border: 1px solid;
@@ -424,6 +454,7 @@ header ul a, footer ul a{
     grid-template-columns: auto auto;
     justify-content: center;
     border-collapse: collapse;
+    margin-bottom: 50px;
 }
 .gridcontainer2{
     float: right;
@@ -443,7 +474,9 @@ header ul a, footer ul a{
     border: 1px solid;
     height: 100px;
     width: 100%; 
-    background-color: #fafafa;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: blur(11.6px);
     /* width: -moz-fit-content;
     width: fit-content; */
 }
@@ -453,7 +486,7 @@ header ul a, footer ul a{
     align-items: center; 
     justify-content: flex-end; 
     position: sticky;
-    top: 50px;
+    top: 100px;
     right: 70px;  
 }
 .timetablebtns #savetimetable{
@@ -494,7 +527,25 @@ header ul a, footer ul a{
 .viewselected .top .big .dropdown{
     display: none;
     flex-direction: column;
+    animation-name: rotateX;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
 }
+@keyframes translateX {
+    0% {
+      opacity: 0;
+      transform: translateX(60px);
+    }
+    
+    80% {
+      transform: translateX(-5px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
 .viewselected #smallertext{
     font-size: 10pt;
     color: #0d47a1;
@@ -541,12 +592,11 @@ header ul a, footer ul a{
 }
 
 /*for editcourse page */
-.editCourse, .edit-college, .create-account, .createlecturer, .createDepartment, .createcourse, #edit-location{
+.edit-college, .create-account, .createlecturer, .createDepartment, .createcourse, #edit-location{
     width: 80%;
     margin: auto;
 }
-
-.editCourse table, .edit-college, .create-account, #edit-location, .createlecturer table, .createDepartment table,.createcourse table{
+.edit-college, .create-account, .createlecturer table, .createDepartment table,.createcourse table{
     background: rgba(0, 12, 255, 0);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -673,6 +723,9 @@ img:hover{
     overflow-y: auto;
     width: 100%;
     scrollbar-width: thin;
+    animation-name: translateX;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
 }
 .lectdept ul li{
     display: flex;
@@ -773,6 +826,9 @@ img:hover{
 }
 #invisible, .create-college{
     display: none;
+    animation-name: downOut;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
     flex-direction: column;
     position: fixed;
     justify-self: center;
@@ -822,13 +878,37 @@ img:hover{
 #edit-location{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-evenly;
+    background: rgba(0, 12, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    padding: 20px;
+}
+#edit-location h2{
+    align-self: center;
 }
 #edit-location div{
     padding: 20px;
     display: flex;
-    flex-direction: column;
+    width: 60%;
+    margin: auto;
+    flex-direction: row;
+    justify-content: start;
+    align-items: flex-start;
+}
+#edit-location div label{
+    width: 45%;
+}
+#edit-location div input, #edit-location div select{
+    height: 30px;
+    border: #0d47a1 1px solid;
+    border-radius: 10px;
+    width: 300px;
+}
+input:focus and border, select:focus and border{
+    border: #0d47a1 2px solid;
 }
 .colleges{
     width: 60%;
@@ -872,6 +952,49 @@ img:hover{
     80% {transform: scaleY(1,1);}
     100% {transform: scaleY(1);}
 }
+@keyframes rotateX {
+    0% {opacity: 0;
+      transform: rotateX(-90deg);
+    }
+    50% {transform: rotateX(-20deg);}
+    100% {opacity: 1;
+      transform: rotateX(0deg);
+    }
+}
+@keyframes growOut {
+    0% {
+       transform: scale(0)
+   }
+   80% {
+       transform: scale(1.1)
+   }
+   100% {
+       transform: scale(1)
+   }
+}
+@keyframes downOut {
+    0% {
+       transform: translateZ(200px) transLateY(40px)
+   }
+   80% {
+       transform: translateZ(-10px) transLateY(0px)
+   }
+   100% {
+       transform: translateZ(0px) transLateY(0px)
+   }
+}
+@keyframes rotateMenu {
+    0% {
+        transform: rotateX(-90deg)
+    }
+    70% {
+        transform: rotateX(20deg) 
+    }
+    100% {
+        transform: rotateX(0deg) 
+    }
+}
+
 .colleges .drop_parent .dropdown{
     display: none;
     flex-direction: column;
@@ -919,4 +1042,131 @@ img:hover{
     -webkit-backdrop-filter: blur(11.6px);
     color: #424242;
     padding: 20px;
+}
+.createCourse2, .editCourse{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 60%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(0, 12, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+}
+.createCourse2 div{
+    display: inline-flex;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    /* justify-content: space-between; */
+    align-items: flex-start;
+}
+.createCourse2 div p{
+    padding: 10px;
+    align-self: flex-start;
+    width: 40%;
+}
+.createCourse2 form #kofi{
+    display: flex;
+    flex-direction: column;
+    margin: initial;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.createCourse2 form{
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+}
+.createCourse2 .sp{
+    background: #fff;
+    border: none;
+}
+.createCourse2 #kofi div{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.createCourse2 #kofi div label{
+    
+}
+.createCourse2 #kofi div select{
+    border: #0d47a1 1px solid;
+    border-radius: 5px;
+    height: 40px;
+}
+.editCourse form{
+    padding: 5px;
+    border-radius: 5px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+}
+.editCourse form div{
+    width: 90%;
+    margin: auto;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-between;
+    column-gap: 5px;
+}
+.editCourse form input{
+    border-radius: 5px;
+    border: #0d47a1 1px solid;
+    height: 30px;
+}
+#editCourse2 #sp2{
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+#sp1{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+#sp2:first-child{
+    height: 30px;
+}
+#editCourse2 form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+#editCourse2 form div{
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+}
+#editCourse2 form div select{
+    margin: 10px;
+    height: 30px;
+    border: #0d47a1 solid 1px;
+    border-radius: 10px;
 }

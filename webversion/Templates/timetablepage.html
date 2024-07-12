@@ -29,14 +29,14 @@ Timetable
                 <button id="savetimetable" type="submit">
                     Save
                 </button>
-                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college %}">
+                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
                     Regenerate
                 </button>
             </form>
             
         </div>
         {% for group, schedules in scarr.items %}  
-            <p><strong style="text-transform: uppercase;">COLLEGE OF {{college}}</strong></p> 
+            <p><strong style="text-transform: uppercase;">COLLEGE OF {{college.name}}</strong></p> 
         {% if group <= 5 %}
             <p><strong>FIRST YEAR</strong></p>
         {% elif group > 5 and group <= 10 %}

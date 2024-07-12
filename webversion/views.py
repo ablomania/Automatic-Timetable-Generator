@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .models import UserAccount, College, Lecturer, Location, Department, Course,Schedule
+from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff
 from .functions import *
 import random
 
@@ -127,7 +127,6 @@ def secondPage(request, email, college_id, dname,id):
     for course_id in selected_courses:
         scourse = Course.objects.get(id=course_id)
         result[course_id] = scourse
-
     if request.method == "GET" and 'btnsidebar_remove' in request.GET:
         remove_dict = dict(request.GET)
         remove_dict.pop('csrfmiddlewaretoken')
@@ -228,7 +227,7 @@ def timetable(request, email, college_id):
     print(year_groups)
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
-        "year_groups":year_groups, "times":times, "college":college_id, "nofdepts":nofdepts,
+        "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts,
         "email":email,"rows_per_day": rows_per_day, "days_per_week":days_per_week,
     }
     return HttpResponse(template.render(context, request))
@@ -258,19 +257,57 @@ def createCoursePage2(request, email, course_id):
     template = loader.get_template("createcourse2.html")
     course = Course.objects.get(id=course_id)
     department = Department.objects.get(id=course.department_id)
+    college_id = department.college_main_id
     if department.limited: locations = Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size, floor=0)
     else: locations = Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size)
+    number_of_schedules = int(math.ceil(course.hours / 2))
+    times = ['8am','10:30am', '1pm', '3pm','5pm', '7pm', '9pm']
+    days = ["Monday","Tuesday","Wednesday","Thursday","Friday"]
+    error = False
     if request.method == "POST":
-        dictionary = request.POST
-        preferred_location_id = dictionary.get('location', False)
-        if preferred_location_id:
-            course.preferred_location_id = dictionary['location']
-            course.save()
-        return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+        dictionary = dict(request.POST)
+        preferred_location_id = dictionary.get('preferred_location', False)
+        preferred_day = dictionary.get('preferred_day', False)
+        preferred_time = dictionary.get('preferred_time', False)
+        times = ['8am','9am','10:30am','11:30am', '1pm', '2pm', '3pm','4pm','5pm', '6pm', '7pm','8pm', '9pm', '10pm']
+        if preferred_location_id: pref_location_id = dictionary['preferred_location']
+        if preferred_day: preferred_day = list(dictionary['preferred_day'])
+        if preferred_time: preferred_time = list(dictionary['preferred_time'])
+        if "" in preferred_time or "" in preferred_location_id or "" in preferred_day:
+            return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+        for time in list(preferred_time):
+            for day in (preferred_day):
+                day_time_checker = Pref_Stuff.objects.filter(time=time, day=day)
+                if day_time_checker: error = {days[int(day)]:times[int(time)]}
+                print("ts ", day_time_checker)
+            for location in list(pref_location_id):
+                time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location)
+                print("tl ", time_location_checker)
+                if time_location_checker: 
+                    error = {(Location.objects.get(id=location).name):times[int(time)]}
+        if not error:
+            if "" in preferred_time or "" in preferred_location_id or "" in preferred_day:
+                return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+            else:
+                count = 0
+                for sch in range(number_of_schedules):
+                    new_pref_stuff = Pref_Stuff(
+                        time=preferred_time[count],
+                        course_id=course_id,
+                        day=preferred_day[count],
+                        location_id=pref_location_id[count],
+                        creator_id=user_id,
+                        college_main_id = college_id
+                    )
+                    new_pref_stuff.save()
+                    count = count + 1
+                return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
     context = {
-        "course":course, "locations":locations,
+        "course":course, "locations":locations, "n_schedules":range(number_of_schedules), "times":times,
+        "error":error,
         }
     return HttpResponse(template.render(context, request))
+
 
 def deleteCourse(request, email, college, dname, year_group):
     if request.method =='POST':
@@ -342,42 +379,107 @@ def editCourse(request, email, code, id):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("editcourse.html")
     course = Course.objects.get(code=code, id=id)
-    slecturer = Lecturer.objects.all().values()
+    slecturer = Lecturer.objects.filter(creator_id=user_id)
     cdepartment = Department.objects.get(id=course.department_id)
     college_id = cdepartment.college_main_id
-    if Location.objects.filter(id=course.preferred_location_id):
-        pref_loc = Location.objects.get(id=course.preferred_location_id)
-    else: pref_loc=""
     clecturer = Lecturer.objects.get(id=course.lecturer_id)
     departments = Department.objects.all().values()
     if cdepartment.limited: available_locations = Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size, floor=0)
     else: available_locations = Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size)
+    preferred_location_list =[]
     bool_List = [True, False]
     if request.method == "POST":
         dictionary = request.POST
         mcourse = modifyCourse(course=course, dictionary=dictionary)
         mcourse.creator_id = user_id
         mcourse.save()
-        return HttpResponseRedirect(reverse('pagetwo',args=(email, cdepartment.college_main_id, cdepartment.name, course.year_group)))
+        return HttpResponseRedirect(reverse('editCourse2',args=(email, course.id)))
 
     context = {"course": course, "lecturer":slecturer, "departments": departments,
                "clecturer": clecturer, "cdepartment": cdepartment, "bool_List": bool_List,
                "email": email, "college_id": college_id, "available_locations":available_locations,
-               "pref_loc":pref_loc,
+               "preferred_location_list":preferred_location_list,
                }
     return HttpResponse(template.render(context, request))
+
+def editCourse2(request, email, id):
+    template = loader.get_template("editCourse2.html")
+    course = Course.objects.get(id=id)
+    department_id = course.department_id
+    department = Department.objects.get(id=department_id)
+    college_id = department.college_main_id
+    user_id = UserAccount.objects.get(email=email).id
+    preferred = Pref_Stuff.objects.filter(creator_id=user_id, course_id=course.id, college_main_id=college_id)
+    available_locations = list(Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size))
+    number_of_schedules = int(math.ceil(course.hours / 2))
+    range_of_sch = [i for i in range(number_of_schedules)]
+    times = {1:'8am', 3:'10:30am', 5:'1pm', 7:'3pm', 9:'5pm', 11:'7pm', 13:'9pm'}
+    days = {1:'Monday', 2:'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday'}
+    # days = ["Monday","Tuesday","Wednesday","Thursday","Friday"]
+    error =  False
+    ignoreError = 0
+    if request.method == "POST":
+        times = {1:'8am', 3:'10:30am', 5:'1pm', 7:'3pm', 9:'5pm', 11:'7pm', 13:'9pm'}
+        days = {1:'Monday', 2:'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday'}
+        dictionary = dict(request.POST)
+        preferred_location_id = dictionary.get('preferred_location', False)
+        preferred_day = dictionary.get('preferred_day', False)
+        preferred_time = dictionary.get('preferred_time', False)
+        if "" in preferred_time or "" in preferred_location_id or "" in preferred_day:
+            return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+        for time in list(preferred_time):
+            for day in (preferred_day):
+                day_time_checker = Pref_Stuff.objects.filter(time=time, day=day)
+                for chk in day_time_checker:
+                    if course.id == chk.course_id: ignoreError = 1
+                if ignoreError < 1: error = {days[int(day)]:times[int(time)]}
+            for location in list(preferred_location_id):
+                time_location_checker = Pref_Stuff.objects.filter(time=time, location_id=location)
+                for chk2 in time_location_checker:
+                    if course.id == chk2.course_id: ignoreError = 1
+                if ignoreError < 1: error = {(Location.objects.get(id=location).name):times[int(time)]}
+        if error is False and ignoreError > 0:
+            return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+        else:
+            if "" in preferred_time or "" in preferred_location_id or "" in preferred_day:
+                return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+            else:
+                count = 0
+                for sch in range(number_of_schedules):
+                    new_pref_stuff = Pref_Stuff(
+                        time=preferred_time[count],
+                        course_id=course.id,
+                        day=preferred_day[count],
+                        location_id=preferred_location_id[count],
+                        creator_id=user_id,
+                        college_main_id = college_id
+                    )
+                    if preferred: preferred.delete()
+                    new_pref_stuff.save()
+                    print("count is ", count)
+                    count = count + 1
+            return HttpResponseRedirect(reverse("pagetwo", args=(email, department.college_main_id, department.name, course.year_group)))
+    context = {
+        "course":course, "n_schedules": range_of_sch, "error": error,
+        "times":times, "days":days,"available_locations":available_locations, 
+        "preferred":preferred,
+    }
+    return HttpResponse(template.render(context, request))
+
 
 def createDepartment(request, email, college_id, callingpage):
     creator_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("createdept.html")
-    college_name = College.objects.get(id=college_id)
+    college = College.objects.get(id=college_id)
+    colleges = College.objects.filter(creater_id=creator_id)
     if request.method == "POST":
         dictionary = request.POST
         name = dictionary['name'].upper()
         code = dictionary['code'].upper()
         max_yg = int(dictionary['max_yg'])
+        college_id_input = dictionary['college']
         new_Department = Department(
-            name=name, college_main_id=college_id, college=college_name, code=code, max_yg=max_yg,
+            name=name, college_main_id=college_id_input, college=college.name, code=code, max_yg=max_yg,
             creator_id=creator_id
             )
         new_Department.save()
@@ -390,7 +492,11 @@ def createDepartment(request, email, college_id, callingpage):
         elif callingpage == "colleges":
             arg1 = email
             return HttpResponseRedirect(reverse(callingpage, args=(arg1,)))
-    context = {"college_name":college_name}
+        elif callingpage == "alllecturers":
+            arg1 = email
+            return HttpResponseRedirect(reverse(callingpage, args=(arg1,)))
+    context = {"college":college, "colleges":colleges,
+               }
     return HttpResponse(template.render(context, request))
 
 
@@ -400,7 +506,7 @@ def allLecturers(request, email):
     departments = Department.objects.filter(creator_id=creator_id)
     lecturers = Lecturer.objects.filter(creator_id=creator_id).order_by("other_names")
     context = {
-        "lecturers":lecturers, "departments":departments, "email":email
+        "lecturers":lecturers, "departments":departments, "email":email,
     }
     return HttpResponse(template.render(context, request))
 
@@ -420,9 +526,9 @@ def createLecturer(request, email):
         other_names = dictionary['other_names'].upper()
         department = dictionary['department']
         telephone = dictionary['telephone']
-        email = dictionary['email']
+        email_input = dictionary['email']
         creator_id = UserAccount.objects.get(email=email).id
-        new_Lecturer = Lecturer(email=email, telephone=telephone, creator_id=creator_id, surname=surname, other_names=other_names, department_id=department)
+        new_Lecturer = Lecturer(email=email_input, telephone=telephone, creator_id=creator_id, surname=surname, other_names=other_names, department_id=department)
         new_Lecturer.save()
     context = {
         "departments": departments, "email":email,

@@ -15,6 +15,26 @@ class College(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class Pref_time(models.Model):
+    value = models.PositiveSmallIntegerField()
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="course_time")
+
+class Pref_day(models.Model):
+    value = models.PositiveSmallIntegerField()
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="course_day")
+
+class Pref_location(models.Model):
+    value = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="course_location")
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="course_course")
+
+class Pref_Stuff(models.Model):
+    time = models.PositiveSmallIntegerField()
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="pref_course")
+    day = models.PositiveSmallIntegerField()
+    location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="pref_location")
+    creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="creator_pref", null=True)
+    college_main = models.ForeignKey(College, on_delete=models.CASCADE, related_name="pref_college", null=True)
+
 class Course(models.Model):
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=255, null=True)
@@ -30,7 +50,6 @@ class Course(models.Model):
     year_group = models.PositiveSmallIntegerField(null=True)
     estimated_class_size = models.PositiveIntegerField(default=200, null=True)
     creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="course_creator", null=True)
-    preferred_location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="course_location", null=True)
     def __str__(self):
         return f"{self.code} - {self.name}"
 
@@ -46,7 +65,7 @@ class Location(models.Model):
     creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="location_creator", null=True)
     floor = models.SmallIntegerField(null=True)
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.id}"
     
 
 class Lecturer(models.Model):

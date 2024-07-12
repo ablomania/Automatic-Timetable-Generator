@@ -5,65 +5,99 @@ Course Review
 {% endblock %}
 
 {% block content %}
-<div class="createCourse">
+{% include 'error-input.html' %}
+<div class="createCourse2">
+    <h1>Course details</h1>
     <div>
-        <p>Course name</p>
+        <p>Course name:</p>
         <p>{{course.name}}</p>
     </div>
     <div>
-        <p>course code</p>
+        <p>course code:</p>
         <p>{{course.code}}</p>
     </div>
     <div>
-        <p>lecturer</p>
+        <p>lecturer:</p>
         <p>{{course.lecturer}}</p>
     </div>
     <div>
-        <p>department</p>
+        <p>department:</p>
         <p>{{course.department}}</p>
     </div>
     <div>
-        <p>credit hours</p>
+        <p>credit hours:</p>
         <p>{{course.hours}}</p>
     </div>
     <div>
-        <p>Combined Class</p>
+        <p>Combined Class:</p>
         <p>{{course.is_combined}}</p>
     </div>
     <div>
-        <p>Has Lab Sessions</p>
+        <p>Has Lab Sessions:</p>
         <p>{{course.has_labs}}</p>
     </div>
     {% if course.has_labs %}
     <div>
-        <p>Course Is Lab Only</p>
+        <p>Course Is Lab Only:</p>
         <p>{{course.is_lab_only}}</p>
     </div>
     <div>
-        <p>Laboratory Hours</p>
+        <p>Laboratory Hours:</p>
         <p>{{course.lab_hours}}</p>
     </div>
     <div>
-        <p>Labs Need To Be Contiguous</p>
+        <p>Labs Need To Be Contiguous:</p>
         <p>{{course.is_contiguous_lab_time}}</p>
     </div>
     {% endif %}
     <div>
-        <p>Year Group</p>
+        <p>Year Group:</p>
         <p>{{course.year_group}}</p>
     </div>
     <div>
-        <p>Estimated Class Size</p>
+        <p>Estimated Class Size:</p>
         <p>{{course.estimated_class_size}}</p>
     </div>
-    <div>
+    <div class="sp">
         <form method="post">
         {% csrf_token %}
-        {% for location in locations %}
-            <label for="{{location.id}}">{{location.name}}</label>
-            <input type="radio" name="location" value="{{location.id}}" id="{{location.id}}">
-        {% endfor %}
-        <button type="submit">Submit</button>
+        <div id="kofi">
+            <h4>For Special Circumstances:</h4>
+            {% for sch in n_schedules %}
+            <div>
+                <label for="preferred_day">Preferred day:</label>
+                <select title="Preferred Days" name="preferred_day" id="preferred_day">
+                    
+                    <option value="">Any</option>
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                </select>
+                <h5>Please do not choose the same day twice</h5>
+            </div>
+            <div>
+                <label for="preferred_time">preferred time:</label>
+                <select title="Preferred Times" name="preferred_time" id="preferred_time">
+                    <option value="">Any</option>
+                    {% for t in times %}
+                    <option value="{%cycle '1' '3' '5' '7' '9' '11' '13' %}">{{t}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="preferred_location">Preferred location:</label>
+                <select name="preferred_location" id="preferred_location">
+                    <option value="">Any</option>
+                    {% for location in locations %}
+                    <option value="{{location.id}}">{{location.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+        </div>        
+        <button type="submit" id="createcoursebtn">Submit</button>
         </form>
     </div>
 </div>

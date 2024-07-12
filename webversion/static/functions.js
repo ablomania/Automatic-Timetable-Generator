@@ -15,15 +15,14 @@ window.onload = function loadBg() {
 }
 
 function uPanel() {
-    const node = document.querySelector(".user-link");
-    const flex = "flex";
-    const none = "none";
-    if(node.style.display == none) {
-        node.style.display = flex;
+    const node = document.getElementById("user-link");
+    if(node.style.display != "flex"){
+        node.style.display = "flex";
+        const active = 1
     }
-    // else if(node.style.display == flex) {
-    //     node.style.display = none;
-    // }
+    else{
+        node.style.display = "none";
+    }
 }
 
 function activateDark() {

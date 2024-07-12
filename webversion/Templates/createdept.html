@@ -23,6 +23,15 @@ Create Department
                 <td><input type="number" min="1" max="20" id="name" name="max_yg" required></td>
             </tr>
             <tr>
+                <td><label for="college">College</label></td>
+                <td><select name="college" id="college">
+                    <option value="{{college.id}}">{{college.name}}</option>
+                    {% for cc in colleges %}
+                    <option value="{{cc.id}}">{{cc.name}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
                 <td>
                     <input type="submit" id="createdeptbtn" value="submit">
                 </td>

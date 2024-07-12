@@ -1,0 +1,7 @@
+{% load static %}
+
+{% for key, value in error.items %}
+<div class="errorPage">
+    <p><strong>{{key}}</strong> with <strong>{{value}}</strong> has already been chosen</p>
+</div>
+{% endfor %}

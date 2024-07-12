@@ -8,6 +8,7 @@ urlpatterns = [
     path("<str:email>/addaCoursePage/<int:department_id>/<int:year_group>", views.createCoursePage, name="createCourse"),
     path("<str:email>/createcourse2/<int:course_id>", views.createCoursePage2, name="createcourse2"),
     path("<str:email>/editcourse/<str:code>/<int:id>", views.editCourse, name="editCourse"),
+    path("<str:email>/editCourse2/<int:id>", views.editCourse2, name="editCourse2"),
     path("<str:email>/createDepartment/<int:college_id>/<str:callingpage>", views.createDepartment, name="createDept"),
     path("<str:email>/createLecturer", views.createLecturer, name="createLecturer"),
     path("<str:email>/optionsPage/<int:college_id>/<int:count>", views.optionsPage, name="toBegin"),
