@@ -12,10 +12,25 @@ Create Account
     </div>
     <div>
         <form method="post">
+            {% if error == 1 %}
+            <div>
+                <p style="color: red;">
+                    Email: <span style="text-transform: lowercase;"><i>{{new_email}}</i> </span>already exists
+                </p>
+            </div>
+            {% endif %}
             {% csrf_token %}
-            <label for="email">Email</label>
-            <input type="email" name="email" autofocus required>
+            <div>
+                <label for="email">email</label>
+                <input type="email" name="email" id="email" placeholder="email" autofocus required 
+                {% if error == 1 %}
+                value="{{new_email}}"
+                {% endif %}>
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" placeholder="password" required>
+            </div>
             <button type="submit" id="create-account-btn">Submit</button>
+            <a href="/{{error}}"><button type="button">Cancel</button></a>
         </form>
         
     </div>

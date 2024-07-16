@@ -19,7 +19,8 @@ Create Course
         </div>
         <div>
             <label for="lecturer">lecturer:</label>
-            <select name="lecturer" id="lecturer">
+            <select name="lecturer" id="lecturer" required>
+                <option value="">Any</option>
                 {% for x in lecturer %}
                 <option value="{{ x.id }}">{{ x.other_names }} {{ x.surname }}</option>
                 {% endfor %}
@@ -28,7 +29,7 @@ Create Course
         </div>
         <div>
             <label for="department">department:</label>
-            <select name="department" id="department">
+            <select name="department" id="department" required>
                 <option value="{{department.id}}">{{department.name}}</option>
                 {% for x in departments %}
                 <option value="{{ x.id }}">{{ x.name }}</option>
@@ -37,11 +38,7 @@ Create Course
         </div>
         <div>
             <label for="hours">credit hours:</label>
-            <input type="number" name="hours" min="1" max="10" id="hours">
-        </div>
-        <div>
-            <label for="is_combined">Combined class:</label>
-            <input type="checkbox" value="True" name="is_combined" id="is_combined">
+            <input type="number" name="hours" min="1" max="10" id="hours" required>
         </div>
         <div>
             <label for="has_labs">has lab sessions:</label>

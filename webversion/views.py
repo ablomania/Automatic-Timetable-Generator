@@ -10,31 +10,44 @@ import random
 global selected_courses
 selected_courses = []
 #Homepage loader
-def homePage(request):
+def homePage(request, error=0):
     template = loader.get_template("index.html")
-    emails = list(dict(UserAccount.objects.values_list("email", "password")))
+    # emails = list(dict(UserAccount.objects.values_list("email", "password")))
+    error = userEmail = password = 0
+    print(error)
     if request.method == "POST":
         dictionary = request.POST
         userEmail = dictionary['email'].lower()
-        if userEmail in emails:
+        password= dictionary['password']
+        check_user = UserAccount.objects.filter(email=userEmail, password=password)
+        if check_user:
             return HttpResponseRedirect(reverse("colleges", args=(userEmail,)))
         else:
-            return HttpResponseRedirect("errorInputPage")
+           error = 1
+           print(error)
     context = {
-
+        "error":error, "userEmail":userEmail, "password":password,
     }
     return HttpResponse(template.render(context, request))
 
 
 def createAccountPage(request):
     template = loader.get_template("create-account.html")
+    emails = UserAccount.objects.all().values()
+    error = new_email = 0
     if request.method == "POST":
         dictionary = request.POST
         new_email = dictionary['email']
-        new_user = UserAccount(email=new_email)
-        new_user.save()
-        return HttpResponseRedirect(reverse("colleges", args=(new_email,)))
-    context = {}
+        new_password = dictionary['password']
+        check_user = UserAccount.objects.filter(email=new_email)
+        if len(check_user) < 1:
+            new_user = UserAccount(email=new_email, password=new_password)
+            new_user.save()
+            return HttpResponseRedirect(reverse("colleges", args=(new_email,)))
+        else: error = 1
+    context = {
+        "error":error, "emails":emails, "new_email":new_email,
+    }
     return HttpResponse(template.render(context, request))
 
 def errorInputPage(request):
@@ -110,6 +123,7 @@ def secondPage(request, email, college_id, dname,id):
     year_groups = [i for i in range(1,max_yg+1)]
     course = Course.objects.filter(department_id = department.id, year_group=id)
     average_Courses_Per_Day = 5
+    locations = Location.objects.filter(creator_id=user_id)
     if request.method == 'POST':
         b = dict(request.POST)
         b.pop("csrfmiddlewaretoken")
@@ -154,7 +168,7 @@ def secondPage(request, email, college_id, dname,id):
         "courses" : course, "departments" : departments,"college": college_id
         ,"ldept":lastdepartment, "result":result, "year_groups": year_groups,
           "dname": dname, "page" : page, "tp":tp, "department": department,
-          "email":email, "college_name":college.name,
+          "email":email, "college_name":college.name,"n_locations":len(locations)
           }
     return HttpResponse(template.render(context, request))
 
@@ -240,7 +254,7 @@ def createCoursePage(request,email, department_id, year_group):
     department = Department.objects.get(id=department_id)
     college_id = department.college_main_id
     college = Department.objects.get(id=department_id).college
-    slecturer = Lecturer.objects.all().order_by("surname")
+    slecturer = Lecturer.objects.filter(creator_id=user_id).order_by("surname")
     departments = Department.objects.all().filter(college=college).order_by("name")
 
     if request.method == "POST":
@@ -319,9 +333,11 @@ def deleteCourse(request, email, college, dname, year_group):
 def optionsPage(request, email, college_id, count):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("optionsPage.html")
+    college_name = College.objects.get(id=college_id).name
     count = list(range(1,count+1))
     context = {
         "college_id": college_id, "count": count, "email":email,
+        "college_name":college_name,
     }
     return HttpResponse(template.render(context, request))
 
@@ -407,7 +423,7 @@ def editCourse2(request, email, id):
     college_id = department.college_main_id
     user_id = UserAccount.objects.get(email=email).id
     preferred = Pref_Stuff.objects.filter(creator_id=user_id, course_id=course.id, college_main_id=college_id)
-    available_locations = list(Location.objects.filter(creator_id=user_id, capacity__gte=course.estimated_class_size))
+    available_locations = list(Location.objects.filter(creator_id=user_id, capacity__gte=int(course.estimated_class_size)))
     number_of_schedules = int(math.ceil(course.hours / 2))
     range_of_sch = [i for i in range(number_of_schedules)]
     times = {1:'8am', 3:'10:30am', 5:'1pm', 7:'3pm', 9:'5pm', 11:'7pm', 13:'9pm'}
@@ -547,10 +563,11 @@ def locations(request,email):
     template = loader.get_template("all-locations.html")
     locations = Location.objects.filter(creator_id=user_id).order_by("name")
     departments = Department.objects.filter(creator_id=user_id).order_by("name")
+    colleges = College.objects.filter(creater=user_id)
     number = len(locations)
     context = {
         "locations":locations, "departments":departments, "number": number,
-        "email": email,
+        "email": email, "colleges": colleges,
     }
     return HttpResponse(template.render(context, request))
 
@@ -569,11 +586,11 @@ def addalocation(request, email):
         capacity = int(dictionary['capacity'])
         about = dictionary['about'].capitalize()
         is_in_same_college = dictionary.get('is_in_same_college', False)
-        college = dictionary['college'].upper()
+        college_main_id = int(dictionary['college'])
         floor = int(dictionary['floor'])
-        college_main_id = College.objects.get(creater_id=creator_id, name__istartswith=college).id
+        college_name = College.objects.get(id=college_main_id).name
         new_location = Location(
-            floor=floor, college_main_id=college_main_id, creator_id=creator_id, college=college, name=name, capacity=capacity, about=about, is_in_same_college=is_in_same_college
+            floor=floor, college_main_id=college_main_id, creator_id=creator_id, college=college_name, name=name, capacity=capacity, about=about, is_in_same_college=is_in_same_college
         )
         new_location.save()
     return HttpResponseRedirect(reverse('locations', args=(email,)))

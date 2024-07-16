@@ -63,27 +63,31 @@ Locations
             {% csrf_token %}
             <div>
                 <label for="location_name">Location name</label>
-                <input type="text" id="location_name" name="name">  
+                <input type="text" id="location_name" required name="name">  
             </div>
             <div>
                 <label for="capacity">capacity</label>
-                <input type="number" min="0" id="capacity" name="capacity">  
+                <input type="number" min="1" id="capacity" required name="capacity">  
             </div>
             <div>
                 <label for="about">about</label>
-                <input type="text" id="about" name="about">  
+                <input type="text" id="about" name="about" required>  
             </div>
             <div>
                 <label for="is_in_same_college">Location is in same college</label>
-                <input type="checkbox" value="True" id="is_in_same_college" name="is_in_same_college">  
+                <input type="checkbox" value="True" id="is_in_same_college" name="is_in_same_college" required>  
             </div>
             <div>
                 <label for="college">college name</label>
-                <input type="text" id="college" name="college">  
+                <select name="college" id="college" required>
+                    {% for college in colleges %}
+                    <option value="{{college.id}}">{{college.name}}</option>
+                    {% endfor %}
+                </select>  
             </div>
             <div>
                 <label for="floor">floor</label>
-                <select name="floor">
+                <select name="floor" required>
                     <option value="0">Ground floor</option>
                     <option value="1">first floor</option>
                     <option value="2">second floor</option>

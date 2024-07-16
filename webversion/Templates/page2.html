@@ -37,6 +37,11 @@ Select
     </div>
 </div>
 <div class="main">
+    {% if n_locations < 5 %}
+    <div>
+        <p>You have created <strong>{{n_locations}}</strong> locations. Please click here to create more:  <a href="/{{email}}/locations" style="text-decoration: underline;">Link</a></p>
+    </div>
+    {% endif %}
     <h2>college of {{college_name}}</h2>
     <div class="mainhead">
         <div class="left">

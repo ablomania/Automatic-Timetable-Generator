@@ -26,10 +26,12 @@ SECRET_KEY = 'django-insecure-zc_vali(fg0n(oe1v(ew=ji7-=wxg+_tuyia#hx7tx7!i1^p#m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,11 +42,33 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webversion',
     'rest_framework',
+    'corsheaders',
 ]
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",    # React (FrontEnd Url) # <-------- this
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+
+
+CORS_ALLOW_HEADERS = '*' # <-------- this
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000/api/"] 
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -52,6 +76,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+
+
+
 
 ROOT_URLCONF = 'atg2.urls'
 

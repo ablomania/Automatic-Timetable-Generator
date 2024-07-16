@@ -6,7 +6,7 @@ home
 {% endblock %}
 
 {% block content %}
-
+{% if error < 1 %}
 <div class="welcome">
   <div id="indextop">
     <img src="{% static 'calendar.png' %}" width="300px" height="300px">
@@ -14,12 +14,27 @@ home
     <p>Create a timetable for your college with ease. Click on the button to begin</p>
     <button type="button" onclick="loadForm()" id="formLoader"><strong>Get Started</strong></button>
   </div>
+  {% endif %}
     
-    
-    <form method="post" id="formindex">
+    <form method="post" id="formindex" 
+    {% if error == 1 %}
+    style="display: flex;"
+    {% endif %}>
       {% csrf_token %}
       <h3>Sign In</h3>
-      <input type="email" name="email" placeholder="email" id="college" required><br>
+      {% if error == 1 %}
+      <div>
+          <p style="color: red;">Acount not Found</p>
+      </div>
+      {% endif %}
+      <input type="email" name="email" placeholder="email" id="college" required
+      {% if error == 1 %}
+      value={{userEmail}}
+      {% endif %}><br>
+      <input type="password"  name="password" placeholder="password" required
+      {% if error == 1 %}
+      value={{password}}
+      {% endif %}>
       <button type="submit" id="getstartedbtn" onclick="">Continue</button> 
       <a href="{% url 'create-account' %}">Create Account</a>    
     </form>

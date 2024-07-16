@@ -8,7 +8,7 @@ Info
 <div class="optionsPage">
     <form method="post" action="{% url 'departments' email college_id %}">
         {% csrf_token %}
-        <h3>College of {{ collegename }}</h3>
+        <h3>College of {{college_name}}</h3>
         {% for x in count %}
         <div class="options">
             <label for="department">Department Name</label>

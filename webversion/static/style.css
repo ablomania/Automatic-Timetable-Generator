@@ -211,7 +211,7 @@ header ul a, footer ul a{
 .sidenav .subnav ul{
     display: none;
     animation-name: growOut;
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-iteration-count: 1;
     flex-direction: column;
     background-color: #fafafa;
@@ -628,6 +628,12 @@ header ul a, footer ul a{
 .createcourse label, .createlecturer label,.createDepartment label{
     width: 75%;
 }
+.create-account form div{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+}
  #create-account-btn, #createcoursebtn, #createcollegebtn, #generate, #editcoursebtn, #regenerate, #formLoader, #deptsbtn, #optionsbtn, #createlectbtn, #createdeptbtn, #getstartedbtn{
     background-color: #0d47a1;
     border: none;
@@ -1036,7 +1042,9 @@ input:focus and border, select:focus and border{
         transform: rotateX(0deg) 
     }
 }
-
+.dropdown a:hover, .drop_parent strong:hover{
+    cursor: pointer;
+}
 .colleges .drop_parent .dropdown{
     display: none;
     flex-direction: column;

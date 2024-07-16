@@ -19,7 +19,8 @@ Add a Lecturer
         </div>
         <div>
             <label for="department">department</label>
-            <select name="department" id="department">
+            <select name="department" id="department" required>
+                <option value="">Any</option>
                 {% for x in departments %}
                 <option value="{{ x.id }}">{{ x.name }}</option>
                 {% endfor %}
