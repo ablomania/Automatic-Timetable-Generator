@@ -3,7 +3,9 @@ import { Touchable, TouchableOpacity, Text, StyleSheet } from "react-native"
 
 const EventItem = ({id, course_code, lecturer_name, location_name}) => {
     const navigation = useNavigation()
+    console.log(id)
     return(
+        
         <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("Details", {eventId: id, course_code, lecturer_name, location_name})}>
             <Text>{course_code}</Text>
             <Text>{location_name}</Text>

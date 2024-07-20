@@ -42,7 +42,7 @@ class Course(models.Model):
     department = models.ForeignKey("Department", on_delete=models.CASCADE, related_name="adepartment", null=True)
     hours = models.PositiveSmallIntegerField(default=2, null=True)
     has_labs = models.BooleanField(default=False, null=True)
-    is_combined = models.BooleanField(default=False, null=True)
+    is_contiguous_class_time = models.BooleanField(default=False, null=True)
     is_lab_only = models.BooleanField(default=False, null=True)
     is_elective = models.BooleanField(default=False, null=True)
     lab_hours = models.PositiveSmallIntegerField(default=0, null=True)
@@ -95,6 +95,10 @@ class Schedule(models.Model):
     lecturer = models.ForeignKey("Lecturer", on_delete=models.CASCADE, related_name="the_lecturer", null=True)
     creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="schedule_creator", null=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE, related_name="schedule_college", null=True)
+    time = models.PositiveIntegerField(null=True)
+    day = models.PositiveIntegerField(null=True)
+    college_name = models.CharField(max_length=255, null=True)
+    batch = models.PositiveIntegerField(null=True)
     def __str__(self):
         return f"{self.course_code} {self.location_name} {self.lecturer_name}"
 

@@ -4,19 +4,19 @@ import EventItem from "./event-item";
 
 
 const EventList = ({data}) => {
-    const renderItem = ({schedule}) => {
+    const renderItem = () => {
         return <EventItem 
-                    id={schedule.id} 
-                    course_code={schedule.course_code}  
-                    lecturer_name={schedule.lecturer_name}
-                    location_name={schedule.location_name}
+                    id={data.id} 
+                    course_code={data.course_code}  
+                    lecturer_name={data.lecturer_name}
+                    location_name={data.location_name}
                 />
     }
     return(
         <View>
             <FlatList 
                 data={data}
-                keyExtractor={schedule => schedule.id} 
+                keyExtractor={data => data.id} 
                 renderItem={renderItem}
                 refreshControl={
                     <RefreshControl

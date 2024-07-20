@@ -4,7 +4,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff
 from .functions import *
+from .tablegen import tablegenerator
 import random
+import docx
+from docx.shared import Mm
+from docx.enum.section import WD_ORIENT
 
 # Create your views here.
 global selected_courses
@@ -239,6 +243,9 @@ def timetable(request, email, college_id):
         scarr[group] = temp
     times = {0:"PERIOD",1:"8:00 - 8:55", 2:"9:00 - 9:55", 3:"10:30 - 11:25", 4:"11:30 - 12:25", 5:"1:00 - 1:55", 6:"2:00 - 2:55", 7:"3:00 - 3:55", 8:"4:00 - 4:55", 9:"5:00 - 5:55", 10:"6:00 - 6:55", 11:"7:00 - 7:55", 12:"8:00 - 8:55", 13:"9:00 - 9:55", 14:"10:00 - 10:55"}
     print(year_groups)
+    #########################
+    tablegenerator(college_id=college_id, user_id=user_id,some_list=ss)
+    #########################
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
         "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts,

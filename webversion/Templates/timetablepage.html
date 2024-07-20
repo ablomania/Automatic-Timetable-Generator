@@ -5,7 +5,6 @@ Timetable
 {% endblock %}
 
 {% block content %}
-
 <div class="timetable_body">
     <div class="leftsection">
         <div class="card" width="300px" height="300px">
@@ -23,69 +22,62 @@ Timetable
     </div>
     
     <div class="rightsection">
-        <div class="timetablebtns">
-            <form>
-                {% csrf_token %}
-                <button id="savetimetable" type="submit">
-                    Save
-                </button>
-                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
-                    Regenerate
-                </button>
-            </form>
-            
-        </div>
-        {% for group, schedules in scarr.items %}  
-            <p><strong style="text-transform: uppercase;">COLLEGE OF {{college.name}}</strong></p> 
-        {% if group <= 5 %}
-            <p><strong>FIRST YEAR</strong></p>
-        {% elif group > 5 and group <= 10 %}
-            <p><strong>SECOND YEAR</strong></p>
-        {% elif group > 10 and group <= 15 %}
-            <p><strong>THIRD YEAR</strong></p>
-        {% elif group > 15 and group <= 20 %}
-            <p><strong>FOURTH YEAR</strong></p>
-        {% elif group > 20 and group <= 25 %}
-            <p><strong>FIFTH YEAR</strong></p>
-        {% elif group > 25 and group <= 30 %}
-            <p><strong>SIXTH YEAR</strong></p>
-        {% elif group > 30 and group <= 35 %}
-            <p><strong>SEVENTH YEAR</strong></p>
-        {% endif %} 
-        <p><strong>
-            {% cycle "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" %}</p>
-        </strong>
-        <div class="gridcontainer1">
-            <div class="ann">
-                {% for index, time in times.items %}
-                {% if index <= rows_per_day %}
-                <div class="gridtime">
-                    <p>{{time}}</p>
+        
+        <div>
+            {% for group, schedules in scarr.items %}  
+            <div class="timetable-main">
+                <p><strong style="text-transform: uppercase;">COLLEGE OF {{college.name}}</strong></p> 
+                {% if group <= 5 %}
+                    <p><strong>FIRST YEAR</strong></p>
+                {% elif group > 5 and group <= 10 %}
+                    <p><strong>SECOND YEAR</strong></p>
+                {% elif group > 10 and group <= 15 %}
+                    <p><strong>THIRD YEAR</strong></p>
+                {% elif group > 15 and group <= 20 %}
+                    <p><strong>FOURTH YEAR</strong></p>
+                {% elif group > 20 and group <= 25 %}
+                    <p><strong>FIFTH YEAR</strong></p>
+                {% elif group > 25 and group <= 30 %}
+                    <p><strong>SIXTH YEAR</strong></p>
+                {% elif group > 30 and group <= 35 %}
+                    <p><strong>SEVENTH YEAR</strong></p>
+                {% endif %} 
+                <p><strong>
+                    {% cycle "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" %}</p>
+                </strong>
+                <div class="gridcontainer1">
+                    <div class="ann">
+                        {% for index, time in times.items %}
+                        {% if index <= rows_per_day %}
+                        <div class="gridtime">
+                            <p>{{time}}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}  
+                    </div>
+                    
+                    <div class="gridcontainer2" style="display: grid; grid-template-columns: repeat({{nofdepts}}, 1fr); grid-template-rows: repeat({{rows_per_day}}, 1fr);">
+                        {% for department in departments %}
+                        <div class="griddept">
+                            <p>{{department}}</p>
+                        </div>
+                        {% endfor %}  
+                        {% for schedule in schedules %}
+                        <div class="griditem">
+                            <p>
+                                {{schedule.course_code}}<br>
+                                {{schedule.location_name}}<br>
+                                {{schedule.lecturer_name}}
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endif %}
-                {% endfor %}  
             </div>
-            
-            <div class="gridcontainer2" style="display: grid; grid-template-columns: repeat({{nofdepts}}, auto); grid-template-rows: repeat(10, auto);">
-                {% for department in departments %}
-                <div class="griddept">
-                    <p>{{department}}</p>
-                </div>
-                {% endfor %}  
-                {% for schedule in schedules %}
-                <div class="griditem">
-                    <p>
-                        {{schedule.course_code}}<br>
-                        {{schedule.location_name}}<br>
-                        {{schedule.lecturer_name}}
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
+                
+            {% endfor %}
         </div>
-        <br><br><hr>
-        <br><hr>
-        {% endfor %}
+        
     </div>
 </div>
 

@@ -6,7 +6,7 @@ Departments
 
 {% block content %}
 <div class="viewDepartments">
-    <h3>Departments in {{college.name}}</h3>
+    <h3>Departments in {{college}}</h3>
     {% for x in departments %}
     <div class="departments">
         <a href="{% url 'pagetwo' email x.college_main_id x.name x.max_yg %}">{{ x.name }}</a>

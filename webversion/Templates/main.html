@@ -48,14 +48,32 @@
                     <li>
                         <a href="{% url 'viewSelected' email college.id %}">courses</a>
                     </li>
+                    {% endif %}
                     <li>
                         <a href="{% url 'timetablePage' email college %}">timetable</a>
                     </li>
                 </ul>
-                {% endif %}
-                {% endif %}
-                {% endif %}
                 
+                {% endif %}
+                {% endif %}
+                {% if scarr %}
+                <div class="timetablebtns">
+                    <form>
+                        {% csrf_token %}
+                        <div>
+                            <button id="savetimetable" type="button" onclick="showButtons()">
+                                Save
+                            </button>
+                            <button id="print" class="print" type="button" onclick="windowPrinter()">Print</button>
+                        </div>
+                        
+                        <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
+                            Regenerate
+                        </button>
+                    </form>
+                    
+                </div>
+                {% endif %}
             </nav>
         </div>
         <hr>
@@ -67,7 +85,7 @@
     {% endblock %}
     </div>
 
-    <footer>
+    <footer id="footer">
         <hr style="float: right; background-color: #0d47a1; height: 10px;">
         <p>copyright &copy; 2024</p>
         <div class="BottomNavBar">

@@ -11,6 +11,13 @@ input:focus{
 h1, h2, h3,h4{
     color: #0d47a1;
 }
+@media print{
+    @page {
+        size: Tabloid landscape;
+        margin: 2%;
+        scale: 60%;
+    }
+}
 .errorPage{
     width: 60%;
     margin: auto;
@@ -72,6 +79,11 @@ header .subHead .logo img{
 header .subHead .logo h1{
     margin-left: 0;
     float: left;
+}
+.TopNavBar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 header .subHead .TopNavBar ul{
     display: flex;
@@ -263,6 +275,18 @@ header ul a, footer ul a{
 .firstyear form{
     width: 80%;
 }
+#blinky{
+    animation-name: rotateX;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.print{
+    display: none;
+    padding: 5px;
+    border-radius: 5px;
+    color: #0d47a1;
+}
 .firstyear form .scourses{
     display: grid;
     grid-template-columns: auto auto;
@@ -413,13 +437,8 @@ header ul a, footer ul a{
     padding-top: 50px;
 }
 .timetable_body .rightsection{
-    width: 85%;
+    width: 95%;
     margin: auto;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(11.6px);
-    -webkit-backdrop-filter: blur(11.6px);
-    padding: 20px;
-    border-radius: 10px;
     margin-bottom: 50px;
     margin-top: 20px;
     border-radius: 10px;
@@ -432,7 +451,7 @@ header ul a, footer ul a{
     grid-template-columns: auto;
 }
 .gridtime:first-of-type{
-    height: 52px;
+    height: 1fr;
 }
 #item1{
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -445,7 +464,7 @@ header ul a, footer ul a{
 }
 .gridtime{
     border: 1px solid;
-    height: 100px;
+    height: auto;
     background-color: #fafafa;
 }
 .gridcontainer1{
@@ -469,6 +488,9 @@ header ul a, footer ul a{
 .gridcontainer2 .griddept{
     border: solid 1px;
     background-color: #fafafa;
+    padding-right: 2px;
+    padding-left: 2px;
+    justify-content: center;
 }
 .griditem{
     border: 1px solid;
@@ -484,11 +506,23 @@ header ul a, footer ul a{
     display: flex;
     flex-direction: row;
     align-items: center; 
-    justify-content: flex-end; 
-    position: sticky;
-    top: 100px;
-    right: 70px;  
+    justify-content: flex-end;
 }
+.timetable-main{
+    margin: auto;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    padding: 10px;
+    border-radius: 10px;
+}
+.timetablebtns form{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .timetablebtns #savetimetable{
     width: -moz-fit-content;
     width: fit-content;
@@ -497,7 +531,8 @@ header ul a, footer ul a{
     border: #0d47a1 1px dashed;
     height: -moz-fit-content;
     height: fit-content;
-    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 3px;
 }
 
 /* fpr viewselected courses */

@@ -1,3 +1,36 @@
+window.onload = function loadBg() {
+    body = document.getElementById("main-body");
+    tempBody1 = document.querySelector(".welcome");
+    tempBody2 = document.querySelector(".deptsection")
+    tempBody3 = document.querySelector(".viewselected")
+    if(tempBody1) {
+        body.style.backgroundPosition = "top";
+    }
+    else if(tempBody2) {
+        body.style.backgroundPosition = "center";
+    }
+    else if(tempBody3) {
+        body.style.backgroundPosition = "right top"
+    }
+}
+
+function uPanel() {
+    const node = document.getElementById("user-link");
+    if(node.style.display != "flex"){
+        node.style.display = "flex";
+        const active = 1
+    }
+    else{
+        node.style.display = "none";
+    }
+}
+
+function activateDark() {
+    body = document.getElementById("main-body");
+    body.style.background = "#000000";
+    body.style.color = "#fff";
+}
+
 function loadForm(){
     const form = document.getElementById("formindex");
     form.style.display = "flex";

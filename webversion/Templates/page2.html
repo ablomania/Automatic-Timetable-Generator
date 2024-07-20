@@ -38,8 +38,8 @@ Select
 </div>
 <div class="main">
     {% if n_locations < 5 %}
-    <div>
-        <p>You have created <strong>{{n_locations}}</strong> locations. Please click here to create more:  <a href="/{{email}}/locations" style="text-decoration: underline;">Link</a></p>
+    <div id="blinky">
+        <p>You have created <strong>{{n_locations}}</strong> locations. Please click here to create locations:  <a href="/{{email}}/locations" style="text-decoration: underline;">Link</a></p>
     </div>
     {% endif %}
     <h2>college of {{college_name}}</h2>
@@ -72,7 +72,7 @@ Select
                 </div>
                 {% empty %}
                 <p>empty &#8594;</p><br>
-                <p>please select the <strong>plus &plus;</strong> button</button></p>
+                <p>please select the <strong>plus &plus;</strong> button to create courses</p>
                 {% endfor %}
             </div>
             <div class="btns">

@@ -43,15 +43,15 @@ Edit Course
             <label for="hours">credit hours:</label>
             <input type="number" value="{{course.hours}}" name="hours" min="1" max="10" id="hours">
         </div>
-        <div>
-            <label for="is_combined">Combined class:</label>
-            <select name="is_combined" id="is_combined">
-                <option value="{{course.is_combined}}">{{course.is_combined}}</option>
+        <!-- <div>
+            <label for="is_contiguous_class_time">Continuous class:</label>
+            <select name="is_contiguous_class_time" id="is_contiguous_class_time">
+                <option value="{{course.is_contiguous_class_time}}">{{course.is_contiguous_class_time}}</option>
                 {% for x in bool_List %}
                 <option value="{{ x }}">{{ x }}</option>
                 {% endfor %}
             </select>
-        </div>
+        </div> -->
         <div>
             <label for="has_labs">has lab sessions:</label>
             <select name="has_labs" id="has_labs">

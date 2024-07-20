@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'webversion',
     'rest_framework',
     'corsheaders',
+    'bootstrap5',
 ]
 
 # CORS_ORIGIN_ALLOW_ALL = True

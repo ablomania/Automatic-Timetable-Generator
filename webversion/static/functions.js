@@ -14,6 +14,22 @@ window.onload = function loadBg() {
     }
 }
 
+function showButtons() {
+    document.getElementById("print").style.display = "block";
+}
+
+function windowPrinter() {
+    const header = document.getElementById("header")
+    header.style.display = "none";
+    const footer = document.getElementById("footer")
+    footer.style.display = "none";
+    window.print()
+    setTimeout(() => {
+        header.style.display = "initial";
+        footer.style.display = "initial";
+    }, 1000);
+}
+
 function uPanel() {
     const node = document.getElementById("user-link");
     if(node.style.display != "flex"){
