@@ -2,13 +2,19 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff
+from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff, Docs
 from .functions import *
 from .tablegen import tablegenerator
 import random
 import docx
 from docx.shared import Mm
 from docx.enum.section import WD_ORIENT
+from pathlib import Path
+from django.core.files import File
+from django.http import FileResponse
+from docx2pdf import convert
+import time
+
 
 # Create your views here.
 global selected_courses
@@ -199,17 +205,46 @@ def viewSelected(request, college_id, email):
 def generateTimetable(request, college_id, email):
     user_id = UserAccount.objects.get(email=email).id
     # college = College.objects.get(creater_id=user_id, name)
+    is_batch = Schedule.objects.filter(batch__gte=1)
+    if len(is_batch) > 0: 
+        batch = Schedule.objects.order_by("-batch").first().batch
+        batch = batch + 1
+    else: batch = 1
     if request.method == "POST":
         print("generating")
-        Schedule.objects.filter(college_id=college_id).delete()
+        # Schedule.objects.filter(college_id=college_id).delete()
         for course_id in selected_courses:
-            createSchedule(course_id=course_id, user_id=user_id)
-    return HttpResponseRedirect(reverse("timetablePage", args=(email, college_id)))
+            createSchedule(course_id=course_id, user_id=user_id, batch=batch)
+    return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
+    # return HttpResponseRedirect(reverse("timetablePage", args=(email, college_id)))
 
-def timetable(request, email, college_id):
+def deleteTimetable(request, email, college_id, batch):
+    user_id = UserAccount.objects.get(email=email).id
+    if request.method == "POST":
+        target = Schedule.objects.filter(creator_id=user_id, college_id=college_id, batch=batch)
+        if len(target) > 1: target.delete()
+    return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
+
+def collegeTimeTables(request, email, college_id):
+    user_id = UserAccount.objects.get(email=email).id
+    template = loader.get_template("collegetables.html")
+    allTables = Schedule.objects.order_by("date_created")
+    batch = list(dict(Schedule.objects.filter(creator_id=user_id, college_id=college_id).values_list("batch", "id")))
+    print(batch)
+    college = College.objects.get(id=college_id)
+    dates = []
+    for sch in list(allTables):
+        if sch.date_created not in dates: dates.append(sch.date_created)
+    context = {
+        "n_batch": batch, "dates":dates, "college_name":college.name,
+        "email": email, "college_id":college_id,
+    }
+    return HttpResponse(template.render(context, request))
+
+def timetable(request, email, college_id,batch):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("timetablepage.html")
-    schedule = Schedule.objects.filter(creator_id=user_id, college_id=college_id).order_by("row")
+    schedule = Schedule.objects.filter(creator_id=user_id, college_id=college_id, batch=batch).order_by("row")
     course = Course.objects.all().values()
     departments = Department.objects.filter(college_main_id=college_id)
     max_yg = (departments.order_by("-max_yg").first()).max_yg
@@ -244,15 +279,62 @@ def timetable(request, email, college_id):
     times = {0:"PERIOD",1:"8:00 - 8:55", 2:"9:00 - 9:55", 3:"10:30 - 11:25", 4:"11:30 - 12:25", 5:"1:00 - 1:55", 6:"2:00 - 2:55", 7:"3:00 - 3:55", 8:"4:00 - 4:55", 9:"5:00 - 5:55", 10:"6:00 - 6:55", 11:"7:00 - 7:55", 12:"8:00 - 8:55", 13:"9:00 - 9:55", 14:"10:00 - 10:55"}
     print(year_groups)
     #########################
-    tablegenerator(college_id=college_id, user_id=user_id,some_list=ss)
+    tablegenerator(college_id=college_id, user_id=user_id,some_list=ss, batch=batch)
     #########################
+    check_doc = Docs.objects.filter(batch=batch, college_id=college_id)
+    if len(check_doc) > 0: new_doc = Docs.objects.filter(batch=batch, college_id=college_id)
+    else:
+        new_doc = Docs(batch=batch, college_id=college_id)
+        new_doc.save()
+    dd = Docs.objects.get(batch=batch, college_id=college_id)
+    path = Path(f"{college.name}_{batch}.docx")
+    # car = Car.objects.get(name="57 Chevy")
+    with path.open(mode="rb") as f:
+        dd.file = File(f, name=path.name)
+        dd.save()
+    n_timetables = Schedule.objects.values_list("batch")
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
         "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts,
         "email":email,"rows_per_day": rows_per_day, "days_per_week":days_per_week,
+        "new_doc":new_doc, "batch":batch,
     }
     return HttpResponse(template.render(context, request))
 
+def createPdf(college_id, batch):
+    college = College.objects.get(id=college_id)
+    doc = Docs.objects.get(college_id=college_id, batch=batch)
+    i_path = Path(f"{college.name}_{batch}.docx")
+    convert(i_path)
+    dd = Docs.objects.get(batch=batch, college_id=college_id)
+    path = Path(f"{college.name}_{batch}.pdf")
+    with path.open(mode="rb") as f:
+        dd.pdf = File(f, name=path.name)
+        dd.save()
+
+def downloadPdf(request, email, college_id, batch):
+    createPdf(college_id=college_id, batch=batch)
+    college = College.objects.get(id=college_id)
+    doc = Docs.objects.get(college_id=college_id, batch=batch)
+    path = doc.pdf.path
+    file_name = str(college.name) + "_" + str(batch)
+    response = FileResponse(open(path, 'rb'))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = f'attachment; filename="{college.name}_{batch}.pdf"'
+    return response
+
+def downloadDoc(request, email, college_id, batch):
+    college = College.objects.get(id=college_id)
+    doc = Docs.objects.get(college_id=college_id, batch=batch)
+    path = doc.file.path
+    file_name = str(college.name) + "_" + str(batch)
+    response = FileResponse(open(path, 'rb'))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = f'attachment; filename="{college.name}_{batch}.docx"'
+    return response
+    # if request.method == "GET":
+    #     my_file = Docs.objects.get(college_id=college_id, batch=batch).file
+    #     return my_file
 
 def createCoursePage(request,email, department_id, year_group):
     user_id = UserAccount.objects.get(email=email).id

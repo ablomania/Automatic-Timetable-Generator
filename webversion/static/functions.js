@@ -14,15 +14,31 @@ window.onload = function loadBg() {
     }
 }
 
+function loadpdf() {
+    const tBody = document.querySelector(".rightsection");
+    const tImage = document.getElementById("loading");
+    setTimeout(() => {
+        tBody.style.display = "none";
+        tImage.style.display = "block";
+    }, 60000);
+    tBody.style.display = "flex";
+    tImage.style.display = "none";
+    
+}
+
 function showButtons() {
-    document.getElementById("print").style.display = "block";
+    btns = document.querySelectorAll("print")
+    btns.forEach((b)=> {
+        b.style.display = "block";
+    })
+    
 }
 
 function windowPrinter() {
-    const header = document.getElementById("header")
-    header.style.display = "none";
-    const footer = document.getElementById("footer")
-    footer.style.display = "none";
+    // const header = document.getElementById("header")
+    // header.style.display = "none";
+    // const footer = document.getElementById("footer")
+    // footer.style.display = "none";
     window.print()
     setTimeout(() => {
         header.style.display = "initial";

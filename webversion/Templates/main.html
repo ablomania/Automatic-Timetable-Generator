@@ -50,29 +50,11 @@
                     </li>
                     {% endif %}
                     <li>
-                        <a href="{% url 'timetablePage' email college %}">timetable</a>
+                        <a href="{% url 'collegeTables' email college %}">timetable</a>
                     </li>
                 </ul>
                 
                 {% endif %}
-                {% endif %}
-                {% if scarr %}
-                <div class="timetablebtns">
-                    <form>
-                        {% csrf_token %}
-                        <div>
-                            <button id="savetimetable" type="button" onclick="showButtons()">
-                                Save
-                            </button>
-                            <button id="print" class="print" type="button" onclick="windowPrinter()">Print</button>
-                        </div>
-                        
-                        <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
-                            Regenerate
-                        </button>
-                    </form>
-                    
-                </div>
                 {% endif %}
             </nav>
         </div>

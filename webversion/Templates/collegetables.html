@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}
+timetables
+{% endblock %}
+
+{% block content %}
+<div class="college-tables">
+    <div class="collge-tables-main">
+        <h1>All Timetables for {{college_name}}</h1>
+        {% for batch in n_batch %}
+        <div class="toptable">
+            <a href="/{{email}}/{{college_id}}/timetable/{{batch}}">
+                <div class="table-card">
+                    <p>Table {{forloop.counter}}</p>
+                </div>
+            </a>
+            <form method="post" action="/{{email}}/deletetimetable/{{college_id}}/{{batch}}">
+                {% csrf_token %}
+                <button id="delete-timetable-btn" type="submit">
+                    <img src="{% static 'trash-can.png' %}" />
+                </button>
+            </form>
+        </div>
+        
+        
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}

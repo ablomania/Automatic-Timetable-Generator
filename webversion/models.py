@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here. 
 class UserAccount(models.Model):
@@ -34,6 +35,12 @@ class Pref_Stuff(models.Model):
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="pref_location")
     creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="creator_pref", null=True)
     college_main = models.ForeignKey(College, on_delete=models.CASCADE, related_name="pref_college", null=True)
+
+class Docs(models.Model):
+    batch = models.PositiveBigIntegerField()
+    college = models.ForeignKey(College, on_delete=models.CASCADE, related_name="docx_college")
+    file = models.FileField(upload_to='docx')
+    pdf = models.FileField(upload_to='pdf', null=True)
 
 class Course(models.Model):
     code = models.CharField(max_length=15)
@@ -99,6 +106,8 @@ class Schedule(models.Model):
     day = models.PositiveIntegerField(null=True)
     college_name = models.CharField(max_length=255, null=True)
     batch = models.PositiveIntegerField(null=True)
+    posted = models.BooleanField(default=False)
+    date_created = models.DateField(default=timezone.now, null=True)
     def __str__(self):
         return f"{self.course_code} {self.location_name} {self.lecturer_name}"
 

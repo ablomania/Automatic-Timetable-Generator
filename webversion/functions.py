@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 import docx
 
-def createSchedule(course_id, user_id):
+def createSchedule(course_id, user_id, batch):
     current_course = Course.objects.get(id=course_id)
     current_department = Department.objects.get(id=current_course.department_id)
     college_id = current_department.college_main_id
@@ -38,7 +38,7 @@ def createSchedule(course_id, user_id):
         new_schedule = Schedule(course_id=current_course.id, course_code=current_course.code, year_group=current_course.year_group,
                                 location_id=location, location_name=location_name, height=2, column=column, row=row, department=current_department,
                                 lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id, creator_id=user_id, time=time, day=day,
-                                college_id=college_id, college_name=college.name
+                                college_id=college_id, college_name=college.name, batch=batch
                         )
         new_schedule.save()
 

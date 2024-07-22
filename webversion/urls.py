@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('<int:error>', views.homePage, name='homePage'),
     path('<str:email>/select/<int:college_id>/<str:dname>/<int:id>', views.secondPage, name='pagetwo'),
-    path("<str:email>/<int:college_id>/timetable",views.timetable, name="timetablePage"),
+    path("<str:email>/<int:college_id>/timetable/<int:batch>",views.timetable, name="timetablePage"),
     path("<str:email>/addaCoursePage/<int:department_id>/<int:year_group>", views.createCoursePage, name="createCourse"),
     path("<str:email>/createcourse2/<int:course_id>", views.createCoursePage2, name="createcourse2"),
     path("<str:email>/editcourse/<str:code>/<int:id>", views.editCourse, name="editCourse"),
@@ -24,11 +24,16 @@ urlpatterns = [
     path("<str:email>/deletelocation/<int:id>", views.deleteLocation, name="deletelocation"),
     path("<str:email>/editlocation/<int:id>", views.modifylocation, name="modifylocation"),
     path("<str:email>/generate-timetable/<int:college_id>", views.generateTimetable, name="generate"),
+    path("<str:email>/allcollegetables/<int:college_id>", views.collegeTimeTables, name="collegeTables"),
+    path("<str:email>/deletetimetable/<int:college_id>/<int:batch>", views.deleteTimetable, name="deleteTimetable"),
     path("<str:email>/colleges", views.collegePage, name="colleges"),
     path("<str:email>/deletecollege/<int:id>", views.deletecollege, name="deletecollege"),
     path("<str:email>/errorinput", views.errorInputPage, name="error-input"),
     path("createaccount", views.createAccountPage, name="create-account"),
     path("<str:email>/createcollege", views.createCollege, name="create-college"),
     path("<str:email>/collegeviewGenerator/<int:college_id>", views.collegeviewGenerator, name="collegeView"),
-    path("<str:email>/editcollege/<int:college_id>", views.editcollege, name="editcollege")
+    path("<str:email>/editcollege/<int:college_id>", views.editcollege, name="editcollege"),
+    path("<str:email>/downloaddoc/<int:college_id>/<int:batch>", views.downloadDoc, name="downloadDoc"),
+    path("<str:email>/downloadpdf/<int:college_id>/<int:batch>", views.downloadPdf, name="downloadPdf")
+
 ]

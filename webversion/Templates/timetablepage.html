@@ -1,5 +1,5 @@
 {% extends "main.html" %}
-
+{% load static %}
 {% block title %}
 Timetable
 {% endblock %}
@@ -7,22 +7,33 @@ Timetable
 {% block content %}
 <div class="timetable_body">
     <div class="leftsection">
-        <div class="card" width="300px" height="300px">
-           
-        </div>
-        <div class="card" width="300px" height="300px">
-           
-        </div>
-        <div class="card" width="300px" height="300px">
-            
-        </div>
-        <div class="card" width="300px" height="300px">
-            
-        </div>
+        <img id="loading" class="loading" src="{% static 'loading.png' %}" alt="loading" />
     </div>
     
     <div class="rightsection">
-        
+        <div class="timetablebtns">
+            <form>
+                {% csrf_token %}
+                <div>
+                    <!-- <button id="savetimetable" type="button" onclick="showButtons()">
+                        Save
+                    </button> -->
+                    <a href="/{{email}}/downloaddoc/{{college.id}}/{{batch}}">
+                        <button id="savetimetable" class="print" type="button">
+                            docx
+                        </button>
+                    </a>
+                    <a href="/{{email}}/downloadpdf/{{college.id}}/{{batch}}">
+                        <button id="savetimetable" class="print"  type="button">pdf</button>
+                    </a>
+                </div>
+                
+                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
+                    Regenerate
+                </button>
+            </form>
+            
+        </div>
         <div>
             {% for group, schedules in scarr.items %}  
             <div class="timetable-main">
