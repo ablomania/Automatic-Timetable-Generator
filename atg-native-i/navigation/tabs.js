@@ -6,12 +6,29 @@ import ScheduleScreen from '../screens/schedule-screen';
 import NotificationScreen from '../screens/notification-screen';
 import DetailScreen from '../screens/schedules/details';
 import { HomeStack, ProfileStack, ScheduleStack } from './stack';
+import { useEffect, useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabs({navigation}) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    // Check authentication status (e.g., read from local storage)
+    const checkAuthStatus = async () => {
+      try {
+        const authStatus = await AsyncStorage.getItem('userName');
+        if(authStatus.length >= 1);
+        setIsAuthenticated(true);
+        console.log(authStatus)
+      } catch (error) {
+        console.error('Error reading auth status:', error);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
         screenOptions={({ route }) => ({
             headerShown: false,
             tabBarShowLabel: true,

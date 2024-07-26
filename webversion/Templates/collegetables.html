@@ -8,23 +8,30 @@ timetables
 <div class="college-tables">
     <div class="collge-tables-main">
         <h1>All Timetables for {{college_name}}</h1>
-        {% for batch in n_batch %}
+        {% for timetable in timetables %}
         <div class="toptable">
-            <a href="/{{email}}/{{college_id}}/timetable/{{batch}}">
+            <a href="/{{email}}/{{college_id}}/timetable/{{timetable.id}}">
                 <div class="table-card">
-                    <p>Table {{forloop.counter}}</p>
+                    <p>Table {{timetable.batch}}</p>
                 </div>
             </a>
-            <form method="post" action="/{{email}}/deletetimetable/{{college_id}}/{{batch}}">
+            <form method="post" action="/{{email}}/deletetimetable/{{college_id}}/{{timetable.id}}">
                 {% csrf_token %}
                 <button id="delete-timetable-btn" type="submit">
                     <img src="{% static 'trash-can.png' %}" />
                 </button>
             </form>
         </div>
-        
-        
+        {% empty %}
+        <h5>all timetables for {{college_name}} will apear here. </h5>
+        <p>no timetables created yet</p>
+        <a href="/{{email}}/select/{{college_id}}/{{first_dept.name}}/{{first_dept.max_yg}} ">
+            <strong style="text-decoration: underline; color: blue;">Click here to create one</strong>
+        </a>
         {% endfor %}
+        <a href="/{{email}}/select/{{college_id}}/{{first_dept.name}}/{{first_dept.max_yg}} ">
+            <strong style="text-decoration: underline; color: blue;">Add another</strong>
+        </a>
     </div>
     
 </div>

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff, Docs
+from .models import UserAccount, Pref_location, Pref_day, Pref_time, College, Lecturer, Location, Department, Course, Schedule, Pref_Stuff, Docs, Timetable
 from .functions import *
 from .tablegen import tablegenerator
 import random
@@ -14,11 +14,14 @@ from django.core.files import File
 from django.http import FileResponse
 from docx2pdf import convert
 import time
+from .pdfgen import createPdf
 
 
 # Create your views here.
 global selected_courses
+# global preferred_List
 selected_courses = []
+# preferred_List = []
 #Homepage loader
 def homePage(request, error=0):
     template = loader.get_template("index.html")
@@ -140,7 +143,8 @@ def secondPage(request, email, college_id, dname,id):
         for x in b.values():
             course_id = int(x[0])
             current_course = Course.objects.get(id=course_id)
-            if (current_course.has_labs or current_course.is_lab_only):
+            is_preferred = Pref_Stuff.objects.filter(course_id=course_id)
+            if (current_course.has_labs or current_course.is_lab_only or len(is_preferred) > 0):
                 selected_courses.insert(0, int(course_id))
             if(course_id not in selected_courses):
                 selected_courses.append(int(course_id))
@@ -149,8 +153,10 @@ def secondPage(request, email, college_id, dname,id):
         print(selected_courses)
     result = {}
     for course_id in selected_courses:
-        scourse = Course.objects.get(id=course_id)
-        result[course_id] = scourse
+        t = Course.objects.filter(id=course_id)
+        if len(t) > 0:
+            scourse = Course.objects.get(id=course_id)
+            result[course_id] = scourse
     if request.method == "GET" and 'btnsidebar_remove' in request.GET:
         remove_dict = dict(request.GET)
         remove_dict.pop('csrfmiddlewaretoken')
@@ -162,7 +168,6 @@ def secondPage(request, email, college_id, dname,id):
         return HttpResponseRedirect(reverse('pagetwo',args=(email,college_id, dname, id)))
     lastdepartment = departments.filter().last().id
     firstdepartment = departments.filter().first().id
-    
     page = id - 1
     tp = id
     if((page == 0) and (department.id is not lastdepartment)):
@@ -204,49 +209,81 @@ def viewSelected(request, college_id, email):
 #Timetable page loader
 def generateTimetable(request, college_id, email):
     user_id = UserAccount.objects.get(email=email).id
-    # college = College.objects.get(creater_id=user_id, name)
-    is_batch = Schedule.objects.filter(batch__gte=1)
+    preferred = list(dict(Pref_Stuff.objects.filter(college_main_id=college_id).values_list("course_id", "id")))
+    is_batch = Timetable.objects.filter(batch__gte=1)
+    preferred_List = lab_List = con_labs_List = []
+    lab_courses = list(dict(Course.objects.filter(creator_id=user_id, has_labs=True).values_list("id", "name")))
+    cc =list(dict(Course.objects.filter(creator_id=user_id, is_contiguous_lab_time=True).values_list("id", "name")))
+    print("sc bf pl", selected_courses)
+    for pref in list(preferred):
+        if int(pref) in list(selected_courses):
+            preferred_List.append(int(pref))
+            selected_courses.remove(int(pref))
+    print("pl", preferred_List)
+    print("sc af pl", selected_courses)
+    for slt in list(selected_courses):
+        if int(slt) in list(cc): con_labs_List.append(int(slt))
+        else:
+            if int(slt) in list(lab_courses):
+                lab_List.append(int(slt))
+                selected_courses.remove(int(slt))
+    print("ll", lab_List)
+    print("sc af ll", selected_courses)
+    for ll in list(lab_List):
+        selected_courses.insert(0, int(ll))
+    print("sc wt ll", selected_courses)
+    for c in list(con_labs_List):
+        if int(c) in list(selected_courses): selected_courses.remove(int(c))
+        selected_courses.insert(0, int(c))
+    for pl in list(preferred_List):
+        if int(pl) in list(selected_courses): selected_courses.remove(int(pl))
+        selected_courses.insert(0, int(pl))
+    print("sc wt pl and ll", selected_courses)
     if len(is_batch) > 0: 
-        batch = Schedule.objects.order_by("-batch").first().batch
+        batch = Timetable.objects.order_by("-batch").first().batch
         batch = batch + 1
     else: batch = 1
+    code = 343256 + batch
     if request.method == "POST":
+        new_timetable = Timetable(
+            code=code, batch=batch, college_main_id=college_id
+        )
+        new_timetable.save()
         print("generating")
         # Schedule.objects.filter(college_id=college_id).delete()
         for course_id in selected_courses:
-            createSchedule(course_id=course_id, user_id=user_id, batch=batch)
+            createSchedule(course_id=course_id, user_id=user_id, timetable=new_timetable.id)
     return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
     # return HttpResponseRedirect(reverse("timetablePage", args=(email, college_id)))
 
-def deleteTimetable(request, email, college_id, batch):
+def deleteTimetable(request, email, college_id, timetable_id):
     user_id = UserAccount.objects.get(email=email).id
     if request.method == "POST":
-        target = Schedule.objects.filter(creator_id=user_id, college_id=college_id, batch=batch)
-        if len(target) > 1: target.delete()
+        target = Timetable.object.get(id=timetable_id)
+        target.delete()
     return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
 
 def collegeTimeTables(request, email, college_id):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("collegetables.html")
-    allTables = Schedule.objects.order_by("date_created")
-    batch = list(dict(Schedule.objects.filter(creator_id=user_id, college_id=college_id).values_list("batch", "id")))
-    print(batch)
+    timetables = Timetable.objects.filter(college_main_id=college_id)
     college = College.objects.get(id=college_id)
     dates = []
-    for sch in list(allTables):
-        if sch.date_created not in dates: dates.append(sch.date_created)
+    first_department = Department.objects.filter(college_main_id=college_id).order_by("name").first()
+    
     context = {
-        "n_batch": batch, "dates":dates, "college_name":college.name,
-        "email": email, "college_id":college_id,
+        "timetables": timetables, "dates":dates, "college_name":college.name,
+        "email": email, "college_id":college_id, "first_dept":first_department,
     }
     return HttpResponse(template.render(context, request))
 
-def timetable(request, email, college_id,batch):
+def timetable(request, email, college_id,timetable_id):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("timetablepage.html")
-    schedule = Schedule.objects.filter(creator_id=user_id, college_id=college_id, batch=batch).order_by("row")
+    schedule = Schedule.objects.filter(creator_id=user_id, college_id=college_id, timetable_id=timetable_id).order_by("row")
     course = Course.objects.all().values()
     departments = Department.objects.filter(college_main_id=college_id)
+    batch = Timetable.objects.get(id=timetable_id).batch
     max_yg = (departments.order_by("-max_yg").first()).max_yg
     college = College.objects.get(id=college_id)
     rows_per_day = college.rows_per_day
@@ -281,18 +318,17 @@ def timetable(request, email, college_id,batch):
     #########################
     tablegenerator(college_id=college_id, user_id=user_id,some_list=ss, batch=batch)
     #########################
-    check_doc = Docs.objects.filter(batch=batch, college_id=college_id)
-    if len(check_doc) > 0: new_doc = Docs.objects.filter(batch=batch, college_id=college_id)
+    check_doc = Docs.objects.filter(table_id=timetable_id, college_id=college_id)
+    if len(check_doc) > 0: new_doc = Docs.objects.filter(table_id=timetable_id, college_id=college_id)
     else:
-        new_doc = Docs(batch=batch, college_id=college_id)
+        new_doc = Docs(table_id=timetable_id, college_id=college_id)
         new_doc.save()
-    dd = Docs.objects.get(batch=batch, college_id=college_id)
+    dd = Docs.objects.get(table_id=timetable_id, college_id=college_id)
     path = Path(f"{college.name}_{batch}.docx")
     # car = Car.objects.get(name="57 Chevy")
     with path.open(mode="rb") as f:
         dd.file = File(f, name=path.name)
         dd.save()
-    n_timetables = Schedule.objects.values_list("batch")
     context = {
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
         "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts,
@@ -301,21 +337,11 @@ def timetable(request, email, college_id,batch):
     }
     return HttpResponse(template.render(context, request))
 
-def createPdf(college_id, batch):
+def downloadPdf(request, email, college_id, timetable_id):
+    batch = Timetable.objects.get(id=timetable_id).batch
     college = College.objects.get(id=college_id)
-    doc = Docs.objects.get(college_id=college_id, batch=batch)
-    i_path = Path(f"{college.name}_{batch}.docx")
-    convert(i_path)
-    dd = Docs.objects.get(batch=batch, college_id=college_id)
-    path = Path(f"{college.name}_{batch}.pdf")
-    with path.open(mode="rb") as f:
-        dd.pdf = File(f, name=path.name)
-        dd.save()
-
-def downloadPdf(request, email, college_id, batch):
-    createPdf(college_id=college_id, batch=batch)
-    college = College.objects.get(id=college_id)
-    doc = Docs.objects.get(college_id=college_id, batch=batch)
+    doc = Docs.objects.get(college_id=college_id, table_id=timetable_id)
+    createPdf(college_id=college_id, batch=batch, doc=doc)
     path = doc.pdf.path
     file_name = str(college.name) + "_" + str(batch)
     response = FileResponse(open(path, 'rb'))
@@ -323,18 +349,17 @@ def downloadPdf(request, email, college_id, batch):
     response['Content-Disposition'] = f'attachment; filename="{college.name}_{batch}.pdf"'
     return response
 
-def downloadDoc(request, email, college_id, batch):
+def downloadDoc(request, email, college_id, timetable_id):
+    batch = Timetable.objects.get(id=timetable_id).batch
     college = College.objects.get(id=college_id)
-    doc = Docs.objects.get(college_id=college_id, batch=batch)
+    doc = Docs.objects.get(college_id=college_id, table_id=timetable_id)
     path = doc.file.path
     file_name = str(college.name) + "_" + str(batch)
     response = FileResponse(open(path, 'rb'))
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = f'attachment; filename="{college.name}_{batch}.docx"'
     return response
-    # if request.method == "GET":
-    #     my_file = Docs.objects.get(college_id=college_id, batch=batch).file
-    #     return my_file
+
 
 def createCoursePage(request,email, department_id, year_group):
     user_id = UserAccount.objects.get(email=email).id
@@ -576,6 +601,7 @@ def createDepartment(request, email, college_id, callingpage):
         code = dictionary['code'].upper()
         max_yg = int(dictionary['max_yg'])
         college_id_input = dictionary['college']
+        limited_input = dictionary['limited']
         new_Department = Department(
             name=name, college_main_id=college_id_input, college=college.name, code=code, max_yg=max_yg,
             creator_id=creator_id

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserAccount, Pref_Stuff, Pref_day, Pref_location, Pref_time, College, Course, Location, Lecturer, Department, Schedule, Docs
+from .models import UserAccount, Pref_Stuff, Pref_day, Pref_location, Pref_time, College, Course, Location, Lecturer, Department, Schedule, Docs, Timetable
 
 
 # Register your models here.
@@ -16,5 +16,6 @@ admin.site.register(Pref_location)
 admin.site.register(Pref_day)
 admin.site.register(Pref_Stuff)
 admin.site.register(Docs)
+admin.site.register(Timetable)
 
 

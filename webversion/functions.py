@@ -4,45 +4,47 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 import docx
 
-def createSchedule(course_id, user_id, batch):
-    current_course = Course.objects.get(id=course_id)
-    current_department = Department.objects.get(id=current_course.department_id)
-    college_id = current_department.college_main_id
-    college = College.objects.get(id=current_department.college_main_id)
-    rows_per_day = college.rows_per_day
-    days_per_week = college.days_per_week
-    year_group = current_course.year_group
-    max_yg_row = year_group * (rows_per_day * days_per_week)
-    min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
-    #create lab sessions for courses with labs
-    if current_course.has_labs or current_course.is_lab_only:
-        createLab(course=current_course, user_id=user_id, college_id=college_id)
-        if current_course.is_lab_only:
-            return
-    preferred = Pref_Stuff.objects.filter(course_id=course_id)
-    if preferred:
-        createPreferred(course_id=course_id, user_id=user_id)
-        return
-    column = chooseColumn(department=current_department)
-    locations = chooseLocation(course=current_course, user_id=user_id)
-    result = chooseRow(course=current_course, locations=locations, is_lab=False, user_id=user_id)
-    for row, location in list(result.items()):
-        location_name = Location.objects.get(id=location).name
-        lecturer_name = Lecturer.objects.get(id=current_course.lecturer_id)
-        if row % 10 == 0:
-            time = rows_per_day
-            day = int((row - min_yg_row + 1) / rows_per_day)
+def createSchedule(course_id, user_id, timetable):
+    if len(Course.objects.filter(id=course_id)) > 0:
+        current_course = Course.objects.get(id=course_id)
+        current_department = Department.objects.get(id=current_course.department_id)
+        college_id = current_department.college_main_id
+        college = College.objects.get(id=current_department.college_main_id)
+        rows_per_day = college.rows_per_day
+        days_per_week = college.days_per_week
+        year_group = current_course.year_group
+        max_yg_row = year_group * (rows_per_day * days_per_week)
+        min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
+        #create lab sessions for courses with labs
+        if current_course.has_labs or current_course.is_lab_only:
+            createLab(course=current_course, user_id=user_id, college_id=college_id, timetable_id=timetable)
+            if current_course.is_lab_only:
+                return
+        preferred = Pref_Stuff.objects.filter(course_id=course_id)
+        if preferred:
+            createPreferred(course_id=course_id, user_id=user_id, timetable_id=timetable)
         else:
-            time = (row - min_yg_row + 1) % rows_per_day
-            day = int((row - min_yg_row + 1) / rows_per_day) + 1
-        new_schedule = Schedule(course_id=current_course.id, course_code=current_course.code, year_group=current_course.year_group,
-                                location_id=location, location_name=location_name, height=2, column=column, row=row, department=current_department,
-                                lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id, creator_id=user_id, time=time, day=day,
-                                college_id=college_id, college_name=college.name, batch=batch
-                        )
-        new_schedule.save()
+            column = chooseColumn(department=current_department)
+            locations = chooseLocation(course=current_course, user_id=user_id)
+            result = chooseRow(course=current_course, locations=locations, is_lab=False, user_id=user_id, timetable=timetable)
+            for row, location in list(result.items()):
+                location_name = Location.objects.get(id=location).name
+                lecturer_name = Lecturer.objects.get(id=current_course.lecturer_id)
+                if row % 10 == 0:
+                    time = rows_per_day
+                    day = int((row - min_yg_row + 1) / rows_per_day)
+                else:
+                    time = (row - min_yg_row + 1) % rows_per_day
+                    day = int((row - min_yg_row + 1) / rows_per_day) + 1
+                new_schedule = Schedule(course_id=current_course.id, course_code=current_course.code, year_group=current_course.year_group,
+                                        location_id=location, location_name=location_name, height=2, column=column, row=row, department=current_department,
+                                        lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id, creator_id=user_id, time=time, day=day,
+                                        college_id=college_id, college_name=college.name, timetable_id=timetable
+                                )
+                new_schedule.save()
 
-def createPreferred(course_id, user_id):
+def createPreferred(course_id, user_id, timetable):
+    print("preferred started")
     preferred = Pref_Stuff.objects.filter(course_id=course_id)
     course = Course.objects.get(id=course_id)
     department = Department.objects.get(id=course.department_id)
@@ -56,7 +58,7 @@ def createPreferred(course_id, user_id):
     min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
     hours = course.hours
     column = chooseColumn(department=department)
-    
+    print("preferred length is : ", len(preferred))
     for pf in list(preferred):
         hours = hours - 2
         pf_loc = pf.location
@@ -72,16 +74,19 @@ def createPreferred(course_id, user_id):
                 lecturer_name=lecturer_name, lecturer_id=lecturer.id,
                 creator_id=user_id, college_id=college.id,
                 day=pf.day, time=pf.time, college_name=college.name,
+                timetable_id=timetable,
             )
             new_schedule.save()
             row = row + 1
             if hours < 0: break
+    print("preferred ended")
 
 
-def createLab(course, user_id, college_id):
+def createLab(course, user_id, college_id, timetable):
+    print("create lab started")
     column = chooseColumn(department=course.department)
     lab = Location.objects.get(name="LAB").id
-    rows = chooseRow(course=course, locations=lab, is_lab=True, user_id=user_id)
+    rows = chooseRow(course=course, locations=lab, is_lab=True, user_id=user_id, timetable=timetable)
     lecturer = Lecturer.objects.get(id=course.lecturer_id)
     college = College.objects.get(id=Department.objects.get(id=course.department_id).college_main_id)
     rows_per_day = college.rows_per_day
@@ -102,12 +107,23 @@ def createLab(course, user_id, college_id):
             location_id=lab, location_name="LAB", height=0, column=column,row=row,
             department_id=course.department_id, lecturer_name=lecturer_name, lecturer_id=course.lecturer_id,
             creator_id=user_id, college_id=college_id, time=time, day=day, college_name=college.name,
+            timetable_id=timetable
         )
         new_lab.save()
+    print("create lab ended")
 
+def lister(mylist, min_yg_row):
+    for element in list(mylist):
+        new_element = element - min_yg_row + 1
+        mylist.insert(0, int(new_element))
+        mylist.remove(element)
+    return mylist
 
-def chooseRow(course, is_lab, locations, user_id, height = 2):
+def chooseRow(course, is_lab, locations, user_id, timetable, height = 2):
+    print("choose row started")
     lect_id = course.lecturer_id
+    print(course.name)
+    print("lab = ", is_lab)
     credit_hours = int(course.hours)
     if is_lab: credit_hours = int(course.lab_hours)
     college = College.objects.get(id=Department.objects.get(id=course.department_id).college_main_id)
@@ -118,51 +134,68 @@ def chooseRow(course, is_lab, locations, user_id, height = 2):
     year_group = course.year_group
     max_yg_row = year_group * (rows_per_day * days_per_week)
     min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
-    rows = []
+    rows = used_rows =  busylect = []
     result = {}
     odd_rows = []
-    used_rows = list(dict((Schedule.objects.filter(department_id=course.department_id, year_group=year_group, creator_id=user_id).values_list("row", "id"))).values())
+    print("1")
+    used_rows_list = list(dict(Schedule.objects.filter(department_id=course.department_id, year_group=year_group, row__gte=(min_yg_row), creator_id=user_id, timetable_id=timetable).values_list("row", "id")))
+    used_rows = lister(mylist=used_rows_list, min_yg_row=min_yg_row)
     all_rows =[i for i in range(1,51)]
     lecturer_id = course.lecturer_id
-    busylect = list(dict(Schedule.objects.filter(lecturer_id=lecturer_id, creator_id=user_id).values_list("row", "id")))    
-    combined_columns = list(dict(Schedule.objects.filter(course_code=course.code, lecturer_id=course.lecturer_id, creator_id=user_id).values_list("row","course")))
-    print(type(locations))
+    busylect_list = list(dict(Schedule.objects.filter(lecturer_id=lecturer_id, creator_id=user_id, timetable_id=timetable).values_list("row", "id"))) 
+    busylect = lister(mylist=busylect_list, min_yg_row=min_yg_row)
     if not is_lab:
+        print("2")
+        print(all_rows)
         for location, h in list(locations.items()):
-            banned_rows = list(dict(Schedule.objects.filter(location_id=location).values_list("row", "id")))
+            banned_rows = list(dict(Schedule.objects.filter(location_id=location, timetable_id=timetable).values_list("row", "id")))
             for p in list(all_rows):
                 for u in list(used_rows):
                     if int(p) == int(u): 
                         all_rows.remove(p)
+                    else: pass
+            print(all_rows)
             for p in list(all_rows):
                 for b in list(banned_rows):
                     if int(p) == int(b): 
                         all_rows.remove(p)
-            for p in list(all_rows):
-                for c in list(combined_columns):
-                    if int(p) == int(c): 
-                        all_rows.remove(p)
+                    else: pass
+            # for p in list(all_rows):
+            #     for c in list(combined_columns):
+            #         if int(p) == int(c): 
+            #             all_rows.remove(p)
             for p in list(all_rows):
                 for b in list(busylect):
                     if int(p) == int(b):  
                         all_rows.remove(p)
+                    else: pass
             for p in list(all_rows):
                 if int(p) % 2 == 1: odd_rows.append(p)
+                else: pass
             isDone = 0
             ss = 0
+            print("3")
             while isDone == 0:
                 rand_row = random.choice(odd_rows)
-                rand_row = rand_row + 2
+                # rand_row = rand_row + 2
+                print("rand row is ", rand_row)
                 if rand_row in all_rows:
                     second_row = rand_row+1
+                    print("rand row in all rows")
                     if second_row in all_rows:
+                        print("second row in all rows")
                         isDone = 1
+                        break
+                    else: pass
+                else: pass
+            print(rand_row)
             rows.append(rand_row+min_yg_row-1)
             result[rand_row+min_yg_row-1] =location
             if h == 2: 
                 rows.append(second_row+min_yg_row-1)
                 result[second_row+min_yg_row-1]=location
             print(rows)
+            print("4")
             test1 = int(rand_row/10)
             for x in list(all_rows):
                 test2 = int(x/10)
@@ -199,7 +232,7 @@ def chooseRow(course, is_lab, locations, user_id, height = 2):
                     continue
                 test_num = 0
                 for count in range(height):
-                    unavailable_lect = list(dict(Schedule.objects.filter(department_id=course.department_id, year_group=year_group, row=test_row, creator_id=user_id).values_list("lecturer_id", "id")))
+                    unavailable_lect = list(dict(Schedule.objects.filter(department_id=course.department_id, year_group=year_group, row=test_row, creator_id=user_id, timetable_id=timetable).values_list("lecturer_id", "id")))
                     # print(unavailable_lect)
                     if ((lect_id in unavailable_lect)):
                         test_num == 1
@@ -235,6 +268,7 @@ def chooseRow(course, is_lab, locations, user_id, height = 2):
         print("course name: ", course.name)
         print("row is ", row)
         return row
+    print("choose row ended")
         
 
 def chooseColumn(department):
@@ -261,11 +295,10 @@ def chooseLocation(course, user_id):
     is_local = departments.filter(code=course.code)
     if is_local: locations = list(dict(Location.objects.filter(college__icontains=college, capacity__gte=class_size, is_Lab=False, creator_id=user_id).values_list("id", "name")))
     locations_list = {}
-    preferred_locations = []
     height_list = []
     hours = course.hours
     count = 0
-    temp_locations = list(dict(Schedule.objects.filter(creator_id=user_id, course_code__icontains=course.code, lecturer_id=course.lecturer_id, college_id=department.college_main_id).values_list("location_id", "id")))
+    # temp_locations = list(dict(Schedule.objects.filter(creator_id=user_id, course_code__icontains=course.code, lecturer_id=course.lecturer_id, college_id=department.college_main_id, batch=batch).values_list("location_id", "id")))
     for number in range(number_of_schedules):
         hours = hours -2
         if hours >= 0: height = 2

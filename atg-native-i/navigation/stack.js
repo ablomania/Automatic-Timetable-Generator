@@ -1,28 +1,39 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/home-screen';
 import DetailScreen from '../screens/schedules/details';
-import { navOptions } from './options';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import ProfileScreen from '../screens/profiles/profiles-screen';
 import ProfileDetailScreen from '../screens/profiles/profile-detail';
-import HomeTabs from './tabs';
 import ScheduleScreen from '../screens/schedule-screen';
-import Details from '../Details';
 import ScheduleDaysScreen from '../screens/schedules/days';
 import SignIn from '../screens/sign-in-screen';
+import SignIn2 from '../screens/signin2';
+import { useEffect, useState } from 'react';
+import HomeTabs from './tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
-export const HomeStack = () => {
-  const navigation = useNavigation()
+export function SignInStacks() {
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name='SignInStack1' options={{
+      title: "Sign In"}} component={SignIn}/>
+    <Stack.Screen name='SignInStack2' options={{
+      title: "More Info",}} component={SignIn2} />
+  </Stack.Navigator>
+}
+
+
+
+export const HomeStack = ({navigation}) => {
+  
   return (
-      <Stack.Navigator>
-        <Stack.Screen options={{
-          title: "Home"
-        }} name="HomeScreenStack" component={HomeScreen} />
-
-      </Stack.Navigator>
-
+    <Stack.Navigator>
+      <Stack.Screen options={{
+        title: "Home"
+      }} name="HomeScreenStack" component={HomeScreen} />
+    </Stack.Navigator>
+  )
     // <Stack.Navigator
     // screenOptions={{
     //   // ()=> navOptions(navigation)
@@ -37,11 +48,10 @@ export const HomeStack = () => {
     //    />
     //   {/* <Stack.Screen name="Details" component={DetailScreen} /> */}
     // </Stack.Navigator>
-  );
+  
 }
 
-export const ScheduleStack = () => {
-  const navigation = useNavigation();
+export const ScheduleStack = ({navigation}) => {
   return (
     <Stack.Navigator>
       <Stack.Screen options={{
@@ -58,13 +68,9 @@ export const ScheduleStack = () => {
   );
 }
 
-export const ProfileStack = () => {
-  const navigation = useNavigation()
+export const ProfileStack = ({navigation}) => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen name='SignInStack' options={{
-        title: "Sign In", */}
-      {/* }} component={SignIn} /> */}
       <Stack.Screen options={{
         title: 'Profile'
       }} name="ProfilesStackScreen" component={ProfileScreen} />
@@ -74,3 +80,6 @@ export const ProfileStack = () => {
     </Stack.Navigator>
   );
 }
+
+
+      

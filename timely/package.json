@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-masked-view/masked-view": "0.3.1",
+    "@react-native-picker/picker": "2.7.5",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/drawer": "^6.7.2",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.11.0",
+    "@react-navigation/stack": "^6.4.1",
+    "expo": "^51.0.22",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "^0.74.3",
+    "react-native-gesture-handler": "~2.16.1",
+    "react-native-ionicons": "^4.6.5",
+    "react-native-picker-select": "^9.1.3",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-screens": "3.31.1",
+    "react-native-web": "~0.19.6",
+    "expo-notifications": "~0.28.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "version": "1.0.0",
+  "private": true,
+  "name": "timely"
+}

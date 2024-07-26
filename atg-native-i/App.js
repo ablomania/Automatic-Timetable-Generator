@@ -1,62 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, View, Platform, Button, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useState} from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { HomeStack } from './navigation/stack';
+import { useState, useEffect } from "react";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { AppStack, HomeStack, SignInStacks } from './navigation/stack';
 import 'react-native-gesture-handler';
-import MyDrawer from './navigation/drawer';
 import HomeTabs from './navigation/tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator()
 export default function App() {
-  const [userName , setUserName] = useState("");
-  const [yearGroup, setYearGroup] = useState("");
-  const [college, setCollege] = useState("");
-  const [departmentName, setDepartmentName] = useState("");
-  var displaySignin = true;
-  if(displaySignin)
-    return(
-        <SafeAreaView>
-            <View>
-                <Text>Name</Text>
-                <TextInput
-                onChangeText={setUserName}
-                value={userName}
-                style={styles.input}
-                 />
-                <Text>Year Group</Text>
-                <TextInput
-                  onChangeText={setYearGroup}
-                  value={yearGroup}
-                  style={styles.input}
-                />
-                <Text>College</Text>
-                <TextInput 
-                  onChangeText={setCollege}
-                  value={college}
-                  style={styles.input}
-                />
-                <Text>Department</Text>
-                <TextInput
-                  onChangeText={setDepartmentName}
-                  value={departmentName}
-                  style={styles.input}
-                 />
-                <Button
-                onPress={() => console.log("Hello")}
-                title='Continue'
-                />
-            </View>
-        </SafeAreaView>
-    )
-  else
-    return (
-      <NavigationContainer>
-        {/* <HomeStack /> */}
-        <HomeTabs />
-        <StatusBar style='light' />
-      </NavigationContainer>
-    );
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const authStatus = await AsyncStorage.getItem('userName');
+        if(authStatus.length >= 1);
+          setIsAuthenticated(true);
+          console.log(authStatus)
+      } catch (error) {
+        console.error('Error reading auth status:', error);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+  return (
+    <NavigationContainer>
+      {isAuthenticated ? (
+        <HomeTabs /> 
+        ) : (
+        <SignInStacks />
+        )}
+    </NavigationContainer>
+    
+  );
 }
+
+export const apiURL = 'http://192.168.1.161:8000/api';
 
 const styles = StyleSheet.create({
   input: {

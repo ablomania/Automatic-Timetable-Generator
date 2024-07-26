@@ -20,3 +20,20 @@ class CourseSerializer(serializers.ModelSerializer):
             'lab_hours', 'is_contiguous_lab_time', 'year_group', 
             'estimated_class_size', 'creator'
         )
+
+class TimetableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timetable
+        fields = '__all__'
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = '__all__'
+
+class CollegeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = College
+        fields = (
+            "id", "name"
+        )

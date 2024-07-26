@@ -12,6 +12,5 @@ export default function HomeScreen({navigation}) {
             <Text style={{fontWeight:'bold', fontSize:20}}>{days[today]}</Text>
         </View>
         </SafeAreaView>
-        
     )
 }

@@ -1,12 +1,13 @@
 import { FlatList, View } from "react-native"
 import ScheduleItem from "./schedule-item"
 import { useEffect } from "react";
+import { apiURL } from "../App";
 
 const ScheduleList = ({data}) => {
     isRefreshing = false
     async function refreshItems() {
         isRefreshing = true;
-        const response = await fetch('http://192.168.1.193:8000/api/schedules/');
+        const response = await fetch(apiURL + '/schedules/');
         result = response.json();
         data = result;
         isRefreshing = false;

@@ -120,6 +120,7 @@ footer{
     flex-direction: column;
     align-items: center;
     background: #0d47a1;
+    color: #fff;
 }
 footer .BottomNavBar ul{
     display: flex;
@@ -488,6 +489,8 @@ header ul a, footer ul a{
     animation-duration: 1s;
     animation-iteration-count: infinite;
     z-index: 999;
+    width: 60%;
+    margin: auto;
 }
  @keyframes loader {
     0% {

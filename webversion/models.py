@@ -14,7 +14,7 @@ class College(models.Model):
     rows_per_day = models.PositiveSmallIntegerField(null=True)
     days_per_week = models.PositiveSmallIntegerField(null=True)
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.id}"
 
 class Pref_time(models.Model):
     value = models.PositiveSmallIntegerField()
@@ -37,7 +37,7 @@ class Pref_Stuff(models.Model):
     college_main = models.ForeignKey(College, on_delete=models.CASCADE, related_name="pref_college", null=True)
 
 class Docs(models.Model):
-    batch = models.PositiveBigIntegerField()
+    table = models.ForeignKey("Timetable", on_delete=models.CASCADE, related_name="table_docs", null=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE, related_name="docx_college")
     file = models.FileField(upload_to='docx')
     pdf = models.FileField(upload_to='pdf', null=True)
@@ -105,11 +105,20 @@ class Schedule(models.Model):
     time = models.PositiveIntegerField(null=True)
     day = models.PositiveIntegerField(null=True)
     college_name = models.CharField(max_length=255, null=True)
-    batch = models.PositiveIntegerField(null=True)
-    posted = models.BooleanField(default=False)
-    date_created = models.DateField(default=timezone.now, null=True)
+    timetable = models.ForeignKey("Timetable", on_delete=models.CASCADE, related_name="schedule_timetable", null=True)
+    # date_created = models.DateField(default=timezone.now, null=True)
     def __str__(self):
-        return f"{self.course_code} {self.location_name} {self.lecturer_name}"
+        return f"{self.course_code} {self.location_name} {self.lecturer_name} {self.department_id}"
+
+
+class Timetable(models.Model):
+    date_created = models.DateField(default=timezone.now)
+    code = models.CharField(max_length=20)
+    posted = models.BooleanField(default=False)
+    batch = models.PositiveIntegerField()
+    college_main = models.ForeignKey(College, on_delete=models.CASCADE, related_name="college_table", null=True)
+    def __str__(self):
+        return f"{self.id}"
 
 class Department(models.Model):
     name = models.CharField(max_length=255, null=True)
