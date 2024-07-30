@@ -22,7 +22,15 @@ export const HomeStack = ({navigation}) => {
 
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={Home}/>
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Home" component={Home}/>
         </Stack.Navigator>
     )
 }
@@ -31,9 +39,33 @@ export const ScheduleStack = ({navigation}) => {
 
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Days" component={Days} />
-            <Stack.Screen name="Daily" component={Daily} />
-            <Stack.Screen name="Details" component={Details} />
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Days" component={Days} />
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Daily" component={Daily} />
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Details" component={Details} />
         </Stack.Navigator>
     )
 }
@@ -41,9 +73,25 @@ export const ScheduleStack = ({navigation}) => {
 export const ProfileStack = ({navigation}) => {
 
     return(
-        <Stack.Navigator>
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Navigator initialRouteName="Porfile">
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Profile" component={Profile} />
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="EditProfile" component={EditProfile} />
         </Stack.Navigator>
     )
 }
@@ -52,7 +100,15 @@ export const NotificationStack = ({navigation}) => {
 
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Notification" component={Notifications} />
+            <Stack.Screen options={{
+                 headerStyle: {
+                    backgroundColor: '#1976d2',
+                    headerTintColor: '#fff',
+                  },
+                  headerTitleStyle: {
+                    color: '#fff',
+                  },
+            }} name="Notification" component={Notifications} />
         </Stack.Navigator>
     )
 }
@@ -64,7 +120,7 @@ export const SignInStack = ({navigation}) => {
             headerShown: false,
         }}>
             <Stack.Screen name="SignInFirst" options={{
-                title: "Sign In"
+                title: "Sign In",
             }} component={SignIn} />
             <Stack.Screen name="SignInSec" options={{
                 title: "Sign In"

@@ -482,8 +482,8 @@ header ul a, footer ul a{
     flex-direction: row;
     padding-top: 50px;
 }
-.timetable_body .leftsection .loading{
-    display: none;
+.loading{
+    visibility: hidden;
     flex-direction: column;
     animation-name: loader;
     animation-duration: 1s;
@@ -492,6 +492,10 @@ header ul a, footer ul a{
     width: 60%;
     margin: auto;
 }
+.loading:focus{
+    visibility: visible;
+}
+
  @keyframes loader {
     0% {
       rotate: 0deg;
@@ -500,6 +504,12 @@ header ul a, footer ul a{
       rotate: 180deg;
     }
   }
+.topofgrid{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 700px;
+}
 .timetable_body .rightsection{
     width: 95%;
     margin: auto;
@@ -1320,4 +1330,98 @@ input:focus and border, select:focus and border{
     height: 30px;
     border: #0d47a1 solid 1px;
     border-radius: 10px;
+}
+
+/* for aore page */
+.aorePage{
+    width: 60%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+
+}
+.aorePage form div{
+    padding: 20px;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.aoreDept{
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+.aoreDept form div{
+    display: flex;
+    flex-direction: row;
+}
+
+.confirm{
+    width: 30%;
+    display: none;
+    flex-direction: column;
+}
+.confirm div{
+    display: flex;
+    flex-direction: row;
+}
+.confirm div .cancel{
+    background-color: #ef5350;
+    border-radius: 10px;
+}
+.confirm div .ok{
+    background-color: #0d47a1                                                                                                                                                                                                                                                                                                                                                                                                                       ;
+    border-radius: 10px;
+}
+
+.exams1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    background: rgba(0, 12, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    color: #424242;
+    padding: 25px;
+}
+.exams1 .mainItemExam{
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr);
+    background: rgba(0, 12, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    margin: 10px;
+    padding: 10px;
+    /* width: 60%; */
+}
+.exams1 .examItem{
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(11.6px);
+    -webkit-backdrop-filter: blur(11.6px);
+    margin: 10px;
+    padding: 10px;
+    /* width: 60%; */
+}
+.exams1 .examItem p{
+    animation-name: translateX;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
 }

@@ -17,12 +17,12 @@ def createSchedule(course_id, user_id, timetable):
         min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
         #create lab sessions for courses with labs
         if current_course.has_labs or current_course.is_lab_only:
-            createLab(course=current_course, user_id=user_id, college_id=college_id, timetable_id=timetable)
+            createLab(course=current_course, user_id=user_id, college_id=college_id, timetable=timetable)
             if current_course.is_lab_only:
                 return
         preferred = Pref_Stuff.objects.filter(course_id=course_id)
         if preferred:
-            createPreferred(course_id=course_id, user_id=user_id, timetable_id=timetable)
+            createPreferred(course_id=course_id, user_id=user_id, timetable=timetable)
         else:
             column = chooseColumn(department=current_department)
             locations = chooseLocation(course=current_course, user_id=user_id)
@@ -32,10 +32,10 @@ def createSchedule(course_id, user_id, timetable):
                 lecturer_name = Lecturer.objects.get(id=current_course.lecturer_id)
                 if row % 10 == 0:
                     time = rows_per_day
-                    day = int((row - min_yg_row + 1) / rows_per_day)
+                    day = int(((row - min_yg_row) + 1) / rows_per_day)
                 else:
-                    time = (row - min_yg_row + 1) % rows_per_day
-                    day = int((row - min_yg_row + 1) / rows_per_day) + 1
+                    time = ((row - min_yg_row) + 1) % rows_per_day
+                    day = int(((row - min_yg_row) + 1) / rows_per_day) + 1
                 new_schedule = Schedule(course_id=current_course.id, course_code=current_course.code, year_group=current_course.year_group,
                                         location_id=location, location_name=location_name, height=2, column=column, row=row, department=current_department,
                                         lecturer_name=lecturer_name, lecturer_id=current_course.lecturer_id, creator_id=user_id, time=time, day=day,
@@ -100,8 +100,8 @@ def createLab(course, user_id, college_id, timetable):
             time = rows_per_day
             day = int((row - min_yg_row + 1) / rows_per_day)
         else:
-            time = (row - min_yg_row + 1) % rows_per_day
-            day = int((row - min_yg_row + 1) / rows_per_day) + 1
+            time = ((row - min_yg_row) + 1) % rows_per_day
+            day = int(((row - min_yg_row) + 1) / rows_per_day) + 1
         new_lab = Schedule(
             course_id=course.id, course_code=course.code, year_group=course.year_group,
             location_id=lab, location_name="LAB", height=0, column=column,row=row,
@@ -150,25 +150,22 @@ def chooseRow(course, is_lab, locations, user_id, timetable, height = 2):
         for location, h in list(locations.items()):
             banned_rows = list(dict(Schedule.objects.filter(location_id=location, timetable_id=timetable).values_list("row", "id")))
             for p in list(all_rows):
-                for u in list(used_rows):
-                    if int(p) == int(u): 
-                        all_rows.remove(p)
-                    else: pass
+                if int(p) in list(used_rows) or int(p)-1 in list(used_rows):
+                    all_rows.remove(p)
+                else: pass
             print(all_rows)
             for p in list(all_rows):
-                for b in list(banned_rows):
-                    if int(p) == int(b): 
-                        all_rows.remove(p)
-                    else: pass
+                if int(p) in list(banned_rows):
+                    all_rows.remove(p)
+                else: pass
             # for p in list(all_rows):
             #     for c in list(combined_columns):
             #         if int(p) == int(c): 
             #             all_rows.remove(p)
             for p in list(all_rows):
-                for b in list(busylect):
-                    if int(p) == int(b):  
-                        all_rows.remove(p)
-                    else: pass
+                if int(p) in list(busylect):  
+                    all_rows.remove(p)
+                else: pass
             for p in list(all_rows):
                 if int(p) % 2 == 1: odd_rows.append(p)
                 else: pass
@@ -325,12 +322,14 @@ def createCourse(dictionary, user_id):
     lab_hours = dictionary.get('lab_hours', False)
     year_group = dictionary['year_group']
     estimated_class_size = dictionary['estimated_class_size']
+    exam_size = dictionary['exam_size']
     # preferred_location = dictionary[]
     new_Course = Course(
         creator_id=user_id, is_contiguous_lab_time=is_contiguous_lab_time,
           code=code, name=name, lecturer_id=lecturer, department_id=department,
             hours=hours, is_lab_only=is_lab_only, has_labs=has_labs, lab_hours=lab_hours,
               year_group=year_group, estimated_class_size=estimated_class_size,
+              exam_size=exam_size,
               )
     new_Course.save()
     return new_Course
@@ -350,6 +349,7 @@ def modifyCourse(course, dictionary):
     currentCourse.lab_hours = dictionary['lab_hours']
     currentCourse.year_group = dictionary['year_group']
     currentCourse.estimated_class_size = dictionary['estimated_class_size']
+    currentCourse.exam_size = dictionary['exam_size']
     currentCourse.save()
     return currentCourse
 

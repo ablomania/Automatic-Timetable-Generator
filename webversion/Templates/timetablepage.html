@@ -7,32 +7,34 @@ Timetable
 {% block content %}
 <div class="timetable_body">
     <div class="leftsection">
-        <img id="loading" class="loading" src="{% static 'loading.png' %}" alt="loading" />
     </div>
     
     <div class="rightsection">
         <div class="timetablebtns">
-            <form>
+            <form class="topofgrid">
                 {% csrf_token %}
-                <div>
+                <div >
                     <!-- <button id="savetimetable" type="button" onclick="showButtons()">
                         Save
                     </button> -->
-                    <a href="/{{email}}/downloaddoc/{{college.id}}/{{batch}}">
+                    <p>Table number : {{table.batch}}</p>
+                    <p>Table code: {{table.code}}</p>
+                    <a href="/{{email}}/downloaddoc/{{college.id}}/{{table.id}}">
                         <button id="savetimetable" class="print" type="button">
-                            docx
+                            Save as docx
                         </button>
                     </a>
-                    <a href="/{{email}}/downloadpdf/{{college.id}}/{{batch}}">
-                        <button id="savetimetable" class="print"  type="button">
-                            pdf
+                    <a href="/{{email}}/downloadpdf/{{college.id}}/{{table.id}}">
+                        <button id="savetimetable" class="print"  type="button" onclick="window.location.reload();" style="display: flex; flex-direction: row;">
+                           Save as pdf
                         </button>
                     </a>
+                    <button type="submit" id="regenerate" formmethod="post" onclick="window.location.reload();" formaction="{% url 'generate' email college.id %}">
+                        Regenerate
+                    </button>
                 </div>
                 
-                <button type="submit" id="regenerate" formmethod="post" formaction="{% url 'generate' email college.id %}">
-                    Regenerate
-                </button>
+                
             </form>
             
         </div>
@@ -77,7 +79,7 @@ Timetable
                         {% endfor %}  
                         {% for schedule in schedules %}
                         <div class="griditem">
-                            <p>
+                            <p onclick="scheduleClicked(id={{schedule.id}})">
                                 {{schedule.course_code}}<br>
                                 {{schedule.location_name}}<br>
                                 {{schedule.lecturer_name}}

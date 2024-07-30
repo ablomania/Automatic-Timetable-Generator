@@ -1,8 +1,9 @@
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 export default function DaysList({data}) {
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     const navigation = useNavigation()
     return (

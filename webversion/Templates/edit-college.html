@@ -24,6 +24,10 @@ College Settings
             <label for="days">Days per week</label>
             <input type="number" value="{{college.days_per_week}}" min="1" max="7" name="days" required>
         </div>
+        <div>
+            <label for="examdays">Number of days for exam</label>
+            <input type="number" value="{{college.exam_days}}" min="1" max="50" name="exam_days" required>
+        </div>
         <div id="edit-college-btns">
             <!-- <button type="button" name="cancel-college" onclick="unallo()" id="new-college">
                 cancel

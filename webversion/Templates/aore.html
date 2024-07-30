@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}
+Switch
+{% endblock %}
+
+{% block content %}
+<div class="aorePage">
+    <div>
+        <h1>Please select an option</h1>
+        <div class="aoreDept">
+            <form action="">
+                {% csrf_token %}
+                <h3>{{department.name}}</h3>
+                {% for course in courses %}
+                    <div>
+                        <label for="{{course.code}}">{{course.code}}</label>
+                        <input type="checkbox" value="true" name="{{course.code}}" id="" />
+                    </div>
+                {% endfor %}
+                <button>add a course</button>
+                <button>Next</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -9,9 +9,9 @@ const Tab = createBottomTabNavigator();
 export const HomeTabs = ({navigation, state, descriptors}) => {
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarActiveTintColor: 'green', // Focused tab icon color
-      tabBarInactiveTintColor: 'grey', // Unfocused tab icon color
-      tabBarStyle: { backgroundColor: 'black' }, // Tab bar background color
+      tabBarActiveTintColor: '#fff', // Focused tab icon color
+      tabBarInactiveTintColor: '#fafafa', // Unfocused tab icon color
+      tabBarStyle: { backgroundColor: '#1976d2', height: 70 }, // Tab bar background color
       headerShown: false,
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;

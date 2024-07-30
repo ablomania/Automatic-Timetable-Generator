@@ -1,0 +1,84 @@
+{% extends 'main.html' %}
+{%  load static %}
+
+{% block title %}
+Exams Timetable
+{% endblock %}
+
+
+{% block content %}
+<div class="exams1">
+    <h1>College of {{college.name}}</h1>
+    <div class="ebuttons">
+        <a href="/{{email}}/downloaddoc/{{college.id}}/{{timetable_id}}">
+            Save as docx
+        </a>
+        <a href="/{{email}}/downloadpdf/{{college.id}}/{{timetable_id}}">
+            Save as pdf
+        </a>
+    </div>
+    {% for day in mylist %}
+    <h3>day {{day}}</h3>
+    <div class>
+        <div class="mainItemExam">
+            <p><strong>time</strong></p>
+            <p><strong>course code</strong></p>
+            <p><strong>locations</strong></p>
+            <p><strong>lecturer</strong></p>
+            <p><strong>size</strong></p>
+
+        </div>
+        {% for exam in mydict.values %}
+        {% if exam.day is day %}
+        <div class="examItem">
+            {% if exam.time == 1 %}
+            <p>8am</p>
+            {% elif exam.time == 2 %}
+            <p>9am</p>
+            {% elif exam.time == 3 %}
+            <p>10:30am</p>
+            {% elif exam.time == 4 %}
+            <p>11:30am</p>
+            {% elif exam.time == 5 %}
+            <p>1pm</p>
+            {% elif exam.time == 6 %}
+            <p>2pm</p>
+            {% elif exam.time == 7 %}
+            <p>3pm</p>
+            {% elif exam.time == 8 %}
+            <p>4pm</p>
+            {% elif exam.time == 9 %}
+            <p>5pm</p>
+            {% elif exam.time == 10 %}
+            <p>6pm</p>
+            {% elif exam.time == 11 %}
+            <p>7pm</p>
+            {% elif exam.time == 12 %}
+            <p>8pm</p>
+            {% elif exam.time == 13 %}
+            <p>9pm</p>
+            {% elif exam.time == 14 %}
+            <p>10pm</p>
+            {% elif exam.time == 15 %}
+            <p>11pm</p>
+            {% elif exam.time == 16 %}
+            <p>12am</p>
+            {% endif %}
+            <p>{{exam.course_code}}</p>
+            <p style="display: flex; flex-direction: column; justify-content: space-evenly;">
+                {% for e in exams %}
+                {% if e.course_id == exam.course_id %}
+                {{e.location_name}},<br>
+                {% endif %}
+                {% endfor %}
+            </p>
+            <p>{{exam.lecturer_name}}</p>
+            <p>{{exam.size}}</p>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

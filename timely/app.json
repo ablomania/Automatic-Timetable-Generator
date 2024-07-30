@@ -7,6 +7,9 @@
       "ios",
       "android",
       "web"
+    ],
+    "plugins": [
+      "react-native-background-fetch"
     ]
   }
 }

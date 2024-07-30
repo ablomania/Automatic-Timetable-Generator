@@ -10,9 +10,15 @@ timetables
         <h1>All Timetables for {{college_name}}</h1>
         {% for timetable in timetables %}
         <div class="toptable">
+            {% if timetable.type == 'academic' %}
             <a href="/{{email}}/{{college_id}}/timetable/{{timetable.id}}">
+            {% else %}
+            <a href="/{{email}}/examsone/{{college_id}}/{{timetable.id}}">
+            {% endif %}
                 <div class="table-card">
                     <p>Table {{timetable.batch}}</p>
+                    <p>code: {{timetable.code}}</p>
+                    <p>Table type: {{timetable.type}}</p>
                 </div>
             </a>
             <form method="post" action="/{{email}}/deletetimetable/{{college_id}}/{{timetable.id}}">

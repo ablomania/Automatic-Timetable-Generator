@@ -92,6 +92,10 @@ Edit Course
             <input id="estimated_class_size" value="{{course.estimated_class_size}}" type="number" min="1" max="1000" name="estimated_class_size">
         </div>
         <div>
+            <label for="exam_size">Students per classroom in exams:</label>
+            <input id="exam_size" value="{{course.exam_size}}" type="number" min="1" max="500" name="exam_size">
+        </div>
+        <div>
             <input type="submit" id="editcoursebtn" value="submit" formtarget="_parent">
         </div> 
     </form>

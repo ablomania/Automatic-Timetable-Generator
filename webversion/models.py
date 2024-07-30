@@ -13,6 +13,7 @@ class College(models.Model):
     creater = models.ForeignKey("UserAccount", on_delete=models.CASCADE, related_name="college_user")
     rows_per_day = models.PositiveSmallIntegerField(null=True)
     days_per_week = models.PositiveSmallIntegerField(null=True)
+    exam_days = models.PositiveIntegerField(null=True)
     def __str__(self):
         return f"{self.name} {self.id}"
 
@@ -57,6 +58,7 @@ class Course(models.Model):
     year_group = models.PositiveSmallIntegerField(null=True)
     estimated_class_size = models.PositiveIntegerField(default=200, null=True)
     creator = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="course_creator", null=True)
+    exam_size = models.PositiveIntegerField(null=True)
     def __str__(self):
         return f"{self.code} - {self.name}"
 
@@ -117,8 +119,28 @@ class Timetable(models.Model):
     posted = models.BooleanField(default=False)
     batch = models.PositiveIntegerField()
     college_main = models.ForeignKey(College, on_delete=models.CASCADE, related_name="college_table", null=True)
+    type = models.CharField(max_length=255, default="academic")
     def __str__(self):
         return f"{self.id}"
+
+class ExamSchedule(models.Model):
+    course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="examcourse")
+    course_code  = models.CharField(max_length=255, null=True)
+    course_name = models.CharField(max_length=255)
+    location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="examlocation")
+    location_name = models.CharField(max_length=255)
+    lecturer = models.ForeignKey("Lecturer", on_delete=models.CASCADE, related_name="examlecturer")
+    lecturer_name = models.CharField(max_length=255)
+    time = models.PositiveSmallIntegerField()
+    day = models.PositiveSmallIntegerField()
+    timetable = models.ForeignKey("Timetable", on_delete=models.CASCADE, related_name="examtable", null=True)
+    creator = models.ForeignKey("UserAccount", on_delete=models.CASCADE, related_name="examscreator", null=True)
+    department = models.ForeignKey("Department", on_delete=models.CASCADE, related_name="examdept", null=True)
+    department_name = models.CharField(max_length=255, null=True)
+    college = models.ForeignKey("College", on_delete=models.CASCADE, related_name="examcollege", null=True)
+    college_name = models.CharField(max_length=255, null=True)
+    size = models.PositiveIntegerField(null=True)
+    year_group = models.PositiveSmallIntegerField(null=True)
 
 class Department(models.Model):
     name = models.CharField(max_length=255, null=True)

@@ -34,6 +34,9 @@ urlpatterns = [
     path("<str:email>/collegeviewGenerator/<int:college_id>", views.collegeviewGenerator, name="collegeView"),
     path("<str:email>/editcollege/<int:college_id>", views.editcollege, name="editcollege"),
     path("<str:email>/downloaddoc/<int:college_id>/<int:timetable_id>", views.downloadDoc, name="downloadDoc"),
-    path("<str:email>/downloadpdf/<int:college_id>/<int:timetable_id>", views.downloadPdf, name="downloadPdf")
+    path("<str:email>/downloadpdf/<int:college_id>/<int:timetable_id>", views.downloadPdf, name="downloadPdf"),
+    path("<str:email>/examsone/<str:college_id>/<str:timetable_id>", views.examPage, name="examPage1"),
+    path("<str:email>/aore/<str:college_id>", views.aore, name="aore"),
+    path("<str:email>/generate/exam/<college_id>", views.generateExam, name="generateExam")
 
 ]

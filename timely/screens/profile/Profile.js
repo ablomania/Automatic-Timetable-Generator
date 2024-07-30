@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react"
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 
 
 
@@ -31,25 +31,38 @@ export default function Profile({navigation}) {
         }
     }
     return(
-        <View style={styles.container}>
-            <Text style={styles.label}>Name:</Text>
-            <Text style={styles.value}>{userName}</Text>
-            <Text style={styles.label}>Department:</Text>
-            <Text style={styles.value}>{departmentName}</Text>
-            <Text style={styles.label}>Year Group:</Text>
-            <Text style={styles.value}>{yearGroup}</Text>
-            <Text style={styles.label}>College:</Text>
-            <Text style={styles.value}>{collegeName}</Text>
-            <Text style={styles.label}>Table code:</Text>
-            <Text style={styles.value}>{tableCode}</Text>
-        </View>
+        <ScrollView>
+            <View style={styles.container}>
+                <View style={styles.item}>
+                    <Text style={styles.label}>Name:</Text>
+                    <Text style={styles.value}>{userName}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text style={styles.label}>Department:</Text>
+                    <Text style={styles.value}>{departmentName}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text style={styles.label}>Year Group:</Text>
+                    <Text style={styles.value}>{yearGroup}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text style={styles.label}>College:</Text>
+                    <Text style={styles.value}>{collegeName}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text style={styles.label}>Table code:</Text>
+                    <Text style={styles.value}>{tableCode}</Text>
+                </View>
+                <Button title="Edit" onPress={() => navigation.navigate("EditProfile")} />
+            </View>
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
       padding: 16,
-      backgroundColor: '#f9f9f9',
+      backgroundColor: '#fff',
     },
     label: {
       fontSize: 16,
@@ -61,4 +74,10 @@ const styles = StyleSheet.create({
       color: '#333',
       marginBottom: 12,
     },
+    item: {
+        backgroundColor: '#fafafa',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+    }
   });

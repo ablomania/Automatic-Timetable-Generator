@@ -44,7 +44,13 @@ View selected courses
         <form>
             {% csrf_token %}
             <button type="submit" id="generate" formmethod="post" formaction="{% url 'generate' email college %}">
-                Generate
+                Generate Academic Timetable
+            </button>
+        </form>
+        <form action="">
+            {% csrf_token %}
+            <button type="submit" id="generate" formmethod="post" formaction="{% url 'generateExam' email college %}">
+                Generate Exam Timetable
             </button>
         </form>
     </div>

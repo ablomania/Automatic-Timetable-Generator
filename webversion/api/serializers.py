@@ -8,7 +8,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
             'id', 'course', 'course_code', 'year_group', 'location',
             'location_name', 'column', 'row', 'department',
             'lecturer_name', 'lecturer', 'college', 'time', 'day',
-            'college_name'
+            'college_name', "timetable",
             )
 
 class CourseSerializer(serializers.ModelSerializer):

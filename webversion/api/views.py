@@ -44,4 +44,3 @@ class CollegeViewSet(viewsets.ModelViewSet):
         print(college_id)
         return College.objects.filter(id=college_id)
 
-

@@ -14,18 +14,26 @@ window.onload = function loadBg() {
     }
 }
 
-function loadpdf() {
-    const tBody = document.querySelector(".rightsection");
-    const tImage = document.getElementById("loading");
-    const print_btn = document.querySelector(".print");
-    print_btn.addEventListener("click", (e) =>{
-        setTimeout(() => {
-            tBody.style.display = "none";
-            tImage.style.display = "block";
-        }, 60000);
-        tBody.style.display = "flex";
-        tImage.style.display = "none";
-    }, false)    
+function scheduleClicked(id) {
+    console.log(id);
+    async function fetchData(url) {
+        try{
+            console.log("hey")
+            const response = await fetch(url);
+            if(!response) {
+                console.log("bad");
+            } else {
+                const result = await response.json();
+                const data = await result
+                console.log("dt", data)
+                return data
+            }
+        } catch(error) {
+            console.log("Couldn't load item : ", error);
+        }
+    }
+    const item = fetchData(`http://192.168.1.115:8000/api/schedules/?id=${id}`);
+    
 }
 
 function showButtons() {
@@ -46,6 +54,10 @@ function windowPrinter() {
         header.style.display = "initial";
         footer.style.display = "initial";
     }, 1000);
+}
+
+function confirmPage() {
+    
 }
 
 function uPanel() {

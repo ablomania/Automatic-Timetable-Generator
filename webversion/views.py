@@ -15,6 +15,7 @@ from django.http import FileResponse
 from docx2pdf import convert
 import time
 from .pdfgen import createPdf
+from .exams import *
 
 
 # Create your views here.
@@ -96,8 +97,10 @@ def createCollege(request, email):
         name = dictionary['name'].upper()
         days_per_week = int(dictionary['days'])
         rows_per_day = int(dictionary['rows'])
+        exam_days = int(dictionary['exam_days'])
         new_college = College(
-            name=name, creater_id=user_id, days_per_week=days_per_week, rows_per_day=rows_per_day
+            name=name, creater_id=user_id, days_per_week=days_per_week, rows_per_day=rows_per_day,
+            exam_days=exam_days
             )
         new_college.save()
         return HttpResponseRedirect(reverse("toBegin", args=(email, new_college.id, count)))
@@ -112,6 +115,7 @@ def editcollege(request, email, college_id):
         college.name = dictionary['name']
         college.rows_per_day = dictionary['rows']
         college.days_per_week = dictionary['days']
+        college.exam_days = dictionary['exam_days']
         college.save()
         return HttpResponseRedirect(reverse("colleges", args=(email,)))
     context = {
@@ -256,10 +260,28 @@ def generateTimetable(request, college_id, email):
     return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
     # return HttpResponseRedirect(reverse("timetablePage", args=(email, college_id)))
 
+def generateExam(request, college_id, email):
+    user_id = UserAccount.objects.get(email=email).id
+    is_batch = Timetable.objects.filter(batch__gte=1)
+    if len(is_batch) > 0: 
+        batch = Timetable.objects.order_by("-batch").first().batch
+        batch = batch + 1
+    else: batch = 1
+    code = 343256 + batch
+    if request.method == "POST":
+        new_timetable = Timetable(
+            code=code, batch=batch, college_main_id=college_id,
+            type="exams"
+        )
+        new_timetable.save()
+        for x in list(selected_courses):
+            generateExamsTable(course_id=x, user_id=user_id, timetable_id=new_timetable.id)
+    return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id,)))
+
 def deleteTimetable(request, email, college_id, timetable_id):
     user_id = UserAccount.objects.get(email=email).id
     if request.method == "POST":
-        target = Timetable.object.get(id=timetable_id)
+        target = Timetable.objects.get(id=timetable_id)
         target.delete()
     return HttpResponseRedirect(reverse("collegeTables", args=(email, college_id)))
 
@@ -281,6 +303,7 @@ def timetable(request, email, college_id,timetable_id):
     user_id = UserAccount.objects.get(email=email).id
     template = loader.get_template("timetablepage.html")
     schedule = Schedule.objects.filter(creator_id=user_id, college_id=college_id, timetable_id=timetable_id).order_by("row")
+    table = Timetable.objects.get(id=timetable_id)
     course = Course.objects.all().values()
     departments = Department.objects.filter(college_main_id=college_id)
     batch = Timetable.objects.get(id=timetable_id).batch
@@ -333,11 +356,13 @@ def timetable(request, email, college_id,timetable_id):
         "schedule": schedule, "departments": departments, "scarr": scarr, "days": days,
         "year_groups":year_groups, "times":times, "college":college, "nofdepts":nofdepts,
         "email":email,"rows_per_day": rows_per_day, "days_per_week":days_per_week,
-        "new_doc":new_doc, "batch":batch,
+        "new_doc":new_doc, "batch":batch, "table": table,
     }
     return HttpResponse(template.render(context, request))
 
 def downloadPdf(request, email, college_id, timetable_id):
+    timetable = Timetable.objects.get(id=timetable_id)
+    table_type = timetable.type
     batch = Timetable.objects.get(id=timetable_id).batch
     college = College.objects.get(id=college_id)
     doc = Docs.objects.get(college_id=college_id, table_id=timetable_id)
@@ -350,6 +375,8 @@ def downloadPdf(request, email, college_id, timetable_id):
     return response
 
 def downloadDoc(request, email, college_id, timetable_id):
+    timetable = Timetable.objects.get(id=timetable_id)
+    table_type = timetable.type
     batch = Timetable.objects.get(id=timetable_id).batch
     college = College.objects.get(id=college_id)
     doc = Docs.objects.get(college_id=college_id, table_id=timetable_id)
@@ -737,3 +764,45 @@ def deleteDepartment(request, email, id):
         current_department = Department.objects.get(id=id)
         current_department.delete()
         return HttpResponseRedirect(reverse("alllecturers", args=(email,)))
+
+
+
+def examPage(request, email, college_id, timetable_id):
+    template = loader.get_template("exams1.html")
+    timetable = 
+    user_id = UserAccount.objects.get(email=email).id
+    exams = ExamSchedule.objects.filter(creator_id=user_id, college_id=college_id, timetable_id=timetable_id)
+    college = College.objects.get(id=college_id)
+    user_id = UserAccount.objects.get(email=email).id
+    departments = Department.objects.filter(college_main_id=college.id).order_by("name")
+    courses = Course.objects.filter(creator_id=user_id)
+    times = {1:'8am', 3:'10:30am', 5:'1pm', 7:'3pm', 9:'5pm', 11:'7pm', 13:'9pm'}
+    days = {1:'Monday', 2:'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday'}
+    mydict = {}
+    mylist = []
+    for e in exams:
+        mydict[e.course_code] = e
+    for m in mydict.values():
+        if m.day not in mylist:
+            mylist.append(m.day)
+    mylist.sort()
+    tablegenerator(college_id=college_id, user_id=user_id,some_list=ss, batch=batch)
+    context = {
+        "college":college, "exams":exams, "departments":departments,
+        "exam_days":range(1, college.exam_days+1), "mydict":mydict,
+        "mylist":mylist, "times":times, "days":days, "timetable_id": timetable_id,
+    }
+    return HttpResponse(template.render(context, request))
+
+def aore(request, email, college_id):
+    college = College.objects.get(id=college_id)
+    user_id = UserAccount.objects.get(email=email).id
+    template = loader.get_template("aore.html")
+    departments = Department.objects.filter(college_main_id=college.id).order_by("name")
+    current_department = departments.first()
+    courses = Course.objects.filter(creator_id=user_id, department_id=current_department.id)
+    context = {
+        "departments":departments, "courses":courses, "college":college,
+        "department":current_department,
+    }
+    return HttpResponse(template.render(context, request))
