@@ -132,22 +132,26 @@ def chooseRow(course, is_lab, locations, user_id, timetable, height = 2):
     number_of_schedules = credit_hours//2
     remainder = credit_hours % 2
     year_group = course.year_group
+    #Calculate for the max and min row positions of a year group
     max_yg_row = year_group * (rows_per_day * days_per_week)
     min_yg_row = (max_yg_row + 1) - (rows_per_day * days_per_week)
     rows = used_rows =  busylect = []
     result = {}
     odd_rows = []
     print("1")
+    #find occupied rows
     used_rows_list = list(dict(Schedule.objects.filter(department_id=course.department_id, year_group=year_group, row__gte=(min_yg_row), creator_id=user_id, timetable_id=timetable).values_list("row", "id")))
     used_rows = lister(mylist=used_rows_list, min_yg_row=min_yg_row)
     all_rows =[i for i in range(1,51)]
     lecturer_id = course.lecturer_id
+    #find rows where the lecturer already has a class scheduled
     busylect_list = list(dict(Schedule.objects.filter(lecturer_id=lecturer_id, creator_id=user_id, timetable_id=timetable).values_list("row", "id"))) 
     busylect = lister(mylist=busylect_list, min_yg_row=min_yg_row)
     if not is_lab:
         print("2")
         print(all_rows)
         for location, h in list(locations.items()):
+            #find the list of rows where the selected location has already been used
             banned_rows = list(dict(Schedule.objects.filter(location_id=location, timetable_id=timetable).values_list("row", "id")))
             for p in list(all_rows):
                 if int(p) in list(used_rows) or int(p)-1 in list(used_rows):
@@ -176,6 +180,7 @@ def chooseRow(course, is_lab, locations, user_id, timetable, height = 2):
                 rand_row = random.choice(odd_rows)
                 # rand_row = rand_row + 2
                 print("rand row is ", rand_row)
+                print("allrows is : ", all_rows)
                 if rand_row in all_rows:
                     second_row = rand_row+1
                     print("rand row in all rows")

@@ -1385,7 +1385,7 @@ input:focus and border, select:focus and border{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 80%;
+    width: 90%;
     margin: auto;
     margin-top: 20px;
     background: rgba(0, 12, 255, 0);
@@ -1398,7 +1398,7 @@ input:focus and border, select:focus and border{
 }
 .exams1 .mainItemExam{
     display: grid; 
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     background: rgba(0, 12, 255, 0);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -1410,7 +1410,7 @@ input:focus and border, select:focus and border{
 }
 .exams1 .examItem{
     display: grid; 
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

@@ -12,12 +12,16 @@ def generateExamsTable(course_id, user_id, timetable_id):
 
 
 def getLocation(course, user_id, timetable_id,):
-    
     exam_size = course.exam_size
+    if exam_size > 0: pass
+    else: exam_size = 100
     locations = Location.objects.filter(creator_id=user_id)
     course_capacity = course.estimated_class_size
     locations = list(dict(locations.filter(creator_id=user_id).values_list("id", "name")))
     factor = course_capacity // exam_size
+    if (course_capacity % exam_size) == 0: pass
+    elif(course_capacity % exam_size) < 10: pass
+    else: factor = factor + 1
     location_list = []
     isDone = 0
     while len(location_list) < factor:

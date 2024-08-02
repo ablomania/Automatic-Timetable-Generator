@@ -64,7 +64,7 @@ class Course(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     capacity = models.IntegerField(default=0)
     is_Lab = models.BooleanField(default=False, null=True)
     about = models.CharField(max_length=255, null=True)

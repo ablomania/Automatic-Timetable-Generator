@@ -41,7 +41,7 @@ def tablegenerator(college_id, user_id, some_list, batch):
             par2 = doc.add_paragraph(f"{day}")
             par2.alignment = 1
             par2.add_run(".").bold = True
-            table = doc.add_table(rows=11, cols=len(departments)+1)
+            table = doc.add_table(rows=rows_per_day+1, cols=len(departments)+1)
             table.style = 'Table Grid'
             doc.add_paragraph('')
             doc.add_page_break()

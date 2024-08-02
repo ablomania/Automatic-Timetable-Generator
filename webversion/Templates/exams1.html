@@ -22,10 +22,11 @@ Exams Timetable
     <div class>
         <div class="mainItemExam">
             <p><strong>time</strong></p>
+            <p><strong>department/year group</strong></p>
             <p><strong>course code</strong></p>
             <p><strong>locations</strong></p>
             <p><strong>lecturer</strong></p>
-            <p><strong>size</strong></p>
+            <p><strong>size // students per classroom</strong></p>
 
         </div>
         {% for exam in mydict.values %}
@@ -64,6 +65,11 @@ Exams Timetable
             {% elif exam.time == 16 %}
             <p>12am</p>
             {% endif %}
+            {% for department in departments %}
+            {% if exam.department_id == department.id %}
+            <p>{{department.name}} / {{exam.year_group}}</p>
+            {% endif %}
+            {% endfor %}
             <p>{{exam.course_code}}</p>
             <p style="display: flex; flex-direction: column; justify-content: space-evenly;">
                 {% for e in exams %}
@@ -73,7 +79,11 @@ Exams Timetable
                 {% endfor %}
             </p>
             <p>{{exam.lecturer_name}}</p>
-            <p>{{exam.size}}</p>
+            {%for course in courses %}
+            {% if course.id == exam.course_id %}
+            <p>{{exam.size}} // {{course.exam_size}}</p>
+            {% endif %}
+            {% endfor %}
         </div>
 
         {% endif %}

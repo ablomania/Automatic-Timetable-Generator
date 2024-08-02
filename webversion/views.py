@@ -16,6 +16,7 @@ from docx2pdf import convert
 import time
 from .pdfgen import createPdf
 from .exams import *
+from .examtablegen import examTableGenerator
 
 
 # Create your views here.
@@ -769,13 +770,13 @@ def deleteDepartment(request, email, id):
 
 def examPage(request, email, college_id, timetable_id):
     template = loader.get_template("exams1.html")
-    timetable = 
     user_id = UserAccount.objects.get(email=email).id
-    exams = ExamSchedule.objects.filter(creator_id=user_id, college_id=college_id, timetable_id=timetable_id)
+    exams = ExamSchedule.objects.filter(creator_id=user_id, college_id=college_id, timetable_id=timetable_id).order_by("year_group")
     college = College.objects.get(id=college_id)
     user_id = UserAccount.objects.get(email=email).id
     departments = Department.objects.filter(college_main_id=college.id).order_by("name")
-    courses = Course.objects.filter(creator_id=user_id)
+    departmentIds = list(dict(departments.values_list("id", "id")))
+    courses = list(Course.objects.filter(creator_id=user_id))
     times = {1:'8am', 3:'10:30am', 5:'1pm', 7:'3pm', 9:'5pm', 11:'7pm', 13:'9pm'}
     days = {1:'Monday', 2:'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday'}
     mydict = {}
@@ -785,12 +786,17 @@ def examPage(request, email, college_id, timetable_id):
     for m in mydict.values():
         if m.day not in mylist:
             mylist.append(m.day)
+    for c in list(courses):
+        if c.department_id not in list(departmentIds) : courses.remove(c)
     mylist.sort()
-    tablegenerator(college_id=college_id, user_id=user_id,some_list=ss, batch=batch)
+    ###############################################
+    # examTableGenerator(college_id=college_id, user_id=user_id, days_list=mylist, exams_list=mydict, exams=exams, table_id=timetable_id, courses=courses)
+    ###############################################
     context = {
         "college":college, "exams":exams, "departments":departments,
         "exam_days":range(1, college.exam_days+1), "mydict":mydict,
         "mylist":mylist, "times":times, "days":days, "timetable_id": timetable_id,
+        "courses":courses
     }
     return HttpResponse(template.render(context, request))
 
